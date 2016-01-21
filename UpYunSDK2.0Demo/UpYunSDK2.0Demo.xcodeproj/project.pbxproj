@@ -12,7 +12,7 @@
 		AE19D76D1C4E3D4300513CAC /* UPMultipartBody.m in Sources */ = {isa = PBXBuildFile; fileRef = AE19D76C1C4E3D4300513CAC /* UPMultipartBody.m */; };
 		AE3CAB3C1C4F5D6B00BF9A38 /* NSString+NSHash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB3B1C4F5D6B00BF9A38 /* NSString+NSHash.m */; };
 		AE3CAB481C4F5EC700BF9A38 /* UPHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */; };
-		AE3CAB4A1C50A5EF00BF9A38 /* UMUUpload in Resources */ = {isa = PBXBuildFile; fileRef = AE3CAB491C50A5EF00BF9A38 /* UMUUpload */; };
+		AE3CAB661C50BB2100BF9A38 /* UMUUploaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB651C50BB2100BF9A38 /* UMUUploaderManager.m */; };
 		B82A457417B9DAE100EA6AB2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82A457317B9DAE100EA6AB2 /* SystemConfiguration.framework */; };
 		B82A457717B9DB0800EA6AB2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82A457517B9DAF800EA6AB2 /* MobileCoreServices.framework */; };
 		B8E9D5D617B0C79800146D00 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8E9D5D517B0C79800146D00 /* UIKit.framework */; };
@@ -45,7 +45,8 @@
 		AE3CAB3B1C4F5D6B00BF9A38 /* NSString+NSHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NSHash.m"; sourceTree = "<group>"; };
 		AE3CAB461C4F5EC700BF9A38 /* UPHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPHTTPClient.h; sourceTree = "<group>"; };
 		AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPClient.m; sourceTree = "<group>"; };
-		AE3CAB491C50A5EF00BF9A38 /* UMUUpload */ = {isa = PBXFileReference; lastKnownFileType = folder; path = UMUUpload; sourceTree = "<group>"; };
+		AE3CAB641C50BB2100BF9A38 /* UMUUploaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UMUUploaderManager.h; path = UPMutUpload/UMUUploaderManager.h; sourceTree = "<group>"; };
+		AE3CAB651C50BB2100BF9A38 /* UMUUploaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UMUUploaderManager.m; path = UPMutUpload/UMUUploaderManager.m; sourceTree = "<group>"; };
 		B82A457317B9DAE100EA6AB2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B82A457517B9DAF800EA6AB2 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		B8E9D5D217B0C79800146D00 /* UpYunSDK2.0Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpYunSDK2.0Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,7 +105,7 @@
 		88BAB33818C6F66B00426A17 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				AE3CAB491C50A5EF00BF9A38 /* UMUUpload */,
+				AE3CAB631C50BB1200BF9A38 /* UPMutUpload */,
 				AE3CAB461C4F5EC700BF9A38 /* UPHTTPClient.h */,
 				AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */,
 				AE19D7671C4DD87500513CAC /* HttpUtils */,
@@ -122,6 +123,15 @@
 				AE19D76C1C4E3D4300513CAC /* UPMultipartBody.m */,
 			);
 			name = HttpUtils;
+			sourceTree = "<group>";
+		};
+		AE3CAB631C50BB1200BF9A38 /* UPMutUpload */ = {
+			isa = PBXGroup;
+			children = (
+				AE3CAB641C50BB2100BF9A38 /* UMUUploaderManager.h */,
+				AE3CAB651C50BB2100BF9A38 /* UMUUploaderManager.m */,
+			);
+			name = UPMutUpload;
 			sourceTree = "<group>";
 		};
 		B8E9D5C917B0C79800146D00 = {
@@ -258,7 +268,6 @@
 			files = (
 				B8E9D68617B0CB2900146D00 /* ViewController_iPhone.xib in Resources */,
 				B8E9D68717B0CB2900146D00 /* ViewController_iPad.xib in Resources */,
-				AE3CAB4A1C50A5EF00BF9A38 /* UMUUpload in Resources */,
 				B8E9D5E017B0C79800146D00 /* InfoPlist.strings in Resources */,
 				B8E9D5E817B0C79800146D00 /* Default.png in Resources */,
 				B8E9D5EA17B0C79800146D00 /* Default@2x.png in Resources */,
@@ -276,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E9D68217B0C9E400146D00 /* ViewController.m in Sources */,
+				AE3CAB661C50BB2100BF9A38 /* UMUUploaderManager.m in Sources */,
 				B8E9D5E217B0C79800146D00 /* main.m in Sources */,
 				AE3CAB481C4F5EC700BF9A38 /* UPHTTPClient.m in Sources */,
 				B8E9D5E617B0C79800146D00 /* AppDelegate.m in Sources */,
