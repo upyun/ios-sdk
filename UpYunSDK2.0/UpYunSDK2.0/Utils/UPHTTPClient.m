@@ -12,7 +12,8 @@
 
 @interface UPHTTPClient() <NSURLSessionDelegate>
 {
-    NSURLSession *session;
+    NSURLSession *_session;
+    NSURLSessionConfiguration *_sessionConfiguration;
     NSTimeInterval _timeInterval;
     NSMutableDictionary *_headers;
     HttpProgressBlock _progressBlock;
@@ -34,8 +35,8 @@
     if (self) {
         _didCompleted = NO;
         _headers = [[NSMutableDictionary alloc] init];
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-        session = [NSURLSession sessionWithConfiguration:sessionConfiguration
+        _sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        _session = [NSURLSession sessionWithConfiguration:_sessionConfiguration
                                                               delegate:self
                                                          delegateQueue:nil];
     }
@@ -43,6 +44,18 @@
 }
 
 - (void)dealloc {
+    NSLog(@"client dealloc");
+    _session = nil;
+    _sessionConfiguration = nil;
+    _timeInterval = 0;
+    _headers = nil;
+    _progressBlock = nil;
+    _successBlock = nil;
+    _failureBlock = nil;
+    _sessionTask = nil;
+    _didReceiveData = nil;
+    _didReceiveResponse = nil;
+    _didCompleted = nil;
 }
 
 - (void)cancel {
@@ -58,7 +71,7 @@
     _progressBlock = progressBlock;
     _successBlock = successBlock;
     _failureBlock = failureBlock;
-    _sessionTask = [session dataTaskWithRequest:request];
+    _sessionTask = [_session dataTaskWithRequest:request];
     [_sessionTask resume];
 }
 
@@ -114,15 +127,13 @@
             [request setValue:[_headers objectForKey:key] forHTTPHeaderField:key];
         }
     }
-    request.HTTPBody = multiBody.data;
+    request.HTTPBody = [multiBody dataFromPart];
     request.timeoutInterval = _timeInterval;
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
-    NSString *bodyLength = [NSString stringWithFormat:@"%lu", (unsigned long)multiBody.data.length];
-    [request setValue:bodyLength forHTTPHeaderField:@"Content-Length"];
     //发起请求
-    _sessionTask = [session dataTaskWithRequest:request];
+    _sessionTask = [_session dataTaskWithRequest:request];
     [_sessionTask resume];
 }
 
@@ -146,7 +157,7 @@
     }
     
     request.HTTPBody = postData;
-    _sessionTask = [session dataTaskWithRequest:request
+    _sessionTask = [_session dataTaskWithRequest:request
                               completionHandler:^(NSData *data,
                                                   NSURLResponse *response,
                                                   NSError *error) {
@@ -224,6 +235,8 @@ didCompleteWithError:(NSError *)error {
         _didReceiveData = nil;
         _didReceiveData = nil;
         _didReceiveResponse = nil;
+        _sessionConfiguration = nil;
+        _session = nil;
     });
 }
 

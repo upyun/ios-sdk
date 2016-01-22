@@ -71,8 +71,7 @@
 - (NSMutableArray *)uploadWithFile:(NSData *)fileData
                                   policy:(NSString *)policy
                                signature:(NSString *)signature
-                           progressBlock:(void (^)(float percent,
-                                                   long long requestDidSendBytes))progressBlock
+                           progressBlock:(void (^)(CGFloat percent, int64_t requestDidSendBytes))progressBlock
                            completeBlock:(void (^)(NSError * error,
                                                    NSDictionary * result,
                                                    BOOL completed))completeBlock;

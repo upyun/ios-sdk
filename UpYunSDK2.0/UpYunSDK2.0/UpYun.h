@@ -27,13 +27,20 @@
 //#error 必填项
 #define DEFAULT_EXPIRES_IN 600
 
+/**
+ *	@brief 默认超过大小后走分块上传，可在init之后修改mutUploadSize的值来更改
+ */
+#define DEFAULT_MUTUPLOAD_SIZE 2*1024*1024
+
 #define API_DOMAIN @"http://v0.api.upyun.com/"
+
+typedef void(^UPCompeleteBlock)(NSError *error, NSDictionary *result, BOOL completed);
 
 typedef void(^UPSuccessBlock)(NSURLResponse *response, id responseData);
 typedef void(^UPFailBlock)(NSError *error);
 typedef void(^UPProGgressBlock)(CGFloat percent, int64_t requestDidSendBytes);
-
 typedef NSString*(^UPSignatureBlock)(NSString *policy);
+
 
 @interface UpYun : NSObject
 
@@ -44,6 +51,8 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 @property (nonatomic, copy) NSMutableDictionary *params;
 
 @property (nonatomic, copy) NSString *passcode;
+
+@property (nonatomic) NSInteger mutUploadSize;
 
 @property (nonatomic, copy) UPSuccessBlock   successBlocker;
 

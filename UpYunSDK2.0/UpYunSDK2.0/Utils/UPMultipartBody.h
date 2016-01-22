@@ -10,7 +10,6 @@
 
 @interface UPMultipartBody : NSObject
 @property (nonatomic, copy) NSString* boundary;
-@property (nonatomic, strong) NSMutableData* data;
 - (instancetype)initWithBoundary:(NSString*)boundary;
 
 - (void)addKey:(NSString*)key AndValue:(NSString*)value;
@@ -18,8 +17,8 @@
 - (void)addFilePath:(NSString*)filePath WithFileName:(NSString*)fileName;
 - (void)addFileData:(NSData*)fileData WithFileName:(NSString*)fileName;
 
+- (void)addFileData:(NSData*)fileData OrFilePath:(NSString*)filePath  WithFileName:(NSString*)fileName;
 
 
-
-- (void)dataFromPart;
+- (NSData *)dataFromPart;
 @end

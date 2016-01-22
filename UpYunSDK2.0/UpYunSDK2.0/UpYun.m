@@ -9,8 +9,7 @@
 #import "UpYun.h"
 #import "UPMultipartBody.h"
 #import "NSString+NSHash.h"
-
-
+#import "UMUUploaderManager.h"
 
 #define ERROR_DOMAIN @"upyun.com"
 #define DATE_STRING(expiresIn) [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970] + expiresIn]
@@ -25,8 +24,9 @@
         self.bucket = DEFAULT_BUCKET;
         self.expiresIn = DEFAULT_EXPIRES_IN;
         self.passcode = DEFAULT_PASSCODE;
-	}
-	return self;
+        self.mutUploadSize = DEFAULT_MUTUPLOAD_SIZE;
+    }
+    return self;
 }
 
 - (void) uploadImage:(UIImage *)image savekey:(NSString *)savekey
@@ -53,48 +53,35 @@
 
 - (void) uploadFilePath:(NSString *)path savekey:(NSString *)savekey
 {
-    [self creatSessinTaskWithSaveKey:savekey data:nil filePath:path];
-//    [task resume];
+    
+    [self uploadSavekey:savekey data:nil filePath:path];
 }
 
 - (void) uploadFileData:(NSData *)data savekey:(NSString *)savekey
 {
-    [self creatSessinTaskWithSaveKey:savekey data:data filePath:nil];
-//    [task resume];
+    [self uploadSavekey:savekey data:data filePath:nil];
 }
 
-- (BOOL)checkSavekey:(NSString *)string
-{
-    NSRange rangeFileName;
-    NSRange rangeFileNameOnDic;
-    rangeFileName = [string rangeOfString:SUB_SAVE_KEY_FILENAME];
-    if ([_params objectForKey:@"save-key"]) {
-        rangeFileNameOnDic = [[_params objectForKey:@"save-key"]
-                              rangeOfString:SUB_SAVE_KEY_FILENAME];
-    }else {
-        rangeFileNameOnDic.location = NSNotFound;
+- (void) uploadSavekey:(NSString *)savekey data:(NSData*)data filePath:(NSString*)filePath {
+    
+    NSInteger fileSize = data.length;
+    if (filePath) {
+        NSError *error = nil;
+        NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+        fileSize = [fileDictionary fileSize];
     }
     
-    
-    if(rangeFileName.location != NSNotFound || rangeFileNameOnDic.location != NSNotFound)
-    {
-        NSString *  message = [NSString stringWithFormat:@"传入file为NSData或者UIImage时,不能使用%@方式生成savekey",
-                               SUB_SAVE_KEY_FILENAME];
-        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
-                                           code:-1998
-                                       userInfo:@{@"message":message}];
-        if (_failBlocker) {
-            _failBlocker(err);
-        }
-        return NO;
+    if (fileSize > self.mutUploadSize) {
+        [self mutUploadFileData:data OrFilePath:filePath savekey:savekey];
+    } else {
+        [self formUploadWithSaveKey:savekey data:data filePath:filePath];
     }
-    return YES;
 }
 
 - (void)uploadFile:(id)file saveKey:(NSString *)saveKey
 {
-    if (![file isKindOfClass:[NSString class]] && ![self checkSavekey:saveKey])//非path传入的需要检查savekey
-    {
+    //非path传入的需要检查savekey
+    if (![file isKindOfClass:[NSString class]] && ![self checkSavekey:saveKey]) {
         return;
     }
     if([file isKindOfClass:[UIImage class]]){
@@ -104,44 +91,19 @@
     }else if([file isKindOfClass:[NSString class]]) {
         [self uploadFilePath:file savekey:saveKey];
     }else {
-        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+        NSString *errorInfo = [NSString stringWithFormat:@"传入参数类型错误: file is %@",file];
+        NSError *error = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1999
-                                       userInfo:@{@"message":@"传入参数类型错误"}];
+                                       userInfo:@{@"message":errorInfo}];
         if (_failBlocker) {
-            _failBlocker(err);
+            _failBlocker(error);
         }
     }
 }
 
-- (NSString *)getPolicyWithSaveKey:(NSString *)savekey {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:self.bucket forKey:@"bucket"];
-    [dic setObject:DATE_STRING(self.expiresIn) forKey:@"expiration"];
-    if (savekey && ![savekey isEqualToString:@""]) {
-        [dic setObject:savekey forKey:@"save-key"];
-    }
-    
-    if (self.params) {
-        for (NSString *key in self.params.keyEnumerator) {
-            [dic setObject:[self.params objectForKey:key] forKey:key];
-        }
-    }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:NULL];
-    NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return [json Base64encode];
-}
-
-- (NSString *)getSignatureWithPolicy:(NSString *)policy
-{
-    NSString *str = [NSString stringWithFormat:@"%@&%@",policy,self.passcode];
-    NSString *signature = [[[str dataUsingEncoding:NSUTF8StringEncoding] MD5HexDigest] lowercaseString];
-    return signature;
-}
-
-
-- (NSURLSessionTask *)creatSessinTaskWithSaveKey:(NSString *)saveKey
-                                                 data:(NSData *)data
-                                             filePath:(NSString *)filePath{
+- (void)formUploadWithSaveKey:(NSString *)saveKey
+                         data:(NSData *)data
+                     filePath:(NSString *)filePath {
     //进度回调
     HttpProgressBlock httpProgress = ^(int64_t completedBytesCount, int64_t totalBytesCount) {
         CGFloat percent = completedBytesCount/(float)totalBytesCount;
@@ -178,9 +140,11 @@
     
     NSString *policy = [self getPolicyWithSaveKey:saveKey];
     
-    NSString *signature = @"";
+    __block NSString *signature = @"";
     if (_signatureBlocker) {
-        signature = _signatureBlocker(policy);
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            signature = _signatureBlocker([policy stringByAppendingString:@"&"]);
+        });
     } else if (self.passcode) {
         signature = [self getSignatureWithPolicy:policy];
     } else {
@@ -193,47 +157,151 @@
         }
     }
     NSDictionary *parameDic = @{@"policy":policy, @"signature":signature};
-
+    
     UPMultipartBody *multiBody = [[UPMultipartBody alloc]initWithBoundary:@"Boundary+32309A3DE1A3C0DB"];
     [multiBody addDictionary:parameDic];
-    if (data) {
-        [multiBody addFileData:data WithFileName:@"file"];
-    } else if (filePath) {
-        [multiBody addFilePath:filePath WithFileName:@"file"];
-    }
-    
-    [multiBody dataFromPart];
+    [multiBody addFileData:data OrFilePath:filePath WithFileName:@"file"];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:REQUEST_URL(self.bucket)];
     request.HTTPMethod = @"POST";
-    request.HTTPBody = multiBody.data;
+    request.HTTPBody = [multiBody dataFromPart];
     [request setValue:@"*/*" forHTTPHeaderField:@"Accept"];
     [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", multiBody.boundary] forHTTPHeaderField:@"Content-Type"];
     
     UPHTTPClient *client = [[UPHTTPClient alloc]init];
     [client uploadRequest:request success:httpSuccess failure:httpFail progress:httpProgress];
-    
-    return nil;
 }
 
 #pragma mark----mut upload
 
-- (void) mutUploadFilePath:(NSString *)path savekey:(NSString *)savekey
+- (void) mutUploadFileData:(NSData *)data OrFilePath:(NSString*) filePath savekey:(NSString *)savekey
 {
+    if (!data) {
+        data = [NSData dataWithContentsOfFile:filePath];
+    }
+    NSDictionary *fileInfo = [UMUUploaderManager fetchFileInfoDictionaryWith:data];//获取文件信息
+    NSDictionary *signaturePolicyDic =[self constructingSignatureAndPolicyWithFileInfo:fileInfo saveKey:savekey];
     
+    NSString * signature = signaturePolicyDic[@"signature"];
+    NSString * policy = signaturePolicyDic[@"policy"];
+    
+    UMUUploaderManager *manager = [UMUUploaderManager managerWithBucket:self.bucket];
+    [manager uploadWithFile:data policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            UIAlertView * alert;
+            if (completed) {
+                alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                NSLog(@"%@",result);
+            }else {
+                alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传失败" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                NSLog(@"%@",error);
+            }
+            [alert show];
+        });
+    }];
 }
 
-- (void) mutUploadImage:(UIImage *)image savekey:(NSString *)savekey
-{
+#pragma mark--Utils---
+
+/**
+ *  根据文件信息生成Signature\Policy (安全起见，以下算法应在服务端完成)
+ *  @param paramaters 文件信息
+ *  @return
+ */
+- (NSDictionary *)constructingSignatureAndPolicyWithFileInfo:(NSDictionary *)fileInfo saveKey:(NSString*) saveKey{
+    NSMutableDictionary * mutableDic = [[NSMutableDictionary alloc]initWithDictionary:fileInfo];
+    [mutableDic setObject:@(ceil([[NSDate date] timeIntervalSince1970])+60) forKey:@"expiration"];//设置授权过期时间
+    [mutableDic setObject:saveKey forKey:@"path"];//设置保存路径
+    /**
+     *  这个 mutableDic 可以塞入其他可选参数 见：http://docs.upyun.com/api/multipart_upload/#_2
+     */
     
+    NSString *policy = [self dictionaryToJSONStringBase64Encoding:mutableDic];
+    
+    __block NSString *signature = @"";
+    if (_signatureBlocker) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            signature = _signatureBlocker(policy);
+        });
+    } else if (self.passcode) {
+        NSArray * keys = [mutableDic allKeys];
+        keys= [keys sortedArrayUsingSelector:@selector(compare:)];
+        for (NSString * key in keys) {
+            NSString * value = mutableDic[key];
+            signature = [NSString stringWithFormat:@"%@%@%@",signature,key,value];
+        }
+        signature = [signature stringByAppendingString:self.passcode];
+    } else {
+        NSString *message = _signatureBlocker?@"没有提供密钥":@"没有实现signatureBlock";
+        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-1999
+                                       userInfo:@{@"message":message}];
+        if (_failBlocker) {
+            _failBlocker(err);
+        }
+    }
+    return @{@"signature":[signature MD5],
+             @"policy":policy};
 }
 
-- (void) mutUploadFileData:(NSData *)data savekey:(NSString *)savekey
-{
+- (NSString *)getPolicyWithSaveKey:(NSString *)savekey {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:self.bucket forKey:@"bucket"];
+    [dic setObject:DATE_STRING(self.expiresIn) forKey:@"expiration"];
+    if (savekey && ![savekey isEqualToString:@""]) {
+        [dic setObject:savekey forKey:@"save-key"];
+    }
     
+    if (self.params) {
+        for (NSString *key in self.params.keyEnumerator) {
+            [dic setObject:[self.params objectForKey:key] forKey:key];
+        }
+    }
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:NULL];
+    NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return [json Base64encode];
 }
 
+- (NSString *)getSignatureWithPolicy:(NSString *)policy
+{
+    NSString *str = [NSString stringWithFormat:@"%@&%@",policy,self.passcode];
+    NSString *signature = [[[str dataUsingEncoding:NSUTF8StringEncoding] MD5HexDigest] lowercaseString];
+    return signature;
+}
 
+- (NSString *)dictionaryToJSONStringBase64Encoding:(NSDictionary *)dic
+{
+    id paramesData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:paramesData
+                                                 encoding:NSUTF8StringEncoding];
+    return [jsonString Base64encode];
+}
 
+- (BOOL)checkSavekey:(NSString *)string
+{
+    NSRange rangeFileName;
+    NSRange rangeFileNameOnDic;
+    rangeFileName = [string rangeOfString:SUB_SAVE_KEY_FILENAME];
+    if ([_params objectForKey:@"save-key"]) {
+        rangeFileNameOnDic = [[_params objectForKey:@"save-key"]
+                              rangeOfString:SUB_SAVE_KEY_FILENAME];
+    }else {
+        rangeFileNameOnDic.location = NSNotFound;
+    }
+    
+    
+    if(rangeFileName.location != NSNotFound || rangeFileNameOnDic.location != NSNotFound)
+    {
+        NSString *message = [NSString stringWithFormat:@"传入file为NSData或者UIImage时,不能使用%@方式生成savekey",SUB_SAVE_KEY_FILENAME];
+        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-1998
+                                       userInfo:@{@"message":message}];
+        if (_failBlocker) {
+            _failBlocker(err);
+        }
+        return NO;
+    }
+    return YES;
+}
 
 @end

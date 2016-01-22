@@ -20,7 +20,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"test");
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -41,50 +40,14 @@
 
 - (IBAction)mutilUploadAction:(UIButton *)sender {
     
-    NSString * url = [[NSBundle mainBundle] pathForResource:@"image" ofType:@"jpg"];
-    
-    NSData * fileData = [NSData dataWithContentsOfFile:url];
-    
-    NSDictionary * fileInfo = [UMUUploaderManager fetchFileInfoDictionaryWith:fileData];//获取文件信息
-    
-    NSDictionary * signaturePolicyDic =[self constructingSignatureAndPolicyWithFileInfo:fileInfo];
-    
-    NSString * signature = signaturePolicyDic[@"signature"];
-    NSString * policy = signaturePolicyDic[@"policy"];
-    NSString * bucket = signaturePolicyDic[@"bucket"];
-    
-    __weak typeof(self)weakSelf = self;
-    UMUUploaderManager *manager = [UMUUploaderManager managerWithBucket:bucket];
-    [manager uploadWithFile:fileData policy:policy signature:signature progressBlock:^(float percent, long long requestDidSendBytes) {
-        NSLog(@"%f",percent);
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            weakSelf.pv.progress = percent;
-        });
-        
-    } completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            UIAlertView * alert;
-            if (completed) {
-                alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                NSLog(@"%@",result);
-            }else {
-                alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传失败" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                NSLog(@"%@",error);
-            }
-            [alert show];
-            
-        });
-    }];
-
-    
 }
 
 
 - (IBAction)uploadFile:(id)sender {
-    UpYun *uy = [[UpYun alloc] init];
+    __block UpYun *uy = [[UpYun alloc] init];
     uy.successBlocker = ^(NSURLResponse *response, id responseData)
     {
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
         NSLog(@"%@",responseData);
     };
@@ -97,30 +60,32 @@
     };
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes)
     {
+        NSLog(@"percent %f",percent);
+        NSLog(@"all %lld",requestDidSendBytes);
         [_pv setProgress:percent];
     };
     
-//    如果 sinature 由服务端生成，则需要实现signatureBlocker, 否则就不用初始化signatureBlocker
+//    如果 sinature 由服务端生成, 只需要将policy 和 密钥 拼接之后进行MD5, 否则就不用初始化signatureBlocker
 //    uy.signatureBlocker = ^(NSString *policy)
 //    {
-//        // 在这里进行服务端的sinature 获取
 //        return @"";
 //    };
-    
-    
+
     /**
      *	@brief	根据 UIImage 上传
      */
-    UIImage * image = [UIImage imageNamed:@"image.jpg"];
+    
+//    UIImage * image = [UIImage imageNamed:@"image.jpg"];
 //    [uy uploadFile:image saveKey:[self getSaveKey]];
+
 //    [uy uploadFile:image saveKey:@"2016.jpg"];
-    [uy uploadImage:image savekey:[self getSaveKey]];
+//    [uy uploadImage:image savekey:[self getSaveKey]];
     /**
      *	@brief	根据 文件路径 上传
      */
-//    NSString* resourcePath = [[NSBundle mainBundle] resourcePath];
-//    NSString* filePath = [resourcePath stringByAppendingPathComponent:@"fileTest.file"];
-//    [uy uploadFile:filePath saveKey:[self getSaveKey]];
+    NSString* resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString* filePath = [resourcePath stringByAppendingPathComponent:@"test2.png"];
+    [uy uploadFile:filePath saveKey:@"/test2.png"];
     
     /**
      *	@brief	根据 NSDate  上传
@@ -167,50 +132,5 @@
     int month = [comps month];
     return month;
 }
-
-
-/**
- *  根据文件信息生成Signature\Policy\bucket (安全起见，以下算法应在服务端完成)
- *
- *  @param paramaters 文件信息
- *
- *  @return
- */
-- (NSDictionary *)constructingSignatureAndPolicyWithFileInfo:(NSDictionary *)fileInfo
-{
-#warning 您需要加上自己的bucket和secret
-    NSString * bucket = @"test654123";
-    NSString * secret = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
-    
-    NSMutableDictionary * mutableDic = [[NSMutableDictionary alloc]initWithDictionary:fileInfo];
-    [mutableDic setObject:@(ceil([[NSDate date] timeIntervalSince1970])+60) forKey:@"expiration"];//设置授权过期时间
-    [mutableDic setObject:[NSString stringWithFormat:@"/test/%@.jpeg",@"fileName"] forKey:@"path"];//设置保存路径
-    /**
-     *  这个 mutableDic 可以塞入其他可选参数 见：http://docs.upyun.com/api/form_api/#Policy%e5%86%85%e5%ae%b9%e8%af%a6%e8%a7%a3
-     */
-    NSString * signature = @"";
-    NSArray * keys = [mutableDic allKeys];
-    keys= [keys sortedArrayUsingSelector:@selector(compare:)];
-    for (NSString * key in keys) {
-        NSString * value = mutableDic[key];
-        signature = [NSString stringWithFormat:@"%@%@%@",signature,key,value];
-    }
-    signature = [signature stringByAppendingString:secret];
-    
-    return @{@"signature":[signature MD5],
-             @"policy":[self dictionaryToJSONStringBase64Encoding:mutableDic],
-             @"bucket":bucket};
-}
-
-- (NSString *)dictionaryToJSONStringBase64Encoding:(NSDictionary *)dic
-{
-    id paramesData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
-    NSString *jsonString = [[NSString alloc] initWithData:paramesData
-                                                 encoding:NSUTF8StringEncoding];
-    return [jsonString Base64encode];
-}
-
-
-
 
 @end

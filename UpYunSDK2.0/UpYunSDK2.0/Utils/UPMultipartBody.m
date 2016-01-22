@@ -30,7 +30,6 @@
     if (self) {
         self.boundary = boundary;
         self.bodyParts = [NSMutableArray new];
-        self.data = [NSMutableData new];
     }
     return self;
 }
@@ -76,28 +75,48 @@
     [self.bodyParts addObject:part];
 }
 
+- (void)addFileData:(NSData*)fileData OrFilePath:(NSString*)filePath  WithFileName:(NSString*)fileName {
+    NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
+    [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", fileName, fileName] forKey:@"Content-Disposition"];
+    [mutableHeaders setValue:@"application/octet-stream" forKey:@"Content-Type"];
+    
+    UPHTTPBodyPart *part = [[UPHTTPBodyPart alloc]init];
+    part.headers = mutableHeaders;
+    
+    if (fileData) {
+        part.body = fileData;
+    } else if (filePath){
+        part.body = fileData;
+    }
+    [self.bodyParts addObject:part];
+}
 
-- (void)dataFromPart {
 
+- (NSData *)dataFromPart {
+
+    
+    NSMutableData *data = [[NSMutableData alloc]init];
     for (int i = 0; i< self.bodyParts.count; i++) {
         UPHTTPBodyPart *part = self.bodyParts[i];
         
         NSData *beginData = [AFMultipartFormEncapsulationBoundary(self.boundary) dataUsingEncoding:NSUTF8StringEncoding];
-        [self.data appendData:beginData];
+        [data appendData:beginData];
         
         NSData *headerData = [[part stringForHeaders] dataUsingEncoding:NSUTF8StringEncoding];
-        [self.data appendData:headerData];
+        [data appendData:headerData];
         
         if ([part.body isKindOfClass:[NSData class]]) {
-            [self.data appendData:part.body];
+            [data appendData:part.body];
         } else if ([part.body isKindOfClass:[NSString class]]) {
             NSData *fileData = [NSData dataWithContentsOfFile:part.body];
-            [self.data appendData:fileData];
+            [data appendData:fileData];
         }
     }
     
     NSData *endData = [AFMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:NSUTF8StringEncoding];
-    [self.data appendData:endData];
+    [data appendData:endData];
+    
+    return data;
 }
 
 @end

@@ -13,6 +13,9 @@
 		AE3CAB3C1C4F5D6B00BF9A38 /* NSString+NSHash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB3B1C4F5D6B00BF9A38 /* NSString+NSHash.m */; };
 		AE3CAB481C4F5EC700BF9A38 /* UPHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */; };
 		AE3CAB661C50BB2100BF9A38 /* UMUUploaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB651C50BB2100BF9A38 /* UMUUploaderManager.m */; };
+		AE7730B61C50D6ED006FD6FC /* vlc.dmg in Resources */ = {isa = PBXBuildFile; fileRef = AE7730B51C50D67F006FD6FC /* vlc.dmg */; };
+		AE7730B81C50E594006FD6FC /* test3.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7730B71C50E594006FD6FC /* test3.png */; };
+		AE7730BA1C50E7AD006FD6FC /* test2.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7730B91C50E7AD006FD6FC /* test2.png */; };
 		B82A457417B9DAE100EA6AB2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82A457317B9DAE100EA6AB2 /* SystemConfiguration.framework */; };
 		B82A457717B9DB0800EA6AB2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B82A457517B9DAF800EA6AB2 /* MobileCoreServices.framework */; };
 		B8E9D5D617B0C79800146D00 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8E9D5D517B0C79800146D00 /* UIKit.framework */; };
@@ -47,6 +50,9 @@
 		AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPClient.m; sourceTree = "<group>"; };
 		AE3CAB641C50BB2100BF9A38 /* UMUUploaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UMUUploaderManager.h; path = UPMutUpload/UMUUploaderManager.h; sourceTree = "<group>"; };
 		AE3CAB651C50BB2100BF9A38 /* UMUUploaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UMUUploaderManager.m; path = UPMutUpload/UMUUploaderManager.m; sourceTree = "<group>"; };
+		AE7730B51C50D67F006FD6FC /* vlc.dmg */ = {isa = PBXFileReference; lastKnownFileType = file; path = vlc.dmg; sourceTree = "<group>"; };
+		AE7730B71C50E594006FD6FC /* test3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test3.png; sourceTree = "<group>"; };
+		AE7730B91C50E7AD006FD6FC /* test2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test2.png; sourceTree = "<group>"; };
 		B82A457317B9DAE100EA6AB2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B82A457517B9DAF800EA6AB2 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		B8E9D5D217B0C79800146D00 /* UpYunSDK2.0Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpYunSDK2.0Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +203,9 @@
 		B8E9D68317B0CA6400146D00 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AE7730B91C50E7AD006FD6FC /* test2.png */,
+				AE7730B71C50E594006FD6FC /* test3.png */,
+				AE7730B51C50D67F006FD6FC /* vlc.dmg */,
 				B8F54BFA17B8EDAD001D1CE9 /* fileTest.file */,
 				B8E9D68417B0CA6C00146D00 /* image.jpg */,
 			);
@@ -266,11 +275,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE7730B61C50D6ED006FD6FC /* vlc.dmg in Resources */,
 				B8E9D68617B0CB2900146D00 /* ViewController_iPhone.xib in Resources */,
 				B8E9D68717B0CB2900146D00 /* ViewController_iPad.xib in Resources */,
+				AE7730BA1C50E7AD006FD6FC /* test2.png in Resources */,
 				B8E9D5E017B0C79800146D00 /* InfoPlist.strings in Resources */,
 				B8E9D5E817B0C79800146D00 /* Default.png in Resources */,
 				B8E9D5EA17B0C79800146D00 /* Default@2x.png in Resources */,
+				AE7730B81C50E594006FD6FC /* test3.png in Resources */,
 				B8E9D5EC17B0C79800146D00 /* Default-568h@2x.png in Resources */,
 				B8E9D68517B0CA6C00146D00 /* image.jpg in Resources */,
 				B8F54BFB17B8EDAD001D1CE9 /* fileTest.file in Resources */,
