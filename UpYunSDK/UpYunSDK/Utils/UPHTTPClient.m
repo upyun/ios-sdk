@@ -36,6 +36,8 @@
         _didCompleted = NO;
         _headers = [[NSMutableDictionary alloc] init];
         _sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+//        _sessionConfiguration.timeoutIntervalForRequest = 10.f;
+//        _sessionConfiguration.timeoutIntervalForResource = 10.f;
         _session = [NSURLSession sessionWithConfiguration:_sessionConfiguration
                                                               delegate:self
                                                          delegateQueue:nil];
@@ -71,6 +73,7 @@
     _progressBlock = progressBlock;
     _successBlock = successBlock;
     _failureBlock = failureBlock;
+    
     _sessionTask = [_session dataTaskWithRequest:request];
     [_sessionTask resume];
 }

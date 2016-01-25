@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  UpYunSDK2.0Demo
+//  UpYunSDK Demo
 //
 //  Created by jack zhou on 13-8-6.
 //  Copyright (c) 2013年 upyun. All rights reserved.

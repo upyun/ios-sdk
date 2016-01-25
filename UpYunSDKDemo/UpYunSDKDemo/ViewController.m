@@ -60,8 +60,8 @@
     };
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes)
     {
-        NSLog(@"percent %f",percent);
-        NSLog(@"all %lld",requestDidSendBytes);
+//        NSLog(@"percent %f",percent);
+//        NSLog(@"all %lld",requestDidSendBytes);
         [_pv setProgress:percent];
     };
     

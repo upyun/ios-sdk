@@ -39,7 +39,7 @@
 /* Begin PBXFileReference section */
 		88BAB33518C6F66B00426A17 /* UpYun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYun.h; sourceTree = "<group>"; };
 		88BAB33618C6F66B00426A17 /* UpYun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYun.m; sourceTree = "<group>"; };
-		88BAB33718C6F66B00426A17 /* UpYunSDK2.0-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UpYunSDK2.0-Prefix.pch"; sourceTree = "<group>"; };
+		88BAB33718C6F66B00426A17 /* UpYunSDK-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UpYunSDK-Prefix.pch"; sourceTree = "<group>"; };
 		AE19D7681C4DDA6F00513CAC /* UPHTTPBodyPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPHTTPBodyPart.h; sourceTree = "<group>"; };
 		AE19D7691C4DDA6F00513CAC /* UPHTTPBodyPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPBodyPart.m; sourceTree = "<group>"; };
 		AE19D76B1C4E3D4300513CAC /* UPMultipartBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPMultipartBody.h; sourceTree = "<group>"; };
@@ -55,14 +55,14 @@
 		AE7730B91C50E7AD006FD6FC /* test2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test2.png; sourceTree = "<group>"; };
 		B82A457317B9DAE100EA6AB2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B82A457517B9DAF800EA6AB2 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		B8E9D5D217B0C79800146D00 /* UpYunSDK2.0Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpYunSDK2.0Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E9D5D217B0C79800146D00 /* UpYunSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpYunSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E9D5D517B0C79800146D00 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B8E9D5D717B0C79800146D00 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B8E9D5D917B0C79800146D00 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		B8E9D5DD17B0C79800146D00 /* UpYunSDK2.0Demo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UpYunSDK2.0Demo-Info.plist"; sourceTree = "<group>"; };
+		B8E9D5DD17B0C79800146D00 /* UpYunSDKDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UpYunSDKDemo-Info.plist"; sourceTree = "<group>"; };
 		B8E9D5DF17B0C79800146D00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B8E9D5E117B0C79800146D00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B8E9D5E317B0C79800146D00 /* UpYunSDK2.0Demo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UpYunSDK2.0Demo-Prefix.pch"; sourceTree = "<group>"; };
+		B8E9D5E317B0C79800146D00 /* UpYunSDKDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UpYunSDKDemo-Prefix.pch"; sourceTree = "<group>"; };
 		B8E9D5E417B0C79800146D00 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B8E9D5E517B0C79800146D00 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B8E9D5E717B0C79800146D00 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -96,16 +96,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		88BAB33418C6F66B00426A17 /* UpYunSDK2.0 */ = {
+		88BAB33418C6F66B00426A17 /* UpYunSDK */ = {
 			isa = PBXGroup;
 			children = (
 				88BAB33818C6F66B00426A17 /* Utils */,
 				88BAB33518C6F66B00426A17 /* UpYun.h */,
 				88BAB33618C6F66B00426A17 /* UpYun.m */,
-				88BAB33718C6F66B00426A17 /* UpYunSDK2.0-Prefix.pch */,
+				88BAB33718C6F66B00426A17 /* UpYunSDK-Prefix.pch */,
 			);
-			name = UpYunSDK2.0;
-			path = ../../UpYunSDK2.0/UpYunSDK2.0;
+			name = UpYunSDK;
+			path = ../../UpYunSDK/UpYunSDK;
 			sourceTree = "<group>";
 		};
 		88BAB33818C6F66B00426A17 /* Utils */ = {
@@ -143,7 +143,7 @@
 		B8E9D5C917B0C79800146D00 = {
 			isa = PBXGroup;
 			children = (
-				B8E9D5DB17B0C79800146D00 /* UpYunSDK2.0Demo */,
+				B8E9D5DB17B0C79800146D00 /* UpYunSDKDemo */,
 				B8E9D5D417B0C79800146D00 /* Frameworks */,
 				B8E9D5D317B0C79800146D00 /* Products */,
 			);
@@ -152,7 +152,7 @@
 		B8E9D5D317B0C79800146D00 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B8E9D5D217B0C79800146D00 /* UpYunSDK2.0Demo.app */,
+				B8E9D5D217B0C79800146D00 /* UpYunSDKDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -170,10 +170,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B8E9D5DB17B0C79800146D00 /* UpYunSDK2.0Demo */ = {
+		B8E9D5DB17B0C79800146D00 /* UpYunSDKDemo */ = {
 			isa = PBXGroup;
 			children = (
-				88BAB33418C6F66B00426A17 /* UpYunSDK2.0 */,
+				88BAB33418C6F66B00426A17 /* UpYunSDK */,
 				B8E9D68317B0CA6400146D00 /* Resources */,
 				B8E9D67E17B0C94500146D00 /* ViewController.h */,
 				B8E9D67F17B0C94500146D00 /* ViewController.m */,
@@ -183,16 +183,16 @@
 				B8E9D5E517B0C79800146D00 /* AppDelegate.m */,
 				B8E9D5DC17B0C79800146D00 /* Supporting Files */,
 			);
-			path = UpYunSDK2.0Demo;
+			path = UpYunSDKDemo;
 			sourceTree = "<group>";
 		};
 		B8E9D5DC17B0C79800146D00 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B8E9D5DD17B0C79800146D00 /* UpYunSDK2.0Demo-Info.plist */,
+				B8E9D5DD17B0C79800146D00 /* UpYunSDKDemo-Info.plist */,
 				B8E9D5DE17B0C79800146D00 /* InfoPlist.strings */,
 				B8E9D5E117B0C79800146D00 /* main.m */,
-				B8E9D5E317B0C79800146D00 /* UpYunSDK2.0Demo-Prefix.pch */,
+				B8E9D5E317B0C79800146D00 /* UpYunSDKDemo-Prefix.pch */,
 				B8E9D5E717B0C79800146D00 /* Default.png */,
 				B8E9D5E917B0C79800146D00 /* Default@2x.png */,
 				B8E9D5EB17B0C79800146D00 /* Default-568h@2x.png */,
@@ -227,9 +227,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B8E9D5D117B0C79800146D00 /* UpYunSDK2.0Demo */ = {
+		B8E9D5D117B0C79800146D00 /* UpYunSDKDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B8E9D5EF17B0C79800146D00 /* Build configuration list for PBXNativeTarget "UpYunSDK2.0Demo" */;
+			buildConfigurationList = B8E9D5EF17B0C79800146D00 /* Build configuration list for PBXNativeTarget "UpYunSDKDemo" */;
 			buildPhases = (
 				B8E9D5CE17B0C79800146D00 /* Sources */,
 				B8E9D5CF17B0C79800146D00 /* Frameworks */,
@@ -239,9 +239,9 @@
 			);
 			dependencies = (
 			);
-			name = UpYunSDK2.0Demo;
+			name = UpYunSDKDemo;
 			productName = UpYunSDK2.0Demo;
-			productReference = B8E9D5D217B0C79800146D00 /* UpYunSDK2.0Demo.app */;
+			productReference = B8E9D5D217B0C79800146D00 /* UpYunSDKDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -253,7 +253,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = upyun;
 			};
-			buildConfigurationList = B8E9D5CD17B0C79800146D00 /* Build configuration list for PBXProject "UpYunSDK2.0Demo" */;
+			buildConfigurationList = B8E9D5CD17B0C79800146D00 /* Build configuration list for PBXProject "UpYunSDKDemo" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -265,7 +265,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B8E9D5D117B0C79800146D00 /* UpYunSDK2.0Demo */,
+				B8E9D5D117B0C79800146D00 /* UpYunSDKDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -384,13 +384,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "UpYunSDK2.0Demo/UpYunSDK2.0Demo-Prefix.pch";
+				GCC_PREFIX_HEADER = "UpYunSDKDemo/UpYunSDKDemo-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "UpYunSDK2.0Demo/UpYunSDK2.0Demo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				INFOPLIST_FILE = "UpYunSDKDemo/UpYunSDKDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = UpYunSDK2.0Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = upyun.UpYunSDKDemo;
+				PRODUCT_NAME = UpYunSDKDemo;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -400,12 +401,13 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "UpYunSDK2.0Demo/UpYunSDK2.0Demo-Prefix.pch";
+				GCC_PREFIX_HEADER = "UpYunSDKDemo/UpYunSDKDemo-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "UpYunSDK2.0Demo/UpYunSDK2.0Demo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				INFOPLIST_FILE = "UpYunSDKDemo/UpYunSDKDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_NAME = UpYunSDK2.0Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = upyun.UpYunSDKDemo;
+				PRODUCT_NAME = UpYunSDKDemo;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -413,7 +415,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B8E9D5CD17B0C79800146D00 /* Build configuration list for PBXProject "UpYunSDK2.0Demo" */ = {
+		B8E9D5CD17B0C79800146D00 /* Build configuration list for PBXProject "UpYunSDKDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8E9D5ED17B0C79800146D00 /* Debug */,
@@ -422,7 +424,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B8E9D5EF17B0C79800146D00 /* Build configuration list for PBXNativeTarget "UpYunSDK2.0Demo" */ = {
+		B8E9D5EF17B0C79800146D00 /* Build configuration list for PBXNativeTarget "UpYunSDKDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8E9D5F017B0C79800146D00 /* Debug */,

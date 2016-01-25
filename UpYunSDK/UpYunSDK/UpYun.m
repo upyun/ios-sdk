@@ -176,17 +176,19 @@
 
 - (void) mutUploadFileData:(NSData *)data OrFilePath:(NSString*) filePath savekey:(NSString *)savekey
 {
+    
+    NSData *fileData = [data copy];
     if (!data) {
-        data = [NSData dataWithContentsOfFile:filePath];
+        fileData = [NSData dataWithContentsOfFile:filePath];
     }
-    NSDictionary *fileInfo = [UMUUploaderManager fetchFileInfoDictionaryWith:data];//获取文件信息
+    NSDictionary *fileInfo = [UMUUploaderManager fetchFileInfoDictionaryWith:fileData];//获取文件信息
     NSDictionary *signaturePolicyDic =[self constructingSignatureAndPolicyWithFileInfo:fileInfo saveKey:savekey];
     
     NSString * signature = signaturePolicyDic[@"signature"];
     NSString * policy = signaturePolicyDic[@"policy"];
     
     UMUUploaderManager *manager = [UMUUploaderManager managerWithBucket:self.bucket];
-    [manager uploadWithFile:data policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
+    [manager uploadWithFile:fileData policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
         dispatch_async(dispatch_get_main_queue(), ^() {
             UIAlertView * alert;
             if (completed) {
