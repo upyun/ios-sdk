@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UpYun.h"
 
 
-@interface UMUUploaderManager : NSObject
+@interface UPMutUploaderManager : NSObject
 
 #pragma mark - setup Methods
 
@@ -43,6 +44,8 @@
  */
 + (instancetype)managerWithBucket:(NSString *)bucket;
 
+- (instancetype)initWithBucket:(NSString *)bucket;
+
 #pragma mark - Method
 
 /**
@@ -54,27 +57,27 @@
  */
 + (NSDictionary *)fetchFileInfoDictionaryWith:(NSData *)fileData;
 
++ (NSDictionary *)fetchFileInfoDictionaryWithFilePath:(NSString *)filePath;
+
+
 /**
  *  上传文件
  *
- *  @param fileData                       文件数据
- *  @param policy                         策略信息
- *  @param signature                      签名
- *  @param progressBlock                  进度回调
- *  @param completeBlock                  结束回调:
- *                                          当completed
- *                                          为  YES 上传成功，可以从result中获取返回信息，
- *                                          为  NO  上传失败，可以从error 获取失败信息
+ *  @param fileData             文件数据
+ *  @param policy               策略信息
+ *  @param signature            签名
+ *  @param progressBlock        进度回调
+ *  @param completeBlock        结束回调: 当completed
+ *                                   为  YES 上传成功，可以从result中获取返回信息，
+ *                                   为  NO  上传失败，可以从error 获取失败信息
  *
  *  @return UMUUploaderOperation
  */
-- (NSMutableArray *)uploadWithFile:(NSData *)fileData
+- (void)uploadWithFile:(NSData *)fileData OrFilePath:(NSString *)filePath
                                   policy:(NSString *)policy
                                signature:(NSString *)signature
-                           progressBlock:(void (^)(CGFloat percent, int64_t requestDidSendBytes))progressBlock
-                           completeBlock:(void (^)(NSError * error,
-                                                   NSDictionary * result,
-                                                   BOOL completed))completeBlock;
+                           progressBlock:(UPProGgressBlock)progressBlock
+                           completeBlock:(UPCompeleteBlock)completeBlock;
 
 /**
  *  取消所有请求

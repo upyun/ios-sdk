@@ -52,48 +52,36 @@
     }
 }
 
-- (void)addFilePath:(NSString*)filePath WithFileName:(NSString*)fileName {
-    
-    UPHTTPBodyPart *part = [[UPHTTPBodyPart alloc]init];
-    NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
-    [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", fileName, fileName] forKey:@"Content-Disposition"];
-    [mutableHeaders setValue:@"application/octet-stream" forKey:@"Content-Type"];
-    
-    part.headers = mutableHeaders;
-    part.body = filePath;
-    [self.bodyParts addObject:part];
+- (void)addFilePath:(NSString*)filePath fileName:(NSString *)fileName fileType:(NSString *)fileType {
+    [self addFileData:nil OrFilePath:filePath fileName:fileName fileType:fileType];
 }
 
-- (void)addFileData:(NSData*)fileData WithFileName:(NSString*)fileName {
-    NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
-    [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", fileName, fileName] forKey:@"Content-Disposition"];
-    [mutableHeaders setValue:@"application/octet-stream" forKey:@"Content-Type"];
-    
-    UPHTTPBodyPart *part = [[UPHTTPBodyPart alloc]init];
-    part.headers = mutableHeaders;
-    part.body = fileData;
-    [self.bodyParts addObject:part];
+- (void)addFileData:(NSData*)fileData fileName:(NSString *)fileName fileType:(NSString *)fileType {
+    [self addFileData:fileData OrFilePath:nil fileName:fileName fileType:fileType];
 }
 
-- (void)addFileData:(NSData*)fileData OrFilePath:(NSString*)filePath  WithFileName:(NSString*)fileName {
+- (void)addFileData:(NSData*)fileData OrFilePath:(NSString *)filePath fileName:(NSString *)fileName fileType:(NSString *)fileType {
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
-    [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", fileName, fileName] forKey:@"Content-Disposition"];
-    [mutableHeaders setValue:@"application/octet-stream" forKey:@"Content-Type"];
+    [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"file\"; filename=\"%@\"", fileName] forKey:@"Content-Disposition"];
+    if (fileType) {
+        [mutableHeaders setValue:fileType forKey:@"Content-Type"];
+    } else {
+        [mutableHeaders setValue:@"application/octet-stream" forKey:@"Content-Type"];
+    }
     
     UPHTTPBodyPart *part = [[UPHTTPBodyPart alloc]init];
     part.headers = mutableHeaders;
     
     if (fileData) {
         part.body = fileData;
-    } else if (filePath){
-        part.body = fileData;
+    } else if (filePath) {
+        part.body = filePath;
     }
     [self.bodyParts addObject:part];
 }
 
 
 - (NSData *)dataFromPart {
-
     
     NSMutableData *data = [[NSMutableData alloc]init];
     for (int i = 0; i< self.bodyParts.count; i++) {
@@ -117,6 +105,15 @@
     [data appendData:endData];
     
     return data;
+}
+
+- (void)dealloc {
+    for (int i = 0; i< self.bodyParts.count; i++) {
+        UPHTTPBodyPart *part = self.bodyParts[i];
+        part.body = nil;
+        part = nil;
+    }
+    [self.bodyParts removeAllObjects];
 }
 
 @end

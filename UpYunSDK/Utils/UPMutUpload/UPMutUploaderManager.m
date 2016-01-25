@@ -6,20 +6,19 @@
 //
 //
 
-#import "UMUUploaderManager.h"
+#import "UPMutUploaderManager.h"
 #import "NSData+MD5Digest.h"
 #import "NSString+NSHash.h"
 #import "UPHTTPClient.h"
 #import "UPMultipartBody.h"
 
-#import "UpYun.h"
 
-static NSString * UMU_ERROR_DOMAIN = @"UPMutUpload";
+static NSString *UPMut_ERROR_DOMAIN = @"分块上传";
 
 /**
  *  请求api地址
  */
-static NSString * API_SERVER = @"http://m0.api.upyun.com/";
+static NSString *API_SERVER = @"http://m0.api.upyun.com/";
 
 
 /**
@@ -35,19 +34,33 @@ static NSInteger ValidTimeSpan = 600.0f;
 /**
  *   请求重试次数
  */
-static NSInteger MaxRetryCount  = 3;
+static NSInteger MaxRetryCount = 3;
 
-static NSMutableDictionary * managerRepository;
+static NSMutableDictionary *managerRepository;
 
-@interface UMUUploaderManager()
+
+@interface UPMutUploaderManager() {
+    NSString *_saveToken;
+    NSArray *_filesStatus;
+    NSString *_tokenSecret;
+    NSMutableArray *_remainingFileBlockIndexs;
+    NSMutableArray *_progressArray;
+    
+    int _blockFailed;
+    int _blockSuccess;
+}
+
 @property(nonatomic, copy) NSString *bucket;
-@property(nonatomic, strong) NSMutableArray *umuOperations;
 @end
-@implementation UMUUploaderManager
+
+
+@implementation UPMutUploaderManager
 
 - (instancetype)initWithBucket:(NSString *)bucket {
     if (self = [super init]) {
         self.bucket = bucket;
+        _remainingFileBlockIndexs = [[NSMutableArray alloc]init];
+        _progressArray = [[NSMutableArray alloc]init];
     }
     return self;
 }
@@ -58,64 +71,80 @@ static NSMutableDictionary * managerRepository;
     }
     bucket = [self formatBucket:bucket];
     if (!managerRepository[bucket]) {
-        UMUUploaderManager * manager = [[self alloc] initWithBucket:bucket];
+        UPMutUploaderManager *manager = [[self alloc] initWithBucket:bucket];
         managerRepository[bucket] = manager;
-        manager.umuOperations = [NSMutableArray new];
     }
     return managerRepository[bucket];
 }
 
 #pragma mark - Setup Methods
 
-+ (void)setValidTimeSpan:(NSInteger)validTimeSpan
-{
++ (void)setValidTimeSpan:(NSInteger)validTimeSpan {
     ValidTimeSpan = validTimeSpan;
 }
 
-+ (void)setServer:(NSString *)server
-{
++ (void)setServer:(NSString *)server {
     API_SERVER = server;
 }
 
-+ (void)setMaxRetryCount:(NSInteger)retryCount
-{
++ (void)setMaxRetryCount:(NSInteger)retryCount {
     MaxRetryCount = retryCount;
 }
 
 #pragma mark - Public Methods
 
-+ (void)cancelAllOperations
-{
-    for (NSString * key in managerRepository.allKeys) {
-        UMUUploaderManager * manager = managerRepository[key];
-        
-    }
++ (void)cancelAllOperations {
+//    for (NSString * key in managerRepository.allKeys) {
+        //todo
+        #pragma mark -todo
+//        UPMutUploaderManager *manager = managerRepository[key];
+//    }
 }
 
-+ (NSDictionary *)fetchFileInfoDictionaryWith:(NSData *)fileData
-{
-    NSInteger blockCount = [self calculateBlockCount:fileData];
+
++ (NSDictionary *)fetchFileInfoDictionaryWith:(NSData *)fileData {
+    NSInteger blockCount = [self calculateBlockCount:fileData.length];
     NSDictionary * parameters = @{@"file_blocks":@(blockCount),
                                   @"file_hash":[fileData MD5HexDigest],
                                   @"file_size":@(fileData.length)};
     return parameters;
 }
 
-- (NSMutableArray *)uploadWithFile:(NSData *)fileData
++ (NSDictionary *)fetchFileInfoDictionaryWithFilePath:(NSString *)filePath {
+    NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+    NSUInteger fileSize = [fileDictionary fileSize];
+    NSInteger blockCount = [self calculateBlockCount:fileSize];
+    NSDictionary * parameters = @{@"file_blocks":@(blockCount),
+                                  @"file_hash":[filePath FilePathMD5],
+                                  @"file_size":@(fileSize)};
+    return parameters;
+}
+
+
+#pragma mark--------uploadBlock
+
+- (void)uploadWithFile:(NSData *)fileData
+                        OrFilePath:(NSString *)filePath
+                            policy:(NSString *)policy
+                         signature:(NSString *)signature
+                     progressBlock:(UPProGgressBlock)progressBlock
+                     completeBlock:(UPCompeleteBlock)completeBlock {
+    
+    if (filePath) {
+        [self uploadWithFilePath:filePath policy:policy signature:signature progressBlock:progressBlock completeBlock:completeBlock];
+    } else if (fileData) {
+        [self uploadWithFileData:fileData policy:policy signature:signature progressBlock:progressBlock completeBlock:completeBlock];
+    }
+}
+
+- (void)uploadWithFileData:(NSData *)fileData
                                   policy:(NSString *)policy
                                signature:(NSString *)signature
                            progressBlock:(UPProGgressBlock)progressBlock
-                           completeBlock:(UPCompeleteBlock)completeBlock
-{
-    NSArray * blocks = [UMUUploaderManager subDatasWithFileData:fileData];
-    NSInteger fileLength = fileData.length;
+                           completeBlock:(UPCompeleteBlock)completeBlock {
     
-    __weak typeof(self)weakSelf = self;
-    __block float totalPercent = 0;
-
-    __block int blockFailed = 0;
-    __block int blockSuccess = 0;
-
+    NSArray *blocks = [UPMutUploaderManager subDatasWithFileData:fileData];
+    
     UPCompeleteBlock prepareUploadCompletedBlock = ^(NSError *error, NSDictionary *result, BOOL completed) {
         if (error) {
             completeBlock(error, nil, NO);
@@ -124,70 +153,26 @@ static NSMutableDictionary * managerRepository;
                 NSData *data = (NSData*)result;
                 result =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
             }
-            NSString *saveToken = result[@"save_token"];
-            NSArray *filesStatus = result[@"status"];
-            NSString *tokenSecret = result[@"token_secret"];
-            NSMutableArray *remainingFileBlockIndexs = [[NSMutableArray alloc]init];
-            NSMutableArray *progressArray = [NSMutableArray new];
+            _saveToken = result[@"save_token"];
+            _filesStatus = result[@"status"];
+            _tokenSecret = result[@"token_secret"];
             
-            for (int i=0; i<filesStatus.count; i++) {
-                [progressArray addObject:filesStatus[i]];
-                if (![filesStatus[i] boolValue]) {
-                    [remainingFileBlockIndexs addObject:@(i)];
+            if (!_saveToken) {
+                NSString *errorString = [NSString stringWithFormat:@"返回参数错误: saveToken is %@", _saveToken];
+                NSError* errorInfo = [NSError errorWithDomain:UPMut_ERROR_DOMAIN code:-1999 userInfo:@{@"message":errorString}];
+                completeBlock(errorInfo, nil, NO);
+                return;
+            }
+            
+            for (int i=0; i<_filesStatus.count; i++) {
+                [_progressArray addObject:_filesStatus[i]];
+                if (![_filesStatus[i] boolValue]) {
+                    [_remainingFileBlockIndexs addObject:@(i)];
                 }
             }
             
-            for (NSNumber *num in remainingFileBlockIndexs) {
-                NSData * blockData = [blocks objectAtIndex:[num intValue]];
-                id singleUploadProgressBlcok = ^(float percent) {
-                    @synchronized(progressArray) {
-                        dispatch_async(dispatch_get_main_queue(), ^() {
-                            progressArray[[num intValue]] = [NSNumber numberWithFloat:percent];
-                            float sumPercent = 0;
-                            for (NSNumber *num in progressArray) {
-                                sumPercent += [num floatValue];
-                            }
-                            totalPercent = sumPercent/progressArray.count;
-                            if (totalPercent) {
-                                progressBlock(totalPercent, fileLength*totalPercent);
-                            }
-                        });
-                    }
-                };
-                
-                
-                UPCompeleteBlock singleUploadCompleteBlock = ^(NSError *error, NSDictionary *result, BOOL completed) {
-                    NSLog(@"block is OK");
-                    if (!completed) {
-                        if (completeBlock) {
-                            completeBlock(error,nil,NO);
-                        }
-                        return ;
-                    }
-                    if (completed) {
-                        blockSuccess++;
-                    } else {
-                        blockFailed++;
-                    }
-                    
-                    if (blockFailed < 1 && blockSuccess == remainingFileBlockIndexs.count) {
-                        UPCompeleteBlock mergeRequestCompleteBlcok = ^(NSError *error, NSDictionary *result, BOOL completed) {
-                            completeBlock(error, result, completed);
-                        };
-                        [self fileMergeRequestWithSaveToken:saveToken
-                                                tokenSecret:tokenSecret
-                                                 retryCount:0
-                                              completeBlock:mergeRequestCompleteBlcok];
-                    }
-                };
-                [weakSelf uploadFileBlockWithSaveToken:saveToken
-                                            blockIndex:[num intValue]
-                                         fileBlockData:blockData
-                                            retryTimes:0
-                                           tokenSecret:tokenSecret
-                                         progressBlock:singleUploadProgressBlcok
-                                         completeBlock:singleUploadCompleteBlock];
-            
+            for (int i = 0; i<MaxConcurrentOperationCount; i++) {
+                [self uploadBlockIndex:i fileData:blocks progressBlock:progressBlock completeBlock:completeBlock];
             }
         }
     };
@@ -196,18 +181,184 @@ static NSMutableDictionary * managerRepository;
                               retryCount:0
                            completeBlock:prepareUploadCompletedBlock];
     
-    return nil;
 }
 
+
+
+- (void)uploadWithFilePath:(NSString *)filePath
+                            policy:(NSString *)policy
+                         signature:(NSString *)signature
+                     progressBlock:(UPProGgressBlock)progressBlock
+                     completeBlock:(UPCompeleteBlock)completeBlock {
+    
+    UPCompeleteBlock prepareUploadCompletedBlock = ^(NSError *error, NSDictionary *result, BOOL completed) {
+        if (error) {
+            completeBlock(error, nil, NO);
+        } else {
+            if ([result isKindOfClass:[NSData class]]){
+                NSData *data = (NSData*)result;
+                result =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+            }
+            _saveToken = result[@"save_token"];
+            _filesStatus = result[@"status"];
+            _tokenSecret = result[@"token_secret"];
+            
+            if (!_saveToken) {
+                NSString *errorString = [NSString stringWithFormat:@"返回参数错误: saveToken is %@", _saveToken];
+                NSError* errorInfo = [NSError errorWithDomain:UPMut_ERROR_DOMAIN code:-1999 userInfo:@{@"message":errorString}];
+                completeBlock(errorInfo, nil, NO);
+                return;
+            }
+            
+            for (int i=0; i<_filesStatus.count; i++) {
+                [_progressArray addObject:_filesStatus[i]];
+                if (![_filesStatus[i] boolValue]) {
+                    [_remainingFileBlockIndexs addObject:@(i)];
+                }
+            }
+            
+            for (int i = 0; i<MaxConcurrentOperationCount; i++) {
+                [self uploadBlockIndex:i filePath:filePath progressBlock:progressBlock completeBlock:completeBlock];
+            }
+        }
+    };
+    [self prepareUploadRequestWithPolicy:policy
+                               signature:signature
+                              retryCount:0
+                           completeBlock:prepareUploadCompletedBlock];
+    
+}
+
+#pragma mark --
+
+- (void)uploadBlockIndex:(NSInteger)index filePath:(NSString *)filePath progressBlock:(UPProGgressBlock)progressBlock
+           completeBlock:(UPCompeleteBlock)completeBlock {
+    if (index >= _progressArray.count) {
+        return;
+    }
+    __weak typeof(self)weakSelf = self;
+    
+    id singleUploadProgressBlcok = ^(float percent) {
+        @synchronized(_progressArray) {
+                _progressArray[index] = [NSNumber numberWithFloat:percent];
+                float sumPercent = 0;
+                for (NSNumber *num in _progressArray) {
+                    sumPercent += [num floatValue];
+                }
+                float totalPercent = sumPercent/_progressArray.count;
+                progressBlock(totalPercent, 100);
+        }
+    };
+    
+    
+    UPCompeleteBlock singleUploadCompleteBlock = ^(NSError *error, NSDictionary *result, BOOL completed) {
+        
+        if (!completed) {
+            if (completeBlock) {
+                completeBlock(error, nil, NO);
+            }
+            return;
+        }
+        if (completed) {
+            _blockSuccess++;
+        } else {
+            _blockFailed++;
+        }
+        
+        if (_blockFailed < 1 && _blockSuccess == _remainingFileBlockIndexs.count) {
+            UPCompeleteBlock mergeRequestCompleteBlcok = ^(NSError *error, NSDictionary *result, BOOL completed) {
+                completeBlock(error, result, completed);
+            };
+            [weakSelf fileMergeRequestWithSaveToken:_saveToken
+                                    tokenSecret:_tokenSecret
+                                     retryCount:0
+                                  completeBlock:mergeRequestCompleteBlcok];
+        } else {
+            [weakSelf uploadBlockIndex:index+MaxConcurrentOperationCount filePath:filePath progressBlock:progressBlock completeBlock:completeBlock];
+        }
+    };
+    
+    [self uploadFileBlockWithSaveToken:_saveToken
+                                blockIndex:index
+                             fileBlockData:[UPMutUploaderManager getBlockWithFilePath:filePath offset:index]
+                                retryTimes:0
+                               tokenSecret:_tokenSecret
+                             progressBlock:singleUploadProgressBlcok
+                             completeBlock:singleUploadCompleteBlock];
+    
+}
+
+- (void)uploadBlockIndex:(NSInteger)index fileData:(NSArray *)filedataArray progressBlock:(UPProGgressBlock)progressBlock
+           completeBlock:(UPCompeleteBlock)completeBlock {
+    if (index >= _progressArray.count) {
+        return;
+    }
+    
+    if (index >= filedataArray.count) {
+        return;
+    }
+    
+    NSData *blockData = filedataArray[index];
+    
+    __weak typeof(self)weakSelf = self;
+    
+    id singleUploadProgressBlcok = ^(float percent) {
+        @synchronized(_progressArray) {
+//            dispatch_async(dispatch_get_main_queue(), ^() {
+            
+                _progressArray[index] = [NSNumber numberWithFloat:percent];
+                float sumPercent = 0;
+                for (NSNumber *num in _progressArray) {
+                    sumPercent += [num floatValue];
+                }
+                float totalPercent = sumPercent/_progressArray.count;
+                progressBlock(totalPercent, 100);
+//            });
+        }
+    };
+    
+    
+    UPCompeleteBlock singleUploadCompleteBlock = ^(NSError *error, NSDictionary *result, BOOL completed) {
+        
+        if (!completed) {
+            if (completeBlock) {
+                completeBlock(error, nil, NO);
+            }
+            return;
+        }
+        if (completed) {
+            _blockSuccess++;
+        } else {
+            _blockFailed++;
+        }
+        
+        if (_blockFailed < 1 && _blockSuccess == _remainingFileBlockIndexs.count) {
+            UPCompeleteBlock mergeRequestCompleteBlcok = ^(NSError *error, NSDictionary *result, BOOL completed) {
+                completeBlock(error, result, completed);
+            };
+            [weakSelf fileMergeRequestWithSaveToken:_saveToken
+                                        tokenSecret:_tokenSecret
+                                         retryCount:0
+                                      completeBlock:mergeRequestCompleteBlcok];
+        } else {
+            [weakSelf uploadBlockIndex:index+MaxConcurrentOperationCount fileData:filedataArray progressBlock:progressBlock completeBlock:completeBlock];
+        }
+    };
+    [self uploadFileBlockWithSaveToken:_saveToken
+                            blockIndex:index
+                         fileBlockData:blockData
+                            retryTimes:0
+                           tokenSecret:_tokenSecret
+                         progressBlock:singleUploadProgressBlcok
+                         completeBlock:singleUploadCompleteBlock];
+    
+}
 #pragma mark - Private Methods
 
 - (void)prepareUploadRequestWithPolicy:(NSString *)policy
                              signature:(NSString *)signature
                             retryCount:(NSInteger)retryCount
-                         completeBlock:(void (^)(NSError * error,
-                                                 NSDictionary * result,
-                                                 BOOL completed))completeBlock
-{
+                         completeBlock:(UPCompeleteBlock)completeBlock {
     __block typeof(retryCount)blockRetryCount = retryCount;
     __weak typeof(self)weakSelf = self;
     [self ministrantRequestWithSignature:signature
@@ -235,8 +386,7 @@ static NSMutableDictionary * managerRepository;
                           retryTimes:(NSInteger)retryTimes
                          tokenSecret:(NSString *)tokenSecret
                        progressBlock:(void (^)(float percent))progressBlock
-                       completeBlock:(UPCompeleteBlock)completeBlock
-{
+                       completeBlock:(UPCompeleteBlock)completeBlock {
     NSDictionary * policyParameters = @{@"save_token":saveToken,
                                         @"expiration":@(ceil([[NSDate date] timeIntervalSince1970]+ValidTimeSpan)),
                                         @"block_index":@(blockIndex),
@@ -247,23 +397,20 @@ static NSMutableDictionary * managerRepository;
                                   @"signature":[weakSelf createSignatureWithToken:tokenSecret
                                                                        parameters:policyParameters]};
     
-    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", API_SERVER, self.bucket]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url.absoluteString]];
     
-    NSString *boundary = @"UpYunSDKFormBoundaryFriSep25V01";
-    boundary = [NSString stringWithFormat:@"%@%u", boundary,  arc4random() & 0x7FFFFFFF];
     
     
-    UPMultipartBody *multiBody = [[UPMultipartBody alloc]initWithBoundary:boundary];
+    UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
     [multiBody addDictionary:parameters];
-    [multiBody addFileData:fileBlockData WithFileName:@"file"];
+    [multiBody addFileData:fileBlockData fileName:@"file" fileType:nil];
     //设置URLRequest
     request.HTTPMethod = @"POST";
     request.HTTPBody = [multiBody dataFromPart];
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", multiBody.boundary] forHTTPHeaderField:@"Content-Type"];
     
     UPHTTPClient *upHttpClient =  [[UPHTTPClient alloc] init];
     
@@ -309,9 +456,9 @@ static NSMutableDictionary * managerRepository;
                            completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
         if (completed) {
             completeBlock(error,result,completed);
-        }else if(retryCount >= MaxRetryCount) {
+        } else if(retryCount >= MaxRetryCount) {
             completeBlock(error, nil, NO);
-        }else {
+        } else {
             blockRetryCount++;
             [weakSelf fileMergeRequestWithSaveToken:saveToken
                                         tokenSecret:tokenSecret
@@ -343,7 +490,7 @@ static NSMutableDictionary * managerRepository;
         request.HTTPBody = [[postParameters substringFromIndex:1] dataUsingEncoding:NSUTF8StringEncoding];
     } else {
         NSString *errorInfo = [NSString stringWithFormat:@"传入参数类型错误: Signature is %@, policy is %@", signature, policy];
-        NSError *error = [NSError errorWithDomain:UMU_ERROR_DOMAIN
+        NSError *error = [NSError errorWithDomain:UPMut_ERROR_DOMAIN
                                              code:-1999
                                          userInfo:@{@"message":errorInfo}];
         
@@ -371,7 +518,7 @@ static NSMutableDictionary * managerRepository;
                 }
             } else {
                 NSString *errorString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSError *erro = [[NSError alloc] initWithDomain:UMU_ERROR_DOMAIN
+                NSError *erro = [[NSError alloc] initWithDomain:UPMut_ERROR_DOMAIN
                                                            code:-1998
                                                        userInfo:@{NSLocalizedDescriptionKey:errorString}];
                 completeBlock(erro, nil, NO);
@@ -399,7 +546,7 @@ static NSMutableDictionary * managerRepository;
             userInfo[@"statusCode"] = @(response.statusCode);
         }
         userInfo[NSLocalizedDescriptionKey] = responseObject[@"message"];
-        NSError * error = [NSError errorWithDomain:UMU_ERROR_DOMAIN
+        NSError *error = [NSError errorWithDomain:UPMut_ERROR_DOMAIN
                                               code:[responseObject[@"error_code"] integerValue]
                                           userInfo:userInfo];
         return error;
@@ -409,17 +556,23 @@ static NSMutableDictionary * managerRepository;
 
 
 //计算文件块数
-+ (NSInteger)calculateBlockCount:(NSData *)fileData
-{
-    if (fileData.length < SingleBlockSize)
-        return 1;
-    return ceil(fileData.length*1.0/SingleBlockSize) ;
++ (NSInteger)calculateBlockCount:(NSUInteger)fileLength {
+    return ceil(fileLength*1.0/SingleBlockSize);
+}
+
+//生成单个文件块
++ (NSData *)getBlockWithFilePath:(NSString *)filePath offset:(NSInteger)index {
+    NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:filePath];
+    NSInteger startLocation = index * SingleBlockSize;
+    [handle seekToFileOffset:startLocation];
+    NSData *subData = [handle readDataOfLength:SingleBlockSize];
+    [handle closeFile];
+    return [subData copy];
 }
 
 //生成文件块
-+ (NSArray *)subDatasWithFileData:(NSData *)fileData
-{
-    NSInteger blockCount = [self calculateBlockCount:fileData];
++ (NSArray *)subDatasWithFileData:(NSData *)fileData {
+    NSInteger blockCount = [self calculateBlockCount:fileData.length];
     NSMutableArray * blocks = [[NSMutableArray alloc]init];
     for (int i = 0; i < blockCount;i++ ) {
         NSInteger startLocation = i*SingleBlockSize;

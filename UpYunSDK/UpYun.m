@@ -1,6 +1,6 @@
 //
 //  UpYun.m
-//  UpYunSDK2.0
+//  UpYunSDK
 //
 //  Created by jack zhou on 13-8-6.
 //  Copyright (c) 2013年 upyun. All rights reserved.
@@ -9,7 +9,7 @@
 #import "UpYun.h"
 #import "UPMultipartBody.h"
 #import "NSString+NSHash.h"
-#import "UMUUploaderManager.h"
+#import "UPMutUploaderManager.h"
 
 #define ERROR_DOMAIN @"upyun.com"
 #define DATE_STRING(expiresIn) [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970] + expiresIn]
@@ -18,8 +18,7 @@
 #define SUB_SAVE_KEY_FILENAME @"{filename}"
 
 @implementation UpYun
--(id)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         self.bucket = DEFAULT_BUCKET;
         self.expiresIn = DEFAULT_EXPIRES_IN;
@@ -53,7 +52,6 @@
 
 - (void) uploadFilePath:(NSString *)path savekey:(NSString *)savekey
 {
-    
     [self uploadSavekey:savekey data:nil filePath:path];
 }
 
@@ -158,9 +156,9 @@
     }
     NSDictionary *parameDic = @{@"policy":policy, @"signature":signature};
     
-    UPMultipartBody *multiBody = [[UPMultipartBody alloc]initWithBoundary:@"Boundary+32309A3DE1A3C0DB"];
+    UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
     [multiBody addDictionary:parameDic];
-    [multiBody addFileData:data OrFilePath:filePath WithFileName:@"file"];
+    [multiBody addFileData:data OrFilePath:filePath fileName:@"file" fileType:nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:REQUEST_URL(self.bucket)];
     request.HTTPMethod = @"POST";
@@ -174,29 +172,31 @@
 
 #pragma mark----mut upload
 
-- (void) mutUploadFileData:(NSData *)data OrFilePath:(NSString*) filePath savekey:(NSString *)savekey
-{
+- (void)mutUploadFileData:(NSData *)data OrFilePath:(NSString*) filePath savekey:(NSString *)savekey {
     
-    NSData *fileData = [data copy];
-    if (!data) {
-        fileData = [NSData dataWithContentsOfFile:filePath];
+    NSDictionary *fileInfo = nil;
+    if (filePath) {
+        fileInfo = [UPMutUploaderManager fetchFileInfoDictionaryWithFilePath:filePath];
+    } else if (data) {
+        fileInfo = [UPMutUploaderManager fetchFileInfoDictionaryWith:data];
     }
-    NSDictionary *fileInfo = [UMUUploaderManager fetchFileInfoDictionaryWith:fileData];//获取文件信息
-    NSDictionary *signaturePolicyDic =[self constructingSignatureAndPolicyWithFileInfo:fileInfo saveKey:savekey];
     
-    NSString * signature = signaturePolicyDic[@"signature"];
-    NSString * policy = signaturePolicyDic[@"policy"];
+    NSDictionary *signaturePolicyDic = [self constructingSignatureAndPolicyWithFileInfo:fileInfo saveKey:savekey];
     
-    UMUUploaderManager *manager = [UMUUploaderManager managerWithBucket:self.bucket];
-    [manager uploadWithFile:fileData policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
+    NSString *signature = signaturePolicyDic[@"signature"];
+    NSString *policy = signaturePolicyDic[@"policy"];
+    
+    UPMutUploaderManager *manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
+    [manager uploadWithFile:data OrFilePath: filePath policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
         dispatch_async(dispatch_get_main_queue(), ^() {
+
             UIAlertView * alert;
             if (completed) {
-                alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                alert = [[UIAlertView alloc]initWithTitle:@"上传成功" message:@"" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
                 NSLog(@"%@",result);
-            }else {
-                alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传失败" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                NSLog(@"%@",error);
+            } else {
+                alert = [[UIAlertView alloc]initWithTitle:@"上传失败" message:error.userInfo[@"message"] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                NSLog(@"%@",error.userInfo);
             }
             [alert show];
         });
@@ -264,37 +264,30 @@
     return [json Base64encode];
 }
 
-- (NSString *)getSignatureWithPolicy:(NSString *)policy
-{
-    NSString *str = [NSString stringWithFormat:@"%@&%@",policy,self.passcode];
+- (NSString *)getSignatureWithPolicy:(NSString *)policy {
+    NSString *str = [NSString stringWithFormat:@"%@&%@", policy, self.passcode];
     NSString *signature = [[[str dataUsingEncoding:NSUTF8StringEncoding] MD5HexDigest] lowercaseString];
     return signature;
 }
 
-- (NSString *)dictionaryToJSONStringBase64Encoding:(NSDictionary *)dic
-{
+- (NSString *)dictionaryToJSONStringBase64Encoding:(NSDictionary *)dic {
     id paramesData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:paramesData
                                                  encoding:NSUTF8StringEncoding];
     return [jsonString Base64encode];
 }
 
-- (BOOL)checkSavekey:(NSString *)string
-{
+- (BOOL)checkSavekey:(NSString *)string {
     NSRange rangeFileName;
     NSRange rangeFileNameOnDic;
     rangeFileName = [string rangeOfString:SUB_SAVE_KEY_FILENAME];
     if ([_params objectForKey:@"save-key"]) {
         rangeFileNameOnDic = [[_params objectForKey:@"save-key"]
                               rangeOfString:SUB_SAVE_KEY_FILENAME];
-    }else {
-        rangeFileNameOnDic.location = NSNotFound;
     }
     
-    
-    if(rangeFileName.location != NSNotFound || rangeFileNameOnDic.location != NSNotFound)
-    {
-        NSString *message = [NSString stringWithFormat:@"传入file为NSData或者UIImage时,不能使用%@方式生成savekey",SUB_SAVE_KEY_FILENAME];
+    if(rangeFileName.location != NSNotFound || rangeFileNameOnDic.location != NSNotFound) {
+        NSString *message = [NSString stringWithFormat:@"传入file为NSData或者UIImage时,不能使用%@方式生成savekey", SUB_SAVE_KEY_FILENAME];
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1998
                                        userInfo:@{@"message":message}];

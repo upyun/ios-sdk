@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B8E9D5D117B0C79800146D00"
-               BuildableName = "UpYunSDK2.0Demo.app"
+               BuildableName = "UpYunSDKDemo.app"
                BlueprintName = "UpYunSDKDemo"
                ReferencedContainer = "container:UpYunSDKDemo.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B8E9D5D117B0C79800146D00"
-            BuildableName = "UpYunSDK2.0Demo.app"
+            BuildableName = "UpYunSDKDemo.app"
             BlueprintName = "UpYunSDKDemo"
             ReferencedContainer = "container:UpYunSDKDemo.xcodeproj">
          </BuildableReference>
@@ -50,13 +50,14 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES">
+      allowLocationSimulation = "YES"
+      queueDebuggingEnabled = "No">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B8E9D5D117B0C79800146D00"
-            BuildableName = "UpYunSDK2.0Demo.app"
+            BuildableName = "UpYunSDKDemo.app"
             BlueprintName = "UpYunSDKDemo"
             ReferencedContainer = "container:UpYunSDKDemo.xcodeproj">
          </BuildableReference>
@@ -75,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B8E9D5D117B0C79800146D00"
-            BuildableName = "UpYunSDK2.0Demo.app"
+            BuildableName = "UpYunSDKDemo.app"
             BlueprintName = "UpYunSDKDemo"
             ReferencedContainer = "container:UpYunSDKDemo.xcodeproj">
          </BuildableReference>

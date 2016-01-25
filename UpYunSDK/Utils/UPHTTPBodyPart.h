@@ -13,7 +13,7 @@
 #pragma mark ---copy from AFNetworking
 
 static NSString * AFCreateMultipartFormBoundary() {
-    return [NSString stringWithFormat:@"Boundary+%08X%08X", arc4random(), arc4random()];
+    return [NSString stringWithFormat:@"UpYunSDKFormBoundary2016v3%08X%08X", arc4random(), arc4random()];
 }
 
 static NSString * const kAFMultipartFormCRLF = @"\r\n";

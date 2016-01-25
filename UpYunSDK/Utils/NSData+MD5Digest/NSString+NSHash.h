@@ -26,4 +26,6 @@
 
 - (NSString*) Base64encode;
 
+- (NSString*) FilePathMD5;
+
 @end

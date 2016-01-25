@@ -1,6 +1,6 @@
 //
 //  UpYun.h
-//  UpYunSDK2.0
+//  UpYunSDK
 //
 //  Created by jack zhou on 13-8-6.
 //  Copyright (c) 2013年 upyun. All rights reserved.
@@ -12,12 +12,12 @@
 
 #import "UPHTTPClient.h"
 /**
- *	@brief 默认空间名（必填项），可在init之后修改bucket的值来更改
+ *	@brief 默认空间名(必填项), 可在init之后修改bucket的值来更改
  */
 
 #define DEFAULT_BUCKET @"test654123"
 /**
- *	@brief	默认表单API功能密钥 （必填项），可在init之后修改passcode的值来更改
+ *	@brief	默认表单API密钥, 可在init之后修改passcode的值来更改
  */
 #define DEFAULT_PASSCODE @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc="
 
@@ -28,7 +28,6 @@
 #define DEFAULT_EXPIRES_IN 600
 
 
-
 /**
  *	@brief 默认超过大小后走分块上传，可在init之后修改mutUploadSize的值来更改
  */
@@ -37,7 +36,7 @@
 /**
  *  单个分块尺寸100kb(不可小于此值)
  */
-static NSInteger SingleBlockSize = 1024*200;
+static NSInteger SingleBlockSize = 1024*100;
 
 #define API_DOMAIN @"http://v0.api.upyun.com/"
 
@@ -59,11 +58,11 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 
 @property (nonatomic, copy) NSString *passcode;
 
-@property (nonatomic) NSInteger mutUploadSize;
+@property (nonatomic, assign) NSInteger mutUploadSize;
 
-@property (nonatomic, copy) UPSuccessBlock   successBlocker;
+@property (nonatomic, copy) UPSuccessBlock    successBlocker;
 
-@property (nonatomic, copy) UPFailBlock      failBlocker;
+@property (nonatomic, copy) UPFailBlock       failBlocker;
 
 @property (nonatomic, copy) UPProGgressBlock  progressBlocker;
 
@@ -92,7 +91,7 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
  *	@param 	image 	图片
  *	@param 	savekey 	savekey
  */
-- (void) uploadImage:(UIImage *)image savekey:(NSString *)savekey;
+- (void)uploadImage:(UIImage *)image savekey:(NSString *)savekey;
 
 /**
  *	@brief	上传图片接口
@@ -100,8 +99,7 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
  *	@param 	path 	图片path
  *	@param 	savekey 	savekey
  */
-- (void) uploadImagePath:(NSString *)path savekey:(NSString *)savekey;
-
+- (void)uploadImagePath:(NSString *)path savekey:(NSString *)savekey;
 
 /**
  *	@brief	上传图片接口

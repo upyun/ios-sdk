@@ -46,7 +46,6 @@
 }
 
 - (void)dealloc {
-    NSLog(@"client dealloc");
     _session = nil;
     _sessionConfiguration = nil;
     _timeInterval = 0;
@@ -96,9 +95,6 @@
         fileData = (NSData *)filePathOrData;
     }
     
-    if (!name) {
-        name = @"file";
-    }
     if (!filename) {
         filename = @"filename";
     }
@@ -108,20 +104,13 @@
     _progressBlock = progressBlock;
     _successBlock = successBlock;
     _failureBlock = failureBlock;
-    NSString *boundary = @"UpYunSDKFormBoundaryFriSep25V01";
-    boundary = [NSString stringWithFormat:@"%@%u", boundary,  arc4random() & 0x7FFFFFFF];
-    
-    
-    UPMultipartBody *multiBody = [[UPMultipartBody alloc]initWithBoundary:boundary];
+
+    UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
     [multiBody addDictionary:formParameters];
-    
-    [multiBody addFileData:fileData WithFileName:name];
-    
+    [multiBody addFileData:fileData fileName:filename fileType:mimeType];
     [multiBody dataFromPart];
     
-    
     NSURL *url = [NSURL URLWithString:urlString];
-    
     //设置URLRequest
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = method;
@@ -134,7 +123,7 @@
     request.timeoutInterval = _timeInterval;
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", multiBody.boundary] forHTTPHeaderField:@"Content-Type"];
     //发起请求
     _sessionTask = [_session dataTaskWithRequest:request];
     [_sessionTask resume];
@@ -193,9 +182,7 @@
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     dispatch_async(dispatch_get_main_queue(), ^(){
         if (!_didCompleted) {
-            if (_progressBlock) {
-                _progressBlock(totalBytesSent, totalBytesExpectedToSend);
-            }
+            _progressBlock(totalBytesSent, totalBytesExpectedToSend);
         }
     });
 }
@@ -221,7 +208,6 @@ didCompleteWithError:(NSError *)error {
                 }
                 
             } else {
-                
                 NSString *errorString = [[NSString alloc] initWithData:_didReceiveData encoding:NSUTF8StringEncoding];
                 NSError *error = [[NSError alloc] initWithDomain:@"UPHTTPClient"
                                                             code:0
