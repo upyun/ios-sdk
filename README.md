@@ -33,15 +33,15 @@ uy.signatureBlocker = ^(NSString *policy)
 };
 [uy uploadFile:'file' saveKey:'saveKey'];
 ````
-##### 参数说明：
+### 参数说明：
 
-#####1、`file` 需要上传的文件
+#### 1、`file` 需要上传的文件
 * 可传入类型：
  * `NSData`:   文件数据
  * `NSString`: 本地文件路径
  * `UIImage`:  传入的图片 (*当以此类型传入图片时，都会转成PNG数据，需要其他格式请先转成`NSData`传入 或者 传入文件路径*)
 
-#####2、`saveKey` 要保存到又拍云存储的具体地址
+##### 2、`saveKey` 要保存到又拍云存储的具体地址
 * 可传入类型：
  * `NSString`: 要保存到又拍云存储的具体地址
 * 由开发者自己生成saveKey:
@@ -53,20 +53,20 @@ uy.signatureBlocker = ^(NSString *policy)
   * **特别的** 当参数`file`以`UIImage`、`NSData`类型传入时，`saveKey`不能带有`{filename}`
   * 其他服务器支持的关键key详见 [save-key详细说明](http://docs.upyun.com/api/form_api/#_4) 
 
-#####3、`successBlocker` 上传成功回调
+#### 3、`successBlocker` 上传成功回调
 * 回调中的参数：
  * `data`: 成功后服务器返回的信息
 
-#####4、`failBlocker` 上传失败回调
+#### 4、`failBlocker` 上传失败回调
 * 回调中的参数：
  * `error`: 失败后返回的错误信息
 
-#####5、`progressBlocker` 上传进度度回调
+#### 5、`progressBlocker` 上传进度度回调
 * 回调中的参数：
  * `percent`: 上传进度的百分比
  * `requestDidSendBytes`: 已经发送的数据量
  
-#####6、`signatureBlocker` 用户获取signature回调
+#### 6、`signatureBlocker` 用户获取signature回调
 * 回调中的参数：
  * `policy`: 经过处理的policy字符串, 用户可以直接上传到用户服务端与`密钥`拼接, 
 * 返回的参数：
@@ -76,4 +76,4 @@ uy.signatureBlocker = ^(NSString *policy)
 ### 错误代码
 * `-1998`: 参数`file`以`UIImage`、`NSData`类型传入时，`saveKey`带有`{filename}`
 * `-1999`: 参数`file`以`UIImage`、`NSData`、`NSString`外的类型传入
-* 其他错误代码详见 [表单API错误代码表](http://docs.upyun.com/api/errno/) 
+* 其他错误代码详见 [表单API错误代码表](http://docs.upyun.com/api/errno/)
