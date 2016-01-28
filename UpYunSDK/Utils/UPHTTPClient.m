@@ -68,6 +68,8 @@
     [_sessionTask resume];
 }
 
+
+
 #pragma mark NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session
@@ -94,8 +96,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             NSIndexSet *succesStatus = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
             if ([succesStatus containsIndex:statusCode]) {
                 if (_successBlock) {
-                    NSLog(@"_didReceiveResponse %@", _didReceiveResponse);
-                    NSLog(@"_didReceiveData %@", self.didReceiveData);
                     _successBlock(_didReceiveResponse, self.didReceiveData);
                 }
             } else {
@@ -123,7 +123,6 @@ didReceiveResponse:(NSURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     [self.didReceiveData appendBytes:data.bytes length:data.length];
-    NSLog(@"self.didReceiveData %@", self.didReceiveData);
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task

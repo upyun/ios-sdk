@@ -29,14 +29,6 @@
 
 #pragma mark - init Method
 
-/**
- *  返回UMUUploaderManager 单例
- *
- *  @return bucket 空间 bucket
- *  @return UMUUploaderManager 实例
- */
-+ (instancetype)managerWithBucket:(NSString *)bucket;
-
 - (instancetype)initWithBucket:(NSString *)bucket;
 
 #pragma mark - Method
@@ -75,6 +67,6 @@
 /**
  *  取消所有请求
  */
-+ (void)cancelAllOperations;
+- (void)cancelAllTasks;
 
 @end

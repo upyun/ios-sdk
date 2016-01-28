@@ -10,7 +10,7 @@
 
 @class UPHTTPClient;
 
-typedef void(^HttpSuccessBlock)(NSURLResponse *response, id responseObject);
+typedef void(^HttpSuccessBlock)(NSURLResponse *response, id responseData);
 typedef void(^HttpFailBlock)(NSError *error);
 typedef void(^HttpProgressBlock)(int64_t completedBytesCount, int64_t totalBytesCount);
 

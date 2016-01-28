@@ -38,21 +38,18 @@
 
 - (IBAction)uploadFile:(id)sender {
     __block UpYun *uy = [[UpYun alloc] init];
-    uy.successBlocker = ^(NSURLResponse *response, id responseData)
-    {
+    uy.successBlocker = ^(NSURLResponse *response, id responseData) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
-        NSLog(@"%@", responseData);
+        NSLog(@"response body %@", responseData);
     };
-    uy.failBlocker = ^(NSError * error)
-    {
+    uy.failBlocker = ^(NSError * error) {
         NSString *message = [error.userInfo objectForKey:@"message"];
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"error" message:message delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
-        NSLog(@"%@", error);
+        NSLog(@"error %@", error);
     };
-    uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes)
-    {
+    uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
         [_pv setProgress:percent];
     };
     

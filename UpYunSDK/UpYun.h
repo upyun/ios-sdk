@@ -35,9 +35,9 @@
 
 
 /**
- *	@brief 失败重穿次数
+ *	@brief 失败重传次数
  */
-#define DEFAULT_RETRY_TIMES 1
+#define DEFAULT_RETRY_TIMES 2
 
 /**
  *  单个分块尺寸100kb(不可小于此值)

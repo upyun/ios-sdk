@@ -100,11 +100,9 @@
         }
     };
     //成功回调
-    HttpSuccessBlock httpSuccess = ^(NSURLResponse *response, id responseObject){
-        NSError* error;
-        NSDictionary * jsonDic = [NSJSONSerialization JSONObjectWithData:responseObject
-                                                                 options:kNilOptions
-                                                                   error:&error];;
+    HttpSuccessBlock httpSuccess = ^(NSURLResponse *response, id responseData) {
+        NSError *error;
+        NSDictionary *jsonDic = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&error];
         NSString *message = [jsonDic objectForKey:@"message"];
         if ([@"ok" isEqualToString:message]) {
             if (_successBlocker) {
