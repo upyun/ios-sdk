@@ -33,12 +33,23 @@
  */
 #define DEFAULT_MUTUPLOAD_SIZE 2*1024*1024
 
+
+/**
+ *	@brief 失败重穿次数
+ */
+#define DEFAULT_RETRY_TIMES 1
+
 /**
  *  单个分块尺寸100kb(不可小于此值)
  */
 static NSInteger SingleBlockSize = 1024*100;
 
 #define API_DOMAIN @"http://v0.api.upyun.com/"
+
+#define API_MUT_DOMAIN @"http://m0.api.upyun.com/"
+
+
+#define DATE_STRING(expiresIn) [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970] + expiresIn]
 
 typedef void(^UPCompeleteBlock)(NSError *error, NSDictionary *result, BOOL completed);
 
@@ -60,6 +71,8 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 
 @property (nonatomic, assign) NSInteger mutUploadSize;
 
+@property (nonatomic, assign) NSInteger retryTimes;
+
 @property (nonatomic, copy) UPSuccessBlock    successBlocker;
 
 @property (nonatomic, copy) UPFailBlock       failBlocker;
@@ -67,6 +80,7 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 @property (nonatomic, copy) UPProGgressBlock  progressBlocker;
 
 @property (nonatomic, copy) UPSignatureBlock  signatureBlocker;
+
 
 
 /**********************/

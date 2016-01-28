@@ -12,10 +12,11 @@
 #import "UPMutUploaderManager.h"
 
 #define ERROR_DOMAIN @"upyun.com"
-#define DATE_STRING(expiresIn) [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970] + expiresIn]
+
 #define REQUEST_URL(bucket) [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/",API_DOMAIN,bucket]]
 
 #define SUB_SAVE_KEY_FILENAME @"{filename}"
+
 
 @implementation UpYun
 - (instancetype)init {
@@ -24,84 +25,73 @@
         self.expiresIn = DEFAULT_EXPIRES_IN;
         self.passcode = DEFAULT_PASSCODE;
         self.mutUploadSize = DEFAULT_MUTUPLOAD_SIZE;
+        self.retryTimes = DEFAULT_RETRY_TIMES;
     }
     return self;
 }
 
-- (void) uploadImage:(UIImage *)image savekey:(NSString *)savekey
-{
-    if (![self checkSavekey:savekey]) {
-        return;
-    }
+- (void)uploadImage:(UIImage *)image savekey:(NSString *)savekey {
     NSData *imageData = UIImagePNGRepresentation(image);
     [self uploadImageData:imageData savekey:savekey];
 }
 
-- (void) uploadImagePath:(NSString *)path savekey:(NSString *)savekey
-{
+- (void)uploadImagePath:(NSString *)path savekey:(NSString *)savekey {
     [self uploadFilePath:path savekey:savekey];
 }
 
-- (void) uploadImageData:(NSData *)data savekey:(NSString *)savekey
-{
-    if (![self checkSavekey:savekey]) {
-        return;
-    }
+- (void)uploadImageData:(NSData *)data savekey:(NSString *)savekey {
     [self uploadFileData:data savekey:savekey];
 }
 
-- (void) uploadFilePath:(NSString *)path savekey:(NSString *)savekey
-{
+- (void)uploadFilePath:(NSString *)path savekey:(NSString *)savekey {
+    if (![self checkFilePath:path]) {
+        return;
+    }
     [self uploadSavekey:savekey data:nil filePath:path];
 }
 
-- (void) uploadFileData:(NSData *)data savekey:(NSString *)savekey
-{
+- (void)uploadFileData:(NSData *)data savekey:(NSString *)savekey {
+    if (![self checkSavekey:savekey]) {
+        return;
+    }
     [self uploadSavekey:savekey data:data filePath:nil];
 }
 
-- (void) uploadSavekey:(NSString *)savekey data:(NSData*)data filePath:(NSString*)filePath {
+- (void)uploadSavekey:(NSString *)savekey data:(NSData*)data filePath:(NSString*)filePath {
     
     NSInteger fileSize = data.length;
     if (filePath) {
-        NSError *error = nil;
-        NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+        NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
         fileSize = [fileDictionary fileSize];
     }
     
     if (fileSize > self.mutUploadSize) {
-        [self mutUploadFileData:data OrFilePath:filePath savekey:savekey];
+        [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
     } else {
-        [self formUploadWithSaveKey:savekey data:data filePath:filePath];
+        [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
     }
 }
 
-- (void)uploadFile:(id)file saveKey:(NSString *)saveKey
-{
-    //非path传入的需要检查savekey
-    if (![file isKindOfClass:[NSString class]] && ![self checkSavekey:saveKey]) {
-        return;
-    }
-    if([file isKindOfClass:[UIImage class]]){
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey {
+
+    if([file isKindOfClass:[UIImage class]]) {
         [self uploadImage:file savekey:saveKey];
-    }else if([file isKindOfClass:[NSData class]]) {
+    } else if([file isKindOfClass:[NSData class]]) {
         [self uploadFileData:file savekey:saveKey];
-    }else if([file isKindOfClass:[NSString class]]) {
+    } else if([file isKindOfClass:[NSString class]]) {
         [self uploadFilePath:file savekey:saveKey];
-    }else {
-        NSString *errorInfo = [NSString stringWithFormat:@"传入参数类型错误: file is %@",file];
-        NSError *error = [NSError errorWithDomain:ERROR_DOMAIN
-                                           code:-1999
-                                       userInfo:@{@"message":errorInfo}];
-        if (_failBlocker) {
-            _failBlocker(error);
-        }
     }
 }
 
-- (void)formUploadWithSaveKey:(NSString *)saveKey
-                         data:(NSData *)data
-                     filePath:(NSString *)filePath {
+#pragma mark----form upload
+
+- (void)formUploadWithFileData:(NSData *)data
+                      FilePath:(NSString *)filePath
+                       SaveKey:(NSString *)savekey
+                    RetryTimes:(NSInteger)retryTimes {
+    
+    __weak typeof(self)weakSelf = self;
+    
     //进度回调
     HttpProgressBlock httpProgress = ^(int64_t completedBytesCount, int64_t totalBytesCount) {
         CGFloat percent = completedBytesCount/(float)totalBytesCount;
@@ -129,41 +119,46 @@
             }
         }
     };
+    
+    
     //失败回调
-    HttpFailBlock httpFail = ^(NSError * error){
-        if (_failBlocker) {
-            _failBlocker(error);
+    HttpFailBlock httpFail = ^(NSError * error) {
+        
+        if (retryTimes > 0) {
+            [weakSelf formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:retryTimes-1];
+        } else {
+            if (_failBlocker) {
+                _failBlocker(error);
+            }
         }
     };
     
-    NSString *policy = [self getPolicyWithSaveKey:saveKey];
-    
+    NSString *policy = [self getPolicyWithSaveKey:savekey];
     __block NSString *signature = @"";
     if (_signatureBlocker) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             signature = _signatureBlocker([policy stringByAppendingString:@"&"]);
         });
-    } else if (self.passcode) {
+    } else if (self.passcode.length > 0) {
         signature = [self getSignatureWithPolicy:policy];
     } else {
-        NSString *message = _signatureBlocker?@"没有提供密钥":@"没有实现signatureBlock";
+        NSString *message = _signatureBlocker ? @"没有提供密钥" : @"没有实现signatureBlock";
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1999
                                        userInfo:@{@"message":message}];
         if (_failBlocker) {
             _failBlocker(err);
         }
+        return;
     }
-    NSDictionary *parameDic = @{@"policy":policy, @"signature":signature};
     
     UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
-    [multiBody addDictionary:parameDic];
+    [multiBody addDictionary:@{@"policy":policy, @"signature":signature}];
     [multiBody addFileData:data OrFilePath:filePath fileName:@"file" fileType:nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:REQUEST_URL(self.bucket)];
     request.HTTPMethod = @"POST";
     request.HTTPBody = [multiBody dataFromPart];
-    [request setValue:@"*/*" forHTTPHeaderField:@"Accept"];
     [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", multiBody.boundary] forHTTPHeaderField:@"Content-Type"];
     
     UPHTTPClient *client = [[UPHTTPClient alloc]init];
@@ -172,8 +167,10 @@
 
 #pragma mark----mut upload
 
-- (void)mutUploadFileData:(NSData *)data OrFilePath:(NSString*) filePath savekey:(NSString *)savekey {
-    
+- (void)mutUploadWithFileData:(NSData *)data
+                     FilePath:(NSString *)filePath
+                      SaveKey:(NSString *)savekey
+                   RetryTimes:(NSInteger)retryTimes {
     NSDictionary *fileInfo = nil;
     if (filePath) {
         fileInfo = [UPMutUploaderManager fetchFileInfoDictionaryWithFilePath:filePath];
@@ -186,20 +183,24 @@
     NSString *signature = signaturePolicyDic[@"signature"];
     NSString *policy = signaturePolicyDic[@"policy"];
     
+    [UPMutUploaderManager setServer:API_MUT_DOMAIN];
     UPMutUploaderManager *manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
-    [manager uploadWithFile:data OrFilePath: filePath policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
-        dispatch_async(dispatch_get_main_queue(), ^() {
 
-            UIAlertView * alert;
+    __weak typeof(self)weakSelf = self;
+    [manager uploadWithFile:data OrFilePath: filePath policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
             if (completed) {
-                alert = [[UIAlertView alloc]initWithTitle:@"上传成功" message:@"" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                NSLog(@"%@",result);
+                if (_successBlocker) {
+                    _successBlocker(result[@"response"], result[@"responseData"]);
+                }
             } else {
-                alert = [[UIAlertView alloc]initWithTitle:@"上传失败" message:error.userInfo[@"message"] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                NSLog(@"%@",error.userInfo);
+                if (retryTimes > 0) {
+                    [weakSelf mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:retryTimes-1];
+                } else {
+                    if (_failBlocker) {
+                        _failBlocker(error);
+                    }
+                }
             }
-            [alert show];
-        });
     }];
 }
 
@@ -298,5 +299,21 @@
     }
     return YES;
 }
+
+- (BOOL)checkFilePath:(NSString *)filePath {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        NSString *message = [NSString stringWithFormat:@"传入filepath找不到文件, %@", filePath];
+        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-1997
+                                       userInfo:@{@"message":message}];
+        if (_failBlocker) {
+            _failBlocker(err);
+        }
+
+        return NO;
+    }
+    return YES;
+}
+
 
 @end

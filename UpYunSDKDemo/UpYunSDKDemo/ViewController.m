@@ -77,7 +77,7 @@
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"test2.png"];
     [uy uploadFile:filePath saveKey:@"/test2.png"];
-    
+    [uy.params setObject:@"value" forKey:@"key"];
     /**
      *	@brief	根据 NSDate  上传
      */

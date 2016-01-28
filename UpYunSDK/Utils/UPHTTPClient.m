@@ -11,19 +11,16 @@
 
 
 @interface UPHTTPClient() <NSURLSessionDelegate>
-{
-    NSURLSession *_session;
-    NSURLSessionConfiguration *_sessionConfiguration;
-    NSTimeInterval _timeInterval;
-    NSMutableDictionary *_headers;
-    HttpProgressBlock _progressBlock;
-    HttpSuccessBlock _successBlock;
-    HttpFailBlock _failureBlock;
-    NSURLSessionTask *_sessionTask;
-    NSMutableData *_didReceiveData;
-    NSURLResponse *_didReceiveResponse;
-    BOOL _didCompleted;
-}
+
+@property (copy) HttpProgressBlock progressBlock;
+@property (copy) HttpSuccessBlock successBlock;
+@property (copy) HttpFailBlock failureBlock;
+
+@property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, strong) NSURLSessionTask *sessionTask;
+@property (nonatomic, strong) NSMutableData *didReceiveData;
+@property (nonatomic, strong) NSURLResponse *didReceiveResponse;
+@property (nonatomic, assign) BOOL didCompleted;
 
 @end
 
@@ -34,35 +31,29 @@
     self = [super init];
     if (self) {
         _didCompleted = NO;
-        _headers = [[NSMutableDictionary alloc] init];
-        _sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
-//        _sessionConfiguration.timeoutIntervalForRequest = 10.f;
-//        _sessionConfiguration.timeoutIntervalForResource = 10.f;
-        _session = [NSURLSession sessionWithConfiguration:_sessionConfiguration
-                                                              delegate:self
-                                                         delegateQueue:nil];
     }
     return self;
-}
-
-- (void)dealloc {
-    _session = nil;
-    _sessionConfiguration = nil;
-    _timeInterval = 0;
-    _headers = nil;
-    _progressBlock = nil;
-    _successBlock = nil;
-    _failureBlock = nil;
-    _sessionTask = nil;
-    _didReceiveData = nil;
-    _didReceiveResponse = nil;
-    _didCompleted = nil;
 }
 
 - (void)cancel {
     [_sessionTask cancel];
 }
 
+- (NSMutableData *)didReceiveData {
+    if (!_didReceiveData) {
+        _didReceiveData = [[NSMutableData alloc]init];
+    }
+    return _didReceiveData;
+}
+
+- (NSURLSession *)session {
+    if (!_session) {
+        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]
+                                                 delegate:self
+                                            delegateQueue:[NSOperationQueue mainQueue]];
+    }
+    return _session;
+}
 
 - (void)uploadRequest:(NSMutableURLRequest *)request
               success:(HttpSuccessBlock)successBlock
@@ -73,103 +64,7 @@
     _successBlock = successBlock;
     _failureBlock = failureBlock;
     
-    _sessionTask = [_session dataTaskWithRequest:request];
-    [_sessionTask resume];
-}
-
-
-- (void)sendMultipartFormRequestWithMethod:(NSString *)method
-                                       url:(NSString *)urlString
-                                parameters:(NSDictionary *)formParameters
-                            filePathOrData:(id)filePathOrData
-                                 fieldName:(NSString *)name
-                                  fileName:(NSString *)filename
-                                 mimeTypes:(NSString *)mimeType
-                                   success:(HttpSuccessBlock)successBlock
-                                   failure:(HttpFailBlock)failureBlock
-                                  progress:(HttpProgressBlock)progressBlock {
-    NSData *fileData;
-    if ([filePathOrData isKindOfClass:[NSString class]]) {
-        fileData = [NSData dataWithContentsOfFile:(NSString *)filePathOrData];
-    } else {
-        fileData = (NSData *)filePathOrData;
-    }
-    
-    if (!filename) {
-        filename = @"filename";
-    }
-    if (!mimeType) {
-        mimeType = @"application/octet-stream";
-    }
-    _progressBlock = progressBlock;
-    _successBlock = successBlock;
-    _failureBlock = failureBlock;
-
-    UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
-    [multiBody addDictionary:formParameters];
-    [multiBody addFileData:fileData fileName:filename fileType:mimeType];
-    [multiBody dataFromPart];
-    
-    NSURL *url = [NSURL URLWithString:urlString];
-    //设置URLRequest
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    request.HTTPMethod = method;
-    if (_headers) {
-        for (NSString *key in _headers) {
-            [request setValue:[_headers objectForKey:key] forHTTPHeaderField:key];
-        }
-    }
-    request.HTTPBody = [multiBody dataFromPart];
-    request.timeoutInterval = _timeInterval;
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", multiBody.boundary] forHTTPHeaderField:@"Content-Type"];
-    //发起请求
-    _sessionTask = [_session dataTaskWithRequest:request];
-    [_sessionTask resume];
-}
-
-- (void)sendURLFormEncodedRequestWithMethod:(NSString *)methed
-                                        url:(NSString *)urlString
-                                 parameters:(NSDictionary *)formParameters
-                                    success:(HttpSuccessBlock)successBlock
-                                    failure:(HttpFailBlock)failureBlock {
-    NSURL *url = [[NSURL alloc] initWithString:urlString];
-    NSMutableURLRequest *request = (NSMutableURLRequest *)[NSMutableURLRequest requestWithURL:url];
-    request.HTTPMethod = @"POST";
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    NSMutableString *postParameters = [NSMutableString new];
-    for (NSString *key in formParameters.allKeys) {
-        NSString *keyValue = [NSString stringWithFormat:@"&%@=%@",key, [formParameters objectForKey:key]];
-        [postParameters appendString:keyValue];
-    }
-    NSData *postData = [NSData data];
-    if (postParameters.length > 1) {
-        postData = [[postParameters substringFromIndex:1] dataUsingEncoding:NSUTF8StringEncoding];
-    }
-    
-    request.HTTPBody = postData;
-    _sessionTask = [_session dataTaskWithRequest:request
-                              completionHandler:^(NSData *data,
-                                                  NSURLResponse *response,
-                                                  NSError *error) {
-                                  if (error) {
-                                      failureBlock(error);
-                                  } else {
-                                      //判断返回状态码错误。
-                                      NSInteger statusCode =((NSHTTPURLResponse *)response).statusCode;
-                                      NSIndexSet *succesStatus = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
-                                      if ([succesStatus containsIndex:statusCode]) {
-                                          successBlock(response, data);
-                                      } else {
-                                          
-                                          NSString *errorString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                                          NSError *erro = [[NSError alloc]initWithDomain:@"UPHTTPClient" code:0
-                                                                                userInfo:@{NSLocalizedDescriptionKey:errorString}];
-                                          failureBlock(erro);
-                                      }
-                                  }
-                              }];
+    _sessionTask = [self.session dataTaskWithRequest:request];
     [_sessionTask resume];
 }
 
@@ -180,53 +75,39 @@
    didSendBodyData:(int64_t)bytesSent
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
-    dispatch_async(dispatch_get_main_queue(), ^(){
-        if (!_didCompleted) {
+    if (!_didCompleted) {
+        if (_progressBlock) {
             _progressBlock(totalBytesSent, totalBytesExpectedToSend);
         }
-    });
+    }
 }
 
--(void)URLSession:(NSURLSession *)session
-             task:(NSURLSessionTask *)task
-didCompleteWithError:(NSError *)error {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     _didCompleted = YES;
-    dispatch_async(dispatch_get_main_queue(), ^(){
         if (error) {
             if (_failureBlock) {
                 _failureBlock(error);
             }
-            
         } else {
             //判断返回状态码错误。
             NSInteger statusCode =((NSHTTPURLResponse *)_didReceiveResponse).statusCode;
             NSIndexSet *succesStatus = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
             if ([succesStatus containsIndex:statusCode]) {
-                
                 if (_successBlock) {
-                    _successBlock(_didReceiveResponse, _didReceiveData);
+                    NSLog(@"_didReceiveResponse %@", _didReceiveResponse);
+                    NSLog(@"_didReceiveData %@", self.didReceiveData);
+                    _successBlock(_didReceiveResponse, self.didReceiveData);
                 }
-                
             } else {
-                NSString *errorString = [[NSString alloc] initWithData:_didReceiveData encoding:NSUTF8StringEncoding];
+                NSString *errorString = [[NSString alloc] initWithData:self.didReceiveData encoding:NSUTF8StringEncoding];
                 NSError *error = [[NSError alloc] initWithDomain:@"UPHTTPClient"
-                                                            code:0
+                                                            code:statusCode
                                                         userInfo:@{NSLocalizedDescriptionKey:errorString}];
                 if (_failureBlock) {
                     _failureBlock(error);
                 }
             }
         }
-        _sessionTask = nil;
-        _progressBlock = nil;
-        _successBlock = nil;
-        _failureBlock = nil;
-        _didReceiveData = nil;
-        _didReceiveData = nil;
-        _didReceiveResponse = nil;
-        _sessionConfiguration = nil;
-        _session = nil;
-    });
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -241,12 +122,8 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
-    if (_didReceiveData) {
-        [_didReceiveData appendBytes:data.bytes length:data.length];
-    } else {
-        _didReceiveData = [[NSMutableData alloc] init];
-        [_didReceiveData appendBytes:data.bytes length:data.length];
-    }
+    [self.didReceiveData appendBytes:data.bytes length:data.length];
+    NSLog(@"self.didReceiveData %@", self.didReceiveData);
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
@@ -261,7 +138,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     }
 }
 
-#pragma NSProgress KVO
+#pragma mark NSProgress KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object

@@ -15,9 +15,9 @@
 #pragma mark - setup Methods
 
 /**
- *  设置授权时间长度（秒）默认为60秒
+ *  设置授权时间长度（秒）默认为600秒
  */
-+ (void)setValidTimeSpan:(NSInteger)validTimeSpan;
++ (void)setValidTimeSpan:(NSTimeInterval)validTimeSpan;
 
 /**
  *  设置服务器地址 默认 @"http://m0.api.upyun.com/"
@@ -26,13 +26,6 @@
  */
 + (void)setServer:(NSString *)server;
 
-
-/**
- *  设置请求重试次数 默认为:3
- *
- *  @param 重试次数
- */
-+ (void)setMaxRetryCount:(NSInteger)retryCount;
 
 #pragma mark - init Method
 
