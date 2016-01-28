@@ -37,12 +37,10 @@
  *  获取文件元信息 计算policy、signature需要此信息
  *
  *  @param fileData 文件数据
- *
+ *  @param filePath 文件路径
  *  @return 获取文件元信息 字典
  */
-+ (NSDictionary *)fetchFileInfoDictionaryWith:(NSData *)fileData;
-
-+ (NSDictionary *)fetchFileInfoDictionaryWithFilePath:(NSString *)filePath;
++ (NSDictionary *)getFileInfoDicWithFileData:(NSData *)fileData OrFilePath:(NSString *)filePath ;
 
 
 /**

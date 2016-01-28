@@ -10,6 +10,7 @@
 		88BAB33C18C6F66B00426A17 /* UpYun.m in Sources */ = {isa = PBXBuildFile; fileRef = 88BAB33618C6F66B00426A17 /* UpYun.m */; };
 		AE19D76A1C4DDA6F00513CAC /* UPHTTPBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = AE19D7691C4DDA6F00513CAC /* UPHTTPBodyPart.m */; };
 		AE19D76D1C4E3D4300513CAC /* UPMultipartBody.m in Sources */ = {isa = PBXBuildFile; fileRef = AE19D76C1C4E3D4300513CAC /* UPMultipartBody.m */; };
+		AE1A43241C5A053B00B1C795 /* UpYunSDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AE1A43231C5A053B00B1C795 /* UpYunSDKDemoTests.m */; };
 		AE3CAB3C1C4F5D6B00BF9A38 /* NSString+NSHash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB3B1C4F5D6B00BF9A38 /* NSString+NSHash.m */; };
 		AE3CAB481C4F5EC700BF9A38 /* UPHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */; };
 		AE3CAB661C50BB2100BF9A38 /* UPMutUploaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB651C50BB2100BF9A38 /* UPMutUploaderManager.m */; };
@@ -30,6 +31,16 @@
 		B8FD9D16196E223A00CDEDFF /* NSData+MD5Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = B8FD9D15196E223A00CDEDFF /* NSData+MD5Digest.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AE1A43261C5A053B00B1C795 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8E9D5CA17B0C79800146D00 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8E9D5D117B0C79800146D00;
+			remoteInfo = UpYunSDKDemo;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		88BAB33518C6F66B00426A17 /* UpYun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UpYun.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		88BAB33618C6F66B00426A17 /* UpYun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = UpYun.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -37,6 +48,9 @@
 		AE19D7691C4DDA6F00513CAC /* UPHTTPBodyPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPBodyPart.m; sourceTree = "<group>"; };
 		AE19D76B1C4E3D4300513CAC /* UPMultipartBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPMultipartBody.h; sourceTree = "<group>"; };
 		AE19D76C1C4E3D4300513CAC /* UPMultipartBody.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPMultipartBody.m; sourceTree = "<group>"; };
+		AE1A43211C5A053B00B1C795 /* UpYunSDKDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UpYunSDKDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE1A43231C5A053B00B1C795 /* UpYunSDKDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpYunSDKDemoTests.m; sourceTree = "<group>"; };
+		AE1A43251C5A053B00B1C795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AE3CAB3A1C4F5D6B00BF9A38 /* NSString+NSHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+NSHash.h"; sourceTree = "<group>"; };
 		AE3CAB3B1C4F5D6B00BF9A38 /* NSString+NSHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NSHash.m"; sourceTree = "<group>"; };
 		AE3CAB461C4F5EC700BF9A38 /* UPHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UPHTTPClient.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -67,6 +81,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AE1A431E1C5A053B00B1C795 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8E9D5CF17B0C79800146D00 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -113,6 +134,15 @@
 			name = HttpUtils;
 			sourceTree = "<group>";
 		};
+		AE1A43221C5A053B00B1C795 /* UpYunSDKDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				AE1A43231C5A053B00B1C795 /* UpYunSDKDemoTests.m */,
+				AE1A43251C5A053B00B1C795 /* Info.plist */,
+			);
+			path = UpYunSDKDemoTests;
+			sourceTree = "<group>";
+		};
 		AE3CAB631C50BB1200BF9A38 /* UPMutUpload */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				B8E9D5DB17B0C79800146D00 /* UpYunSDKDemo */,
+				AE1A43221C5A053B00B1C795 /* UpYunSDKDemoTests */,
 				B8E9D5D417B0C79800146D00 /* Frameworks */,
 				B8E9D5D317B0C79800146D00 /* Products */,
 			);
@@ -135,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				B8E9D5D217B0C79800146D00 /* UpYunSDKDemo.app */,
+				AE1A43211C5A053B00B1C795 /* UpYunSDKDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -203,6 +235,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AE1A43201C5A053B00B1C795 /* UpYunSDKDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AE1A43281C5A053B00B1C795 /* Build configuration list for PBXNativeTarget "UpYunSDKDemoTests" */;
+			buildPhases = (
+				AE1A431D1C5A053B00B1C795 /* Sources */,
+				AE1A431E1C5A053B00B1C795 /* Frameworks */,
+				AE1A431F1C5A053B00B1C795 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AE1A43271C5A053B00B1C795 /* PBXTargetDependency */,
+			);
+			name = UpYunSDKDemoTests;
+			productName = UpYunSDKDemoTests;
+			productReference = AE1A43211C5A053B00B1C795 /* UpYunSDKDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B8E9D5D117B0C79800146D00 /* UpYunSDKDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B8E9D5EF17B0C79800146D00 /* Build configuration list for PBXNativeTarget "UpYunSDKDemo" */;
@@ -228,6 +278,12 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = upyun;
+				TargetAttributes = {
+					AE1A43201C5A053B00B1C795 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = B8E9D5D117B0C79800146D00;
+					};
+				};
 			};
 			buildConfigurationList = B8E9D5CD17B0C79800146D00 /* Build configuration list for PBXProject "UpYunSDKDemo" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -242,11 +298,19 @@
 			projectRoot = "";
 			targets = (
 				B8E9D5D117B0C79800146D00 /* UpYunSDKDemo */,
+				AE1A43201C5A053B00B1C795 /* UpYunSDKDemoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AE1A431F1C5A053B00B1C795 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8E9D5D017B0C79800146D00 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -266,6 +330,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AE1A431D1C5A053B00B1C795 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE1A43241C5A053B00B1C795 /* UpYunSDKDemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8E9D5CE17B0C79800146D00 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -285,6 +357,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		AE1A43271C5A053B00B1C795 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8E9D5D117B0C79800146D00 /* UpYunSDKDemo */;
+			targetProxy = AE1A43261C5A053B00B1C795 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		B8E9D5DE17B0C79800146D00 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -297,6 +377,63 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		AE1A43291C5A053B00B1C795 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = UpYunSDKDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.upyun.UpYunSDKDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UpYunSDKDemo.app/UpYunSDKDemo";
+			};
+			name = Debug;
+		};
+		AE1A432A1C5A053B00B1C795 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = UpYunSDKDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.upyun.UpYunSDKDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UpYunSDKDemo.app/UpYunSDKDemo";
+			};
+			name = Release;
+		};
 		B8E9D5ED17B0C79800146D00 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -389,6 +526,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AE1A43281C5A053B00B1C795 /* Build configuration list for PBXNativeTarget "UpYunSDKDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE1A43291C5A053B00B1C795 /* Debug */,
+				AE1A432A1C5A053B00B1C795 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		B8E9D5CD17B0C79800146D00 /* Build configuration list for PBXProject "UpYunSDKDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

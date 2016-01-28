@@ -21,7 +21,6 @@ typedef void(^HttpProgressBlock)(int64_t completedBytesCount, int64_t totalBytes
             failure:(HttpFailBlock)failureBlock
            progress:(HttpProgressBlock)progressBlock;
 
-
 - (void)cancel;
 
 @end

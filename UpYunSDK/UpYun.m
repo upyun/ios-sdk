@@ -169,13 +169,7 @@
                      FilePath:(NSString *)filePath
                       SaveKey:(NSString *)savekey
                    RetryTimes:(NSInteger)retryTimes {
-    NSDictionary *fileInfo = nil;
-    if (filePath) {
-        fileInfo = [UPMutUploaderManager fetchFileInfoDictionaryWithFilePath:filePath];
-    } else if (data) {
-        fileInfo = [UPMutUploaderManager fetchFileInfoDictionaryWith:data];
-    }
-    
+    NSDictionary *fileInfo = [UPMutUploaderManager getFileInfoDicWithFileData:data OrFilePath:filePath];
     NSDictionary *signaturePolicyDic = [self constructingSignatureAndPolicyWithFileInfo:fileInfo saveKey:savekey];
     
     NSString *signature = signaturePolicyDic[@"signature"];
@@ -258,7 +252,7 @@
             [dic setObject:[self.params objectForKey:key] forKey:key];
         }
     }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:NULL];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
     NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return [json Base64encode];
 }
@@ -279,12 +273,13 @@
 - (BOOL)checkSavekey:(NSString *)string {
     NSRange rangeFileName;
     NSRange rangeFileNameOnDic;
+    rangeFileNameOnDic.location = NSNotFound;
     rangeFileName = [string rangeOfString:SUB_SAVE_KEY_FILENAME];
     if ([_params objectForKey:@"save-key"]) {
         rangeFileNameOnDic = [[_params objectForKey:@"save-key"]
                               rangeOfString:SUB_SAVE_KEY_FILENAME];
     }
-    
+
     if(rangeFileName.location != NSNotFound || rangeFileNameOnDic.location != NSNotFound) {
         NSString *message = [NSString stringWithFormat:@"传入file为NSData或者UIImage时,不能使用%@方式生成savekey", SUB_SAVE_KEY_FILENAME];
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN

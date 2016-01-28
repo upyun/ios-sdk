@@ -63,18 +63,17 @@
     /**
      *	@brief	根据 UIImage 上传
      */
-//    UIImage * image = [UIImage imageNamed:@"image.jpg"];
+//    UIImage * image = [UIImage imageNamed:@"test2.png"];
 //    [uy uploadFile:image saveKey:[self getSaveKeyWith:@"jpg"]];
 
 //    [uy uploadFile:image saveKey:@"2016.jpg"];
-//    [uy uploadImage:image savekey:[self getSaveKeyWith:@"jpg"]];
+//    [uy uploadImage:image savekey:[self getSaveKeyWith:@"png"]];
     /**
      *	@brief	根据 文件路径 上传
      */
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"test2.png"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"test10.png"];
     [uy uploadFile:filePath saveKey:@"/test2.png"];
-    [uy.params setObject:@"value" forKey:@"key"];
     /**
      *	@brief	根据 NSDate  上传
      */
