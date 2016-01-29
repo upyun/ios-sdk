@@ -26,6 +26,7 @@
         self.passcode = [DEFAULT_PASSCODE copy];
         self.mutUploadSize = DEFAULT_MUTUPLOAD_SIZE;
         self.retryTimes = DEFAULT_RETRY_TIMES;
+        self.uploadMethod = UPFileSizeUpload;
     }
     return self;
 }
@@ -65,10 +66,20 @@
         fileSize = [fileDictionary fileSize];
     }
     
-    if (fileSize > self.mutUploadSize) {
-        [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
-    } else {
-        [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
+    switch (_uploadMethod) {
+        case UPFileSizeUpload:
+            if (fileSize > self.mutUploadSize) {
+                [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
+            } else {
+                [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
+            }
+            break;
+        case UPFormUpload:
+            [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
+            break;
+        case UPMUtUPload:
+            [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
+            break;
     }
 }
 

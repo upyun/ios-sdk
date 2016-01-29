@@ -11,6 +11,13 @@
 #import "NSData+MD5Digest.h"
 
 #import "UPHTTPClient.h"
+
+typedef NS_ENUM(NSUInteger, UPUploadMethod) {
+    UPFileSizeUpload = 1,
+    UPFormUpload = 2,
+    UPMUtUPload = 3
+};
+
 /**
  *	@brief 默认空间名(必填项), 可在init之后修改bucket的值来更改
  */
@@ -81,7 +88,7 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 
 @property (nonatomic, copy) UPSignatureBlock  signatureBlocker;
 
-
+@property (nonatomic, assign) UPUploadMethod uploadMethod;
 
 /**********************/
 /**以下新增接口 建议使用**/
@@ -93,7 +100,7 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
  3、NSString(文件路径)
  *	@param 	saveKey 	由开发者自定义的saveKey
  */
--(void)uploadFile:(id)file saveKey:(NSString *)saveKey;
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey;
 
 /**以上新增接口 建议使用**/
 /**********************/
@@ -121,6 +128,7 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
  *	@param 	data 	图片data
  *	@param 	savekey 	savekey
  */
-- (void) uploadImageData:(NSData *)data savekey:(NSString *)savekey;
+- (void)uploadImageData:(NSData *)data savekey:(NSString *)savekey;
+
 
 @end
