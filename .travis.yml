@@ -1,4 +1,9 @@
-language: objective-c
+#language: objective-c
 # xctool -project UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
 # xctool test -project UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
-xctool test -project UpYunSDKDemo/UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator -destination platform='iOS Simulator',OS=9.2,name='iPhone 5s' ONLY_ACTIVE_ARCH=NO
+#xctool test -project UpYunSDKDemo/UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator -destination platform='iOS Simulator',OS=9.2,name='iPhone 5s' ONLY_ACTIVE_ARCH=NO
+
+language: objective-c
+xcode_project: UpYunSDKDemo/UpYunSDKDemo.xcodeproj # path to your xcodeproj folder
+xcode_scheme: MyNewProjectTests
+xcode_sdk:iphonesimulator -destination platform='iOS Simulator',OS=9.0,name='iPhone 5s'
