@@ -1,4 +1,4 @@
 language: objective-c
 # xctool -project UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
 # xctool test -project UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
-xctool test -project UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator -destination platform='iOS Simulator',OS=9.2,name='iPhone 5s' ONLY_ACTIVE_ARCH=NO
+xctool test -project UpYunSDKDemo/UpYunSDKDemo.xcodeproj -scheme UpYunSDKDemo -sdk iphonesimulator -destination platform='iOS Simulator',OS=9.2,name='iPhone 5s' ONLY_ACTIVE_ARCH=NO
