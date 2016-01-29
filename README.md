@@ -10,7 +10,7 @@ UPYUN iOS SDK, 集成:
 ### 要求
 iOS7.0及以上版本, ARC模式, 采用NSURLSession做网络库
 ### 参数设置
-在 [UpYun.h](http://gitlab.widget-inc.com/upyun-sdk/ios-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置。
+在 [UpYun.h](https://github.com/upyun/iOS-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置。
 
 * **DEFAULT_BUCKET** : 默认空间名（必填项）
 * **DEFAULT_PASSCODE** : 默认表单API功能密钥 , 用户也可自行从服务端获取
@@ -81,7 +81,7 @@ uy.signatureBlocker = ^(NSString *policy) {
 * 返回的参数：
   * `sinature`: 用户服务端使用上传的`policy`生成的sinature, 或者用户自己生成`sinature`
  
-#### 7、`params` 可选参数
+#### 7、`params` [可选参数](http://docs.upyun.com/api/form_api/#api_1)
 
 
 ### 错误代码
