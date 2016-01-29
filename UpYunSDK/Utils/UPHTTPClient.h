@@ -23,4 +23,7 @@ typedef void(^HttpProgressBlock)(int64_t completedBytesCount, int64_t totalBytes
 
 - (void)cancel;
 
+- (void)timeoutIntervalForRequest:(NSTimeInterval)timeoutForRequest;
+- (void)timeoutIntervalForResource:(NSTimeInterval)timeoutForResource;
+
 @end

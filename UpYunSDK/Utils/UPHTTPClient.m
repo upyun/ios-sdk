@@ -22,6 +22,9 @@
 @property (nonatomic, strong) NSURLResponse *didReceiveResponse;
 @property (nonatomic, assign) BOOL didCompleted;
 
+@property (nonatomic, assign) NSTimeInterval timeoutForRequest;
+@property (nonatomic, assign) NSTimeInterval timeoutForResource;
+
 @end
 
 
@@ -39,6 +42,13 @@
     [_sessionTask cancel];
 }
 
+- (void)timeoutIntervalForRequest:(NSTimeInterval)timeoutForRequest {
+    self.timeoutForRequest = timeoutForRequest;
+}
+- (void)timeoutIntervalForResource:(NSTimeInterval)timeoutForResource {
+    self.timeoutForResource = timeoutForResource;
+}
+
 - (NSMutableData *)didReceiveData {
     if (!_didReceiveData) {
         _didReceiveData = [[NSMutableData alloc]init];
@@ -48,7 +58,10 @@
 
 - (NSURLSession *)session {
     if (!_session) {
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        sessionConfig.timeoutIntervalForRequest = self.timeoutForRequest;
+        sessionConfig.timeoutIntervalForResource = self.timeoutForResource;
+        _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     }
     return _session;
 }
@@ -61,8 +74,8 @@
     _progressBlock = progressBlock;
     _successBlock = successBlock;
     _failureBlock = failureBlock;
-    
     _sessionTask = [self.session dataTaskWithRequest:request];
+    
     [_sessionTask resume];
 }
 
@@ -86,7 +99,16 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     _didCompleted = YES;
         if (error) {
             if (_failureBlock) {
-                _failureBlock(error);
+                NSError *upError = error;
+                
+                if (upError.code < NSURLErrorTimedOut &&
+                    upError.code > NSURLErrorZeroByteResource
+                    ) {
+                    upError = [[NSError alloc] initWithDomain:@"UPHTTPClient"
+                                                         code:500
+                                                     userInfo:@{@"message":error.description}];
+                }
+                _failureBlock(upError);
             }
         } else {
             //判断返回状态码错误。
@@ -98,11 +120,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 }
             } else {
                 NSString *errorString = [[NSString alloc] initWithData:self.didReceiveData encoding:NSUTF8StringEncoding];
-                NSError *error = [[NSError alloc] initWithDomain:@"UPHTTPClient"
+                NSError *upError = [[NSError alloc] initWithDomain:@"UPHTTPClient"
                                                             code:statusCode
-                                                        userInfo:@{NSLocalizedDescriptionKey:errorString}];
+                                                        userInfo:@{@"message":errorString}];
                 if (_failureBlock) {
-                    _failureBlock(error);
+                    _failureBlock(upError);
                 }
             }
         }

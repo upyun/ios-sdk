@@ -88,7 +88,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
         fileHash = [fileData MD5HexDigest];
         fileSize = fileData.length;
     }
-    
+    fileHash = @"45455565";
     NSInteger blockCount = [self calculateBlockCount:fileSize];
     NSDictionary * parameters = @{@"file_blocks":@(blockCount),
                                   @"file_hash":fileHash,
@@ -338,7 +338,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     __weak typeof(self)weakSelf = self;
     UPHTTPClient *client = [[UPHTTPClient alloc]init];
-    
+
     [client uploadRequest:request success:^(NSURLResponse *response, id responseData) {
         if (completeBlock) {
             NSDictionary *resonseDic = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:nil];
@@ -357,37 +357,6 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     }];
     
     [_uploadingClientArray addObject:client];
-//    NSURLSession *session = [NSURLSession sharedSession];
-//    NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request
-//                                                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-//                                                    
-//                                                    
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            
-//            
-//            if (!completeBlock) {
-//                return ;
-//            }
-//            NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse *)response;
-//            if (error) {
-//                completeBlock(error, nil, NO);
-//            } else {
-//                //判断返回状态码错误。
-//                NSInteger statusCode = httpResponse.statusCode;
-//                NSIndexSet *succesStatus = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
-//                if ([succesStatus containsIndex:statusCode]) {
-//                    NSError *errorTran;
-//                    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&errorTran];
-//                    completeBlock(errorTran, json, json!=nil);
-//                } else {
-//                    NSString *errorString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//                    NSError *errorInfo = [[NSError alloc] initWithDomain:UPMUT_ERROR_DOMAIN code:-1898 userInfo:@{NSLocalizedDescriptionKey:errorString}];
-//                    completeBlock(errorInfo, nil, NO);
-//                }
-//            }
-//        });
-//    }];
-//    [sessionTask resume];
 }
 
 

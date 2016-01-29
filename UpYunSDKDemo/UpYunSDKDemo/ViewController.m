@@ -45,9 +45,9 @@
     };
     uy.failBlocker = ^(NSError * error) {
         NSString *message = [error.userInfo objectForKey:@"message"];
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"error" message:message delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"message" message:message delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
-        NSLog(@"error %@", error);
+        NSLog(@"error %@", message);
     };
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
         [_pv setProgress:percent];
@@ -72,7 +72,7 @@
      *	@brief	根据 文件路径 上传
      */
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"test10.png"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
     [uy uploadFile:filePath saveKey:@"/test2.png"];
     /**
      *	@brief	根据 NSDate  上传
