@@ -7,9 +7,11 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "UpYun.h"
+#import "NSString+NSHash.h"
 
 @interface UpYunSDKDemoTests : XCTestCase
-
+@property UpYun *upyun;
 @end
 
 @implementation UpYunSDKDemoTests
@@ -17,6 +19,21 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    _upyun = [[UpYun alloc]init];
+    _upyun.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+    };
+    _upyun.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        
+        NSLog(@"error %@", message);
+    };
+    _upyun.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"percent %f", percent);
+    };
+    
+    _upyun.bucket = @"test654123";
+    _upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
 }
 
 - (void)tearDown {
@@ -24,16 +41,147 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testFormPolicy {
+    NSString *json = @"{\"bucket\":\"demobucket\",\"expiration\":1409200758,\"save-key\":\"/img.jpg\"}";
+    XCTAssert([[json Base64encode] isEqual:@"eyJidWNrZXQiOiJkZW1vYnVja2V0IiwiZXhwaXJhdGlvbiI6MTQwOTIwMDc1OCwic2F2ZS1rZXkiOiIvaW1nLmpwZyJ9"], @"Pass");
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
+- (void)testFormSignature {
+    NSString *json = @"{\"bucket\":\"demobucket\",\"expiration\":1409200758,\"save-key\":\"/img.jpg\"}";
+    NSString *passkey = @"cAnyet74l9hdUag34h2dZu8z7gU=";
+    
+    NSString *signature = [NSString stringWithFormat:@"%@%@%@", [json Base64encode], @"&", passkey];
+    
+    XCTAssert([[signature MD5] isEqual:@"646a6a629c344ce0e6a10cadd49756d4"], @"Pass");
+}
+
+- (void)testMutPolicy {
+    NSString *json = @"{\"path\":\"/demo.png\",\"expiration\":1409200758,\"file_blocks\":1,\"file_size\":653252,\"file_hash\":\"b1143cbc07c8e768d517fa5e73cb79ca\"}";
+    XCTAssert([[json Base64encode] isEqual:@"eyJwYXRoIjoiL2RlbW8ucG5nIiwiZXhwaXJhdGlvbiI6MTQwOTIwMDc1OCwiZmlsZV9ibG9ja3MiOjEsImZpbGVfc2l6ZSI6NjUzMjUyLCJmaWxlX2hhc2giOiJiMTE0M2NiYzA3YzhlNzY4ZDUxN2ZhNWU3M2NiNzljYSJ9"], @"Pass");
+}
+
+- (void)testMutSignature {
+    NSMutableDictionary *mutDic = [[NSMutableDictionary alloc]init];
+    [mutDic setObject:@"/demo.png" forKey:@"path"];
+    [mutDic setObject:@"1409200758" forKey:@"expiration"];
+    [mutDic setObject:@"1" forKey:@"file_blocks"];
+    [mutDic setObject:@"b1143cbc07c8e768d517fa5e73cb79ca" forKey:@"file_hash"];
+    [mutDic setObject:@"653252" forKey:@"file_size"];
+    
+    NSString *passkey = @"cAnyet74l9hdUag34h2dZu8z7gU=";
+    NSString *policy = @"";
+    NSArray *keys = [[mutDic allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSString * key in keys) {
+        NSString * value = mutDic[key];
+        policy = [NSString stringWithFormat:@"%@%@%@", policy, key, value];
+    }
+    policy = [policy stringByAppendingString:passkey];
+    XCTAssert([[policy MD5] isEqual:@"a178e6e3ff4656e437811616ca842c48"], @"Pass");
+}
+
+- (void)testUploadFilePath {
+    
+    __weak UpYun *upyun = _upyun;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    
+    upyun.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+        NSLog(@"response %@", response);
+        XCTAssertNotNil(response);
+        [expectation fulfill];
+    };
+    upyun.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+    };
+    upyun.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"percent %f", percent);
+    };
+    
+    upyun.bucket = @"test654123";
+    upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
+    [_upyun uploadFile:filePath saveKey:@"/test2.png"];
+
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
     }];
 }
+
+- (void)testUploadFileData {
+    
+    __weak UpYun *upyun = _upyun;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    
+    upyun.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+        NSLog(@"response %@", response);
+        XCTAssertNotNil(response);
+        [expectation fulfill];
+    };
+    upyun.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+    };
+    upyun.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"percent %f", percent);
+    };
+    
+    upyun.bucket = @"test654123";
+    upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"fileTest.file"];
+    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+    [upyun uploadFile:fileData saveKey:@"/txt"];
+    
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
+- (void)testUploadImageData {
+    __weak UpYun *upyun = _upyun;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    
+    upyun.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+        NSLog(@"response %@", response);
+        XCTAssertNotNil(response);
+        [expectation fulfill];
+    };
+    upyun.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+    };
+    upyun.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"percent %f", percent);
+    };
+    
+    upyun.bucket = @"test654123";
+    upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
+    [upyun uploadFile:[UIImage imageNamed:@"image.jpg"] saveKey:@"/txt"];
+    
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
+
+
+//- (void)testPerformanceExample {
+//    // This is an example of a performance test case.
+//    [self measureBlock:^{
+//        // Put the code you want to measure the time of here.
+//    }];
+//}
 
 @end

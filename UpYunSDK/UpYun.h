@@ -15,38 +15,38 @@
  *	@brief 默认空间名(必填项), 可在init之后修改bucket的值来更改
  */
 
-#define DEFAULT_BUCKET @"test654123"
+static const NSString *DEFAULT_BUCKET = @"test654123";
 /**
  *	@brief	默认表单API密钥, 可在init之后修改passcode的值来更改
  */
-#define DEFAULT_PASSCODE @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc="
+static const NSString *DEFAULT_PASSCODE = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
 
 /**
  *	@brief	默认当前上传授权的过期时间，单位为“秒” （必填项，较大文件需要较长时间)，可在init之后修改expiresIn的值来更改
  */
 //#error 必填项
-#define DEFAULT_EXPIRES_IN 600
+static const NSInteger DEFAULT_EXPIRES_IN = 600;
 
 
 /**
  *	@brief 默认超过大小后走分块上传，可在init之后修改mutUploadSize的值来更改
  */
-#define DEFAULT_MUTUPLOAD_SIZE 2*1024*1024
+static const NSInteger DEFAULT_MUTUPLOAD_SIZE = 2*1024*1024;
 
 
 /**
  *	@brief 失败重传次数
  */
-#define DEFAULT_RETRY_TIMES 2
+static const NSInteger DEFAULT_RETRY_TIMES = 2;
 
 /**
  *  单个分块尺寸100kb(不可小于此值)
  */
-static NSInteger SingleBlockSize = 1024*100;
+static const NSInteger SingleBlockSize = 1024*100;
 
-#define API_DOMAIN @"http://v0.api.upyun.com/"
+static const NSString *FormAPIDomain = @"http://v0.api.upyun.com/";
 
-#define API_MUT_DOMAIN @"http://m0.api.upyun.com/"
+static const NSString *MutAPIDomain = @"http://m0.api.upyun.com/";
 
 
 #define DATE_STRING(expiresIn) [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970] + expiresIn]

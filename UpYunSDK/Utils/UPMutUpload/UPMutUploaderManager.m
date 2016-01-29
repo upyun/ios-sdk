@@ -84,13 +84,12 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
         NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
         fileSize = [fileDictionary fileSize];
         fileHash = [filePath FilePathMD5];
-    } else if (fileData) {
+    } else {
         fileHash = [fileData MD5HexDigest];
         fileSize = fileData.length;
     }
-    fileHash = @"45455565";
     NSInteger blockCount = [self calculateBlockCount:fileSize];
-    NSDictionary * parameters = @{@"file_blocks":@(blockCount),
+    NSDictionary *parameters = @{@"file_blocks":@(blockCount),
                                   @"file_hash":fileHash,
                                   @"file_size":@(fileSize)};
     return parameters;
@@ -153,7 +152,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     NSData *blockData;
     if (_filePathURL) {
         blockData = [UPMutUploaderManager getBlockWithFilePath:_filePathURL offset:index];
-    } else if (_blockDataArray.count > 0) {
+    } else {
         if (index >= _blockDataArray.count) {
             return;
         }
@@ -306,7 +305,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     NSDictionary *parameters = @{@"save_token":saveToken,
                                   @"expiration":DATE_STRING(ValidTimeSpan)};
     
-    NSString * mergePolicy = [self dictionaryToJSONStringBase64Encoding:parameters];
+    NSString *mergePolicy = [self dictionaryToJSONStringBase64Encoding:parameters];
     [self ministrantRequestWithSignature:[self createSignatureWithToken:tokenSecret
                                                              parameters:parameters]
                                   policy:mergePolicy
@@ -398,7 +397,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
                             parameters:(NSDictionary *)parameters {
     NSString *signature = @"";
     NSArray *keys = [parameters allKeys];
-    keys= [keys sortedArrayUsingSelector:@selector(compare:)];
+    keys = [keys sortedArrayUsingSelector:@selector(compare:)];
     for (NSString * key in keys) {
         NSString * value = parameters[key];
         signature = [NSString stringWithFormat:@"%@%@%@", signature, key, value];

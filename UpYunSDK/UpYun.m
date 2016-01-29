@@ -11,9 +11,9 @@
 #import "NSString+NSHash.h"
 #import "UPMutUploaderManager.h"
 
-#define ERROR_DOMAIN @"upyun.com"
+#define ERROR_DOMAIN @"UpYun.m"
 
-#define REQUEST_URL(bucket) [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/",API_DOMAIN,bucket]]
+#define REQUEST_URL(bucket) [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/", FormAPIDomain, bucket]]
 
 #define SUB_SAVE_KEY_FILENAME @"{filename}"
 
@@ -21,9 +21,9 @@
 @implementation UpYun
 - (instancetype)init {
     if (self = [super init]) {
-        self.bucket = DEFAULT_BUCKET;
+        self.bucket = [DEFAULT_BUCKET copy];
         self.expiresIn = DEFAULT_EXPIRES_IN;
-        self.passcode = DEFAULT_PASSCODE;
+        self.passcode = [DEFAULT_PASSCODE copy];
         self.mutUploadSize = DEFAULT_MUTUPLOAD_SIZE;
         self.retryTimes = DEFAULT_RETRY_TIMES;
     }
@@ -118,7 +118,6 @@
         }
     };
     
-    
     //失败回调
     HttpFailBlock httpFail = ^(NSError * error) {
         
@@ -175,7 +174,7 @@
     NSString *signature = signaturePolicyDic[@"signature"];
     NSString *policy = signaturePolicyDic[@"policy"];
     
-    [UPMutUploaderManager setServer:API_MUT_DOMAIN];
+    [UPMutUploaderManager setServer:[FormAPIDomain copy]];
     UPMutUploaderManager *manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
 
     __weak typeof(self)weakSelf = self;
@@ -204,8 +203,8 @@
  *  @return
  */
 - (NSDictionary *)constructingSignatureAndPolicyWithFileInfo:(NSDictionary *)fileInfo saveKey:(NSString*) saveKey{
-    NSMutableDictionary * mutableDic = [[NSMutableDictionary alloc]initWithDictionary:fileInfo];
-    [mutableDic setObject:@(ceil([[NSDate date] timeIntervalSince1970])+60) forKey:@"expiration"];//设置授权过期时间
+    NSMutableDictionary *mutableDic = [[NSMutableDictionary alloc]initWithDictionary:fileInfo];
+    [mutableDic setObject:DATE_STRING(self.expiresIn) forKey:@"expiration"];//设置授权过期时间
     [mutableDic setObject:saveKey forKey:@"path"];//设置保存路径
     /**
      *  这个 mutableDic 可以塞入其他可选参数 见：http://docs.upyun.com/api/multipart_upload/#_2
@@ -219,15 +218,14 @@
             signature = _signatureBlocker(policy);
         });
     } else if (self.passcode) {
-        NSArray * keys = [mutableDic allKeys];
-        keys= [keys sortedArrayUsingSelector:@selector(compare:)];
+        NSArray *keys = [[mutableDic allKeys] sortedArrayUsingSelector:@selector(compare:)];
         for (NSString * key in keys) {
             NSString * value = mutableDic[key];
-            signature = [NSString stringWithFormat:@"%@%@%@",signature,key,value];
+            signature = [NSString stringWithFormat:@"%@%@%@", signature, key, value];
         }
         signature = [signature stringByAppendingString:self.passcode];
     } else {
-        NSString *message = _signatureBlocker?@"没有提供密钥":@"没有实现signatureBlock";
+        NSString *message = _signatureBlocker ? @"没有提供密钥" : @"没有实现signatureBlock";
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1999
                                        userInfo:@{@"message":message}];
@@ -307,6 +305,5 @@
     }
     return YES;
 }
-
 
 @end
