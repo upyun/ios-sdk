@@ -5,5 +5,5 @@
 
 language: objective-c
 xcode_project: UpYunSDKDemo/UpYunSDKDemo.xcodeproj # path to your xcodeproj folder
-xcode_scheme: MyNewProjectTests
+xcode_scheme: UpYunSDKDemo
 xcode_sdk: iphonesimulator -destination platform='iOS Simulator',OS=9.0,name='iPhone 5s'
