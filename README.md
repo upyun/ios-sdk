@@ -12,6 +12,7 @@ UPYUN iOS SDK, 集成:
         ```
 	      pod 'UPYUN_iOS_SDK', '~> 1.0.0'
         ``` , `#import "UpYun.h"` 即可使用
+
 ### 要求
 - iOS 7.0 及以上版本, ARC 模式, 采用 NSURLSession 做网络库
 - iOS 9+ 强制使用 https，需要在 XXX.plist 添加 NSAppTransportSecurity 类型 Dictionary. 在 NSAppTransportSecurity 下添加 NSAllowsArbitraryLoads 类型 Boolean ,值设为 YES . --详细操作可参考 [iOS9 HTTP 不能正常使用的解决办法](https://segmentfault.com/a/1190000002933776) 和 [在Xcode7/7.1中使用Http请求](https://segmentfault.com/a/1190000003852877)
