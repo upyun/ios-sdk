@@ -7,26 +7,25 @@ UPYUN iOS SDK, 集成:
 
 
 ## 使用说明：
-* 1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用.
+* 1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用
 * 2.通过 CocoaPods 
         ```
 	      pod 'UPYUN_iOS_SDK', '~> 0.9'
-        ```
- 	
+        ``` , `#import "UpYun.h"` 即可使用
 ### 要求
-- iOS7.0及以上版本, ARC模式, 采用NSURLSession做网络库
-- iOS 9+ 强制使用https，需要在XXX.plist 添加NSAppTransportSecurity类型Dictionary。在NSAppTransportSecurity下添加NSAllowsArbitraryLoads类型Boolean,值设为YES.--详细操作可参考[iOS9 HTTP 不能正常使用的解决办法](https://segmentfault.com/a/1190000002933776)和[在Xcode7/7.1中使用Http请求](https://segmentfault.com/a/1190000003852877)
+- iOS 7.0 及以上版本, ARC 模式, 采用 NSURLSession 做网络库
+- iOS 9+ 强制使用 https，需要在 XXX.plist 添加 NSAppTransportSecurity 类型 Dictionary. 在 NSAppTransportSecurity 下添加 NSAllowsArbitraryLoads 类型 Boolean ,值设为 YES . --详细操作可参考 [iOS9 HTTP 不能正常使用的解决办法](https://segmentfault.com/a/1190000002933776) 和 [在Xcode7/7.1中使用Http请求](https://segmentfault.com/a/1190000003852877)
 
 ## 参数设置
 在 [UpYun.h](https://github.com/upyun/iOS-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置。
 
 * `DEFAULT_BUCKET` : 默认空间名（必填项）
-* `DEFAULT_PASSCODE` : 默认表单API功能密钥 , 用户从服务端获取signature则无须填写
+* `DEFAULT_PASSCODE` : 默认表单 API 功能密钥 , 用户从服务端获取 `signature` 则无须填写
 * `DEFAULT_EXPIRES_IN` : 默认当前上传授权的过期时间，单位为“秒” （必填项，较大文件需要较长时间)
 * `DEFAULT_MUTUPLOAD_SIZE` : 默认 `fallback` 分块上传的大小, 初始值: `2M`
 
 
-### 初始化UpYun
+### 初始化 UpYun
 ````
 UpYun *uy = [[UpYun alloc] init];
 ````
@@ -34,7 +33,7 @@ UpYun *uy = [[UpYun alloc] init];
 ### 上传文件
 
 ````
-uy.successBlocker = ^(id data) {
+uy.successBlocker = ^(NSURLResponse *response, id responseData) {
   //TODO
 };
 uy.failBlocker = ^(NSError * error) {
@@ -57,12 +56,12 @@ uy.uploadMethod = UPFormUpload;
 * 可传入类型：
  * `NSData`: 文件数据
  * `NSString`: 本地文件路径
- * `UIImage`: 传入的图片 (*当以此类型传入图片时，都会转成PNG数据，需要其他格式请先转成`NSData`传入 或者 传入文件路径*)
+ * `UIImage`: 传入的图片 (*当以此类型传入图片时，都会转成PNG数据，需要其他格式请先转成 `NSData` 传入 或者 传入文件路径 `NSString` *)
 
 #### 2、`saveKey` 要保存到又拍云存储的具体地址
 * 可传入类型：
  * `NSString`: 要保存到又拍云存储的具体地址
-* 由开发者自己生成saveKey:
+* 由开发者自己生成 saveKey :
   * 比如 `/dir/sample.jpg`表示以`sample.jpg` 为文件名保存到 `/dir` 目录下；
   * 若保存路径为 `/sample.jpg` , 则表示保存到根目录下；
   * **注意 `saveKey` 的路径必须是以`/`开始的**，下同
@@ -73,7 +72,8 @@ uy.uploadMethod = UPFormUpload;
 
 #### 3、`successBlocker` 上传成功回调
 * 回调中的参数：
-  * `data`: 成功后服务器返回的信息
+  * `response`: 成功后服务器返回的信息响应
+  * `responseData`: 成功后服务器返回的数据 `body` (JSON)格式
 
 #### 4、`failBlocker` 上传失败回调
 * 回调中的参数：
@@ -84,11 +84,11 @@ uy.uploadMethod = UPFormUpload;
   * `percent`: 上传进度的百分比
   * `requestDidSendBytes`: 已经发送的数据量
  
-#### 6、`signatureBlocker` 用户获取signature回调
+#### 6、`signatureBlocker` 用户获取 signature 回调
 * 回调中的参数：
-  * `policy`: 经过处理的policy字符串, 用户可以直接上传到用户服务端与 `密钥` 拼接, 
+  * `policy`: 经过处理的 policy 字符串, 用户可以直接上传到用户服务端与 `密钥` 拼接, 
 * 返回的参数：
-  * `sinature`: 用户服务端使用上传的 `policy` 生成的sinature, 或者用户自己生成 `sinature`
+  * `sinature`: 用户服务端使用上传的 `policy` 生成的 sinature , 或者用户自己生成 `sinature`
  
 #### 7、`params` [可选参数](http://docs.upyun.com/api/form_api/#api_1)
 
