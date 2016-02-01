@@ -1,5 +1,5 @@
 # UPYUN iOS SDK
-[![Build Status](https://travis-ci.org/upyun/iOS-sdk.svg?branch=master)](https://travis-ci.org/upyun/iOS-sdk)
+[![Build Status](https://travis-ci.org/upyun/ios-sdk.svg?branch=master)](https://travis-ci.org/upyun/ios-sdk)
 
 UPYUN iOS SDK, 集成:
 - [又拍云存储 表单 API接口](http://docs.upyun.com/api/form_api/) 
