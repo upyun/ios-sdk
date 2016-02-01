@@ -8,8 +8,6 @@
 
 #import "ViewController.h"
 #import "UpYun.h"
-#import "UPMutUploaderManager.h"
-#import "NSString+NSHash.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *image;

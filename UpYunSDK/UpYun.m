@@ -78,6 +78,7 @@
             [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
             break;
         case UPMUtUPload:
+            
             [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
             break;
     }
@@ -185,7 +186,7 @@
     NSString *signature = signaturePolicyDic[@"signature"];
     NSString *policy = signaturePolicyDic[@"policy"];
     
-    [UPMutUploaderManager setServer:[FormAPIDomain copy]];
+    [UPMutUploaderManager setServer:[MutAPIDomain copy]];
     UPMutUploaderManager *manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
 
     __weak typeof(self)weakSelf = self;
