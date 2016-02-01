@@ -57,7 +57,7 @@ uy.uploadMethod = UPFormUpload;
 * 可传入类型：
  * `NSData`: 文件数据
  * `NSString`: 本地文件路径
- * `UIImage`: 传入的图片 (*当以此类型传入图片时，都会转成PNG数据，需要其他格式请先转成 `NSData` 传入 或者 传入文件路径 `NSString` *)
+ * `UIImage`: 传入的图片 (*当以此类型传入图片时，都会转成PNG数据，需要其他格式请先转成 `NSData` 传入 或者 传入文件路径 `NSString`*)
 
 #### 2、`saveKey` 要保存到又拍云存储的具体地址
 * 可传入类型：
