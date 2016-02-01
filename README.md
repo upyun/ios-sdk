@@ -7,14 +7,21 @@ UPYUN iOS SDK, 集成:
 
 
 ## 使用说明：
-直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用.
+* 1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用.
+* 2.通过 CocoaPods 
+        ```
+	      pod 'UPYUN_iOS_SDK', '~> 0.9'
+        ```
+ 	
 ### 要求
-iOS7.0及以上版本, ARC模式, 采用NSURLSession做网络库
+- iOS7.0及以上版本, ARC模式, 采用NSURLSession做网络库
+- iOS 9+ 强制使用https，需要在XXX.plist 添加NSAppTransportSecurity类型Dictionary。在NSAppTransportSecurity下添加NSAllowsArbitraryLoads类型Boolean,值设为YES.--详细操作可参考[iOS9 HTTP 不能正常使用的解决办法](https://segmentfault.com/a/1190000002933776)和[在Xcode7/7.1中使用Http请求](https://segmentfault.com/a/1190000003852877)
+
 ## 参数设置
 在 [UpYun.h](https://github.com/upyun/iOS-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置。
 
 * `DEFAULT_BUCKET` : 默认空间名（必填项）
-* `DEFAULT_PASSCODE` : 默认表单API功能密钥 , 用户也可自行从服务端获取
+* `DEFAULT_PASSCODE` : 默认表单API功能密钥 , 用户从服务端获取signature则无须填写
 * `DEFAULT_EXPIRES_IN` : 默认当前上传授权的过期时间，单位为“秒” （必填项，较大文件需要较长时间)
 * `DEFAULT_MUTUPLOAD_SIZE` : 默认 `fallback` 分块上传的大小, 初始值: `2M`
 

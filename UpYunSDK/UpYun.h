@@ -62,7 +62,7 @@ typedef void(^UPCompeleteBlock)(NSError *error, NSDictionary *result, BOOL compl
 
 typedef void(^UPSuccessBlock)(NSURLResponse *response, id responseData);
 typedef void(^UPFailBlock)(NSError *error);
-typedef void(^UPProGgressBlock)(CGFloat percent, int64_t requestDidSendBytes);
+typedef void(^UPProgressBlock)(CGFloat percent, int64_t requestDidSendBytes);
 typedef NSString*(^UPSignatureBlock)(NSString *policy);
 
 
@@ -84,7 +84,7 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 
 @property (nonatomic, copy) UPFailBlock       failBlocker;
 
-@property (nonatomic, copy) UPProGgressBlock  progressBlocker;
+@property (nonatomic, copy) UPProgressBlock  progressBlocker;
 
 @property (nonatomic, copy) UPSignatureBlock  signatureBlocker;
 

@@ -59,7 +59,7 @@
 - (void)uploadWithFile:(NSData *)fileData OrFilePath:(NSString *)filePath
                                   policy:(NSString *)policy
                                signature:(NSString *)signature
-                           progressBlock:(UPProGgressBlock)progressBlock
+                           progressBlock:(UPProgressBlock)progressBlock
                            completeBlock:(UPCompeleteBlock)completeBlock;
 
 /**

@@ -101,7 +101,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
                         OrFilePath:(NSString *)filePath
                             policy:(NSString *)policy
                          signature:(NSString *)signature
-                     progressBlock:(UPProGgressBlock)progressBlock
+                     progressBlock:(UPProgressBlock)progressBlock
                      completeBlock:(UPCompeleteBlock)completeBlock {
     [_uploadingClientArray removeAllObjects];
     _isUploadTaskFinish = NO;
@@ -143,7 +143,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
 
 #pragma mark Upload Block
 
-- (void)uploadBlockIndex:(NSInteger)index progressBlock:(UPProGgressBlock)progressBlock
+- (void)uploadBlockIndex:(NSInteger)index progressBlock:(UPProgressBlock)progressBlock
            completeBlock:(UPCompeleteBlock)completeBlock {
     if (index >= _progressArray.count) {
         return;
