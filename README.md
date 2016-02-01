@@ -10,7 +10,7 @@ UPYUN iOS SDK, 集成:
 * 1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用
 * 2.通过 CocoaPods 
         ```
-	      pod 'UPYUN_iOS_SDK', '~> 0.9'
+	      pod 'UPYUN_iOS_SDK', '~> 1.0.0'
         ``` , `#import "UpYun.h"` 即可使用
 ### 要求
 - iOS 7.0 及以上版本, ARC 模式, 采用 NSURLSession 做网络库
