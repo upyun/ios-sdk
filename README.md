@@ -14,12 +14,12 @@ UPYUN iOS SDK, 集成:
 
 2.通过 CocoaPods 
         ```
-	      pod 'UPYUN_iOS_SDK', '~> 1.0.0'
+	      pod 'UPYUN', '~> 1.0.0'
         ``` , `#import "UpYun.h"` 即可使用
 
 
 ## 参数设置
-在 [UPYUNConfig.m](https://github.com/upyun/ios-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置, 通过 CocoaPods 引用的可以通过 ``` [UPYUNConfig sharedInstance].DEFAULT_BUCKET ``` 来进行修改
+在 [UPYUNConfig.m](https://github.com/upyun/ios-sdk/blob/master/UpYunSDK/UPYUNConfig.m) 中可以对 SDK 的一些参数进行配置, 通过 CocoaPods 引用的可以通过 ``` [UPYUNConfig sharedInstance].DEFAULT_BUCKET ``` 来进行修改
 
 * `DEFAULT_BUCKET` : 默认空间名（必填项）, 
 * `DEFAULT_PASSCODE` : 默认表单 API 功能密钥 , 用户从服务端获取 `signature` 则无须填写

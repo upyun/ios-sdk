@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "NSData+MD5Digest.h"
+#import "UPYUNConfig.h"
 
 #import "UPHTTPClient.h"
 

@@ -35,6 +35,8 @@
 }
 
 - (IBAction)uploadFile:(id)sender {
+    [UPYUNConfig sharedInstance].DEFAULT_BUCKET = @"test654123";
+    [UPYUNConfig sharedInstance].DEFAULT_PASSCODE = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
     __block UpYun *uy = [[UpYun alloc] init];
     uy.successBlocker = ^(NSURLResponse *response, id responseData) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];

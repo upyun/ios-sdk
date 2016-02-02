@@ -10,7 +10,7 @@
 #import "UPMultipartBody.h"
 #import "NSString+NSHash.h"
 #import "UPMutUploaderManager.h"
-#import "UPYUNConfig.h"
+
 
 #define ERROR_DOMAIN @"UpYun.m"
 

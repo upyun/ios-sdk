@@ -21,8 +21,8 @@
         sharedInstance.DEFAULT_MUTUPLOAD_SIZE = 4*1024*1024;
         sharedInstance.DEFAULT_RETRY_TIMES = 2;
         sharedInstance.SingleBlockSize = 500*1024;
-        sharedInstance.FormAPIDomain = @"http://v0.api.upyun.com/";
-        sharedInstance.MutAPIDomain = @"http://m0.api.upyun.com/";
+        sharedInstance.FormAPIDomain = @"https://v0.api.upyun.com/";
+        sharedInstance.MutAPIDomain = @"https://m0.api.upyun.com/";
     });
     return sharedInstance;
 }

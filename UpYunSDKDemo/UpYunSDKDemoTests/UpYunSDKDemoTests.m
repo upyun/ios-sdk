@@ -34,7 +34,7 @@
     
     _upyun.bucket = @"test654123";
     _upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
-//    _upyun.uploadMethod = UPMUtUPload;
+//    _upyun.uploadMethod = UPMutUPload;
 }
 
 - (void)tearDown {
@@ -213,7 +213,7 @@
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
         NSLog(@"%f", percent);
     };
-    uy.uploadMethod = UPMUtUPload;
+    uy.uploadMethod = UPMutUPload;
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image1333.jpg"];
     [uy uploadFile:filePath saveKey:@"/test2.png"];

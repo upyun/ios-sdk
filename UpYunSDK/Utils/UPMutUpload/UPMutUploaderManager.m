@@ -11,7 +11,6 @@
 #import "NSString+NSHash.h"
 #import "UPHTTPClient.h"
 #import "UPMultipartBody.h"
-#import "UPYUNConfig.h"
 
 
 static NSString *UPMUT_ERROR_DOMAIN = @"分块上传";
