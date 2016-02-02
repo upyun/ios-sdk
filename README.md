@@ -5,34 +5,40 @@ UPYUN iOS SDK, 集成:
 - [又拍云存储 表单 API接口](http://docs.upyun.com/api/form_api/) 
 - [又拍云存储 分块上传接口](http://docs.upyun.com/api/multipart_upload/)
 
-
-## 使用说明：
-* 1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用
-* 2.通过 CocoaPods 
-        ```
-	      pod 'UPYUN_iOS_SDK', '~> 1.0.0'
-        ``` , `#import "UpYun.h"` 即可使用
-### 要求
+## 运行环境
 - iOS 7.0 及以上版本, ARC 模式, 采用 NSURLSession 做网络库
 - iOS 9+ 强制使用 https，需要在 XXX.plist 添加 NSAppTransportSecurity 类型 Dictionary. 在 NSAppTransportSecurity 下添加 NSAllowsArbitraryLoads 类型 Boolean ,值设为 YES . --详细操作可参考 [iOS9 HTTP 不能正常使用的解决办法](https://segmentfault.com/a/1190000002933776) 和 [在Xcode7/7.1中使用Http请求](https://segmentfault.com/a/1190000003852877)
 
+## 使用说明：
+1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用
+
+2.通过 CocoaPods 
+        ```
+	      pod 'UPYUN_iOS_SDK', '~> 1.0.0'
+        ``` , `#import "UpYun.h"` 即可使用
+
+
 ## 参数设置
-在 [UpYun.h](https://github.com/upyun/iOS-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置。
+在 [UpYun.h](https://github.com/upyun/ios-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置。
 
 * `DEFAULT_BUCKET` : 默认空间名（必填项）
 * `DEFAULT_PASSCODE` : 默认表单 API 功能密钥 , 用户从服务端获取 `signature` 则无须填写
 * `DEFAULT_EXPIRES_IN` : 默认当前上传授权的过期时间，单位为“秒” （必填项，较大文件需要较长时间)
 * `DEFAULT_MUTUPLOAD_SIZE` : 默认 `fallback` 分块上传的大小, 初始值: `2M`
+* `DEFAULT_RETRY_TIMES` : 失败之后重传次数, 默认2次
+* `SingleBlockSize` : 单个分块大小, 默认100KB
 
 
-### 初始化 UpYun
+
+
+## 上传接口
+
+> 详细示例请见 UpYunSDKDemo 的 [Viewcontroller](https://github.com/upyun/ios-sdk/blob/master/UpYunSDKDemo/UpYunSDKDemo/ViewController.m) 或着 [test](https://github.com/upyun/ios-sdk/blob/master/UpYunSDKDemo/UpYunSDKDemoTests/UpYunSDKDemoTests.m)。
+
+### 文件上传
+
 ````
 UpYun *uy = [[UpYun alloc] init];
-````
-
-### 上传文件
-
-````
 uy.successBlocker = ^(NSURLResponse *response, id responseData) {
   //TODO
 };
@@ -50,13 +56,15 @@ uy.uploadMethod = UPFormUpload;
 
 [uy uploadFile:'file' saveKey:'saveKey'];
 ````
+
+
 ### 参数说明：
 
 #### 1、`file` 需要上传的文件
 * 可传入类型：
  * `NSData`: 文件数据
  * `NSString`: 本地文件路径
- * `UIImage`: 传入的图片 (*当以此类型传入图片时，都会转成PNG数据，需要其他格式请先转成 `NSData` 传入 或者 传入文件路径 `NSString` *)
+ * `UIImage`: 传入的图片 (*当以此类型传入图片时，都会转成PNG数据，需要其他格式请先转成 `NSData` 传入 或者 传入文件路径 `NSString`*)
 
 #### 2、`saveKey` 要保存到又拍云存储的具体地址
 * 可传入类型：
