@@ -133,7 +133,7 @@
     //失败回调
     HttpFailBlock httpFail = ^(NSError * error) {
         
-        if (retryTimes > 0 && error.code/5 == 100) {
+        if (retryTimes > 0 && error.code/100 == 5) {
             [weakSelf formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:retryTimes-1];
         } else {
             if (_failBlocker) {
@@ -196,7 +196,7 @@
                     _successBlocker(result[@"response"], result[@"responseData"]);
                 }
             } else {
-                if (retryTimes > 0 && error.code/5 == 100) {
+                if (retryTimes > 0 && error.code/100 == 5) {
                     [weakSelf mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:retryTimes-1];
                 } else {
                     if (_failBlocker) {
