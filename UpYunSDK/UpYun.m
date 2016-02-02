@@ -55,6 +55,9 @@
     if (![self checkSavekey:savekey]) {
         return;
     }
+    if ([self checkFileData:data]) {
+        return;
+    }
     [self uploadSavekey:savekey data:data filePath:nil];
 }
 
@@ -324,6 +327,21 @@
             _failBlocker(err);
         }
 
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)checkFileData:(NSData *)filedata {
+    if (!filedata) {
+        NSString *message = [NSString stringWithFormat:@"传入filedata 为空！"];
+        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-1997
+                                       userInfo:@{@"message":message}];
+        if (_failBlocker) {
+            _failBlocker(err);
+        }
+        
         return NO;
     }
     return YES;
