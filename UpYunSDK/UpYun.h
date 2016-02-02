@@ -51,9 +51,9 @@ static const NSInteger DEFAULT_RETRY_TIMES = 2;
  */
 static const NSInteger SingleBlockSize = 1024*500;
 
-static const NSString *FormAPIDomain = @"http://v0.api.upyun.com/";
+static const NSString *FormAPIDomain = @"https://v0.api.upyun.com/";
 
-static const NSString *MutAPIDomain = @"http://m0.api.upyun.com/";
+static const NSString *MutAPIDomain = @"https://m0.api.upyun.com/";
 
 
 #define DATE_STRING(expiresIn) [NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970] + expiresIn]

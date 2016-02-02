@@ -20,7 +20,7 @@
 + (void)setValidTimeSpan:(NSTimeInterval)validTimeSpan;
 
 /**
- *  设置服务器地址 默认 @"http://m0.api.upyun.com/"
+ *  设置服务器地址 默认 @"https://m0.api.upyun.com/"
  *
  *  @param server 服务器地址
  */

@@ -18,7 +18,7 @@ static NSString *UPMUT_ERROR_DOMAIN = @"分块上传";
 /**
  *  请求api地址
  */
-static NSString *API_SERVER = @"http://m0.api.upyun.com/";
+static NSString *API_SERVER = @"https://m0.api.upyun.com/";
 
 
 /**
