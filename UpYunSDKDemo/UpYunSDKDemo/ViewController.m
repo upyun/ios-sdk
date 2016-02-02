@@ -50,7 +50,7 @@
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
         [_pv setProgress:percent];
     };
-    uy.uploadMethod = UPMUtUPload;
+    uy.uploadMethod = UPMutUPload;
     
 //    UPFileSizeUpload = 1,
 //    UPFormUpload = 2,

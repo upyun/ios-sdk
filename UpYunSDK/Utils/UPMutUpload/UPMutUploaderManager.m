@@ -11,15 +11,10 @@
 #import "NSString+NSHash.h"
 #import "UPHTTPClient.h"
 #import "UPMultipartBody.h"
+#import "UPYUNConfig.h"
 
 
 static NSString *UPMUT_ERROR_DOMAIN = @"分块上传";
-
-/**
- *  请求api地址
- */
-static NSString *API_SERVER = @"http://m0.api.upyun.com/";
-
 
 /**
  *  同一个bucket 上传文件时最大并发请求数
@@ -69,10 +64,6 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
 
 + (void)setValidTimeSpan:(NSTimeInterval)validTimeSpan {
     ValidTimeSpan = validTimeSpan;
-}
-
-+ (void)setServer:(NSString *)server {
-    API_SERVER = server;
 }
 
 #pragma mark - Public Methods
@@ -251,7 +242,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     NSDictionary *parameters = @{@"policy":uploadPolicy, @"signature":[self createSignatureWithToken:tokenSecret parameters:policyParameters]};
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", API_SERVER, self.bucket]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [UPYUNConfig sharedInstance].FormAPIDomain, self.bucket]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url.absoluteString]];
     
     UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
@@ -327,7 +318,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
 
     NSDictionary *requestParameters = @{@"policy":policy, @"signature":signature};
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", API_SERVER, self.bucket]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [UPYUNConfig sharedInstance].MutAPIDomain, self.bucket]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = @"POST";
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -368,15 +359,16 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
 
 //计算文件块数
 + (NSInteger)calculateBlockCount:(NSUInteger)fileLength {
-    return ceil(fileLength*1.0/SingleBlockSize);
+    return ceil(fileLength*1.0/[UPYUNConfig sharedInstance].SingleBlockSize);
 }
 
 //生成单个文件块
 + (NSData *)getBlockWithFilePath:(NSString *)filePath offset:(NSInteger)index {
     NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:filePath];
-    NSInteger startLocation = index * SingleBlockSize;
+    NSInteger blickSize = [UPYUNConfig sharedInstance].SingleBlockSize;
+    NSInteger startLocation = index * blickSize;
     [handle seekToFileOffset:startLocation];
-    NSData *subData = [handle readDataOfLength:SingleBlockSize];
+    NSData *subData = [handle readDataOfLength:blickSize];
     [handle closeFile];
     return [subData copy];
 }
@@ -386,8 +378,8 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     NSInteger blockCount = [self calculateBlockCount:fileData.length];
     NSMutableArray * blocks = [[NSMutableArray alloc]init];
     for (int i = 0; i < blockCount;i++ ) {
-        NSInteger startLocation = i*SingleBlockSize;
-        NSInteger length = SingleBlockSize;
+        NSInteger length = [UPYUNConfig sharedInstance].SingleBlockSize;
+        NSInteger startLocation = i*length;
         if (startLocation+length > fileData.length) {
             length = fileData.length-startLocation;
         }

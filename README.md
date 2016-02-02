@@ -19,16 +19,15 @@ UPYUN iOS SDK, 集成:
 
 
 ## 参数设置
-在 [UpYun.h](https://github.com/upyun/ios-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置。
+在 [UPYUNConfig.m](https://github.com/upyun/ios-sdk/blob/master/UpYunSDK/UpYun.h) 中可以对 SDK 的一些参数进行配置, 通过 CocoaPods 引用的可以通过 ``` [UPYUNConfig sharedInstance].DEFAULT_BUCKET ``` 来进行修改
 
-* `DEFAULT_BUCKET` : 默认空间名（必填项）
+* `DEFAULT_BUCKET` : 默认空间名（必填项）, 
 * `DEFAULT_PASSCODE` : 默认表单 API 功能密钥 , 用户从服务端获取 `signature` 则无须填写
 * `DEFAULT_EXPIRES_IN` : 默认当前上传授权的过期时间，单位为“秒” （必填项，较大文件需要较长时间)
-* `DEFAULT_MUTUPLOAD_SIZE` : 默认 `fallback` 分块上传的大小, 初始值: `2M`
 * `DEFAULT_RETRY_TIMES` : 失败之后重传次数, 默认2次
-* `SingleBlockSize` : 单个分块大小, 默认100KB
+* `SingleBlockSize` : 单个分块大小, 默认500KB
 
-
+**注意: 如果需要在上传的过程中不断变动一些参数值, 建议初始化 `UpYun` 之后, 通过 `UpYun` 的属性来修改**
 
 
 ## 上传接口

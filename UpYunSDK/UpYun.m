@@ -10,22 +10,22 @@
 #import "UPMultipartBody.h"
 #import "NSString+NSHash.h"
 #import "UPMutUploaderManager.h"
+#import "UPYUNConfig.h"
 
 #define ERROR_DOMAIN @"UpYun.m"
-
-#define REQUEST_URL(bucket) [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/", FormAPIDomain, bucket]]
 
 #define SUB_SAVE_KEY_FILENAME @"{filename}"
 
 
 @implementation UpYun
+
 - (instancetype)init {
     if (self = [super init]) {
-        self.bucket = [DEFAULT_BUCKET copy];
-        self.expiresIn = DEFAULT_EXPIRES_IN;
-        self.passcode = [DEFAULT_PASSCODE copy];
-        self.mutUploadSize = DEFAULT_MUTUPLOAD_SIZE;
-        self.retryTimes = DEFAULT_RETRY_TIMES;
+        self.bucket = [UPYUNConfig sharedInstance].DEFAULT_BUCKET;
+        self.expiresIn = [UPYUNConfig sharedInstance].DEFAULT_EXPIRES_IN;
+        self.passcode = [UPYUNConfig sharedInstance].DEFAULT_PASSCODE;
+        self.mutUploadSize = [UPYUNConfig sharedInstance].DEFAULT_MUTUPLOAD_SIZE;
+        self.retryTimes = [UPYUNConfig sharedInstance].DEFAULT_RETRY_TIMES;
         self.uploadMethod = UPFormUpload;
     }
     return self;
@@ -77,7 +77,7 @@
         case UPFormUpload:
             [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
             break;
-        case UPMUtUPload:
+        case UPMutUPload:
             
             [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
             break;
@@ -173,7 +173,7 @@
     }
     [multiBody addFileData:data OrFilePath:filePath fileName:fileName fileType:nil];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:REQUEST_URL(self.bucket)];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/", [UPYUNConfig sharedInstance].FormAPIDomain, self.bucket]]];
     request.HTTPMethod = @"POST";
     request.HTTPBody = [multiBody dataFromPart];
     [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", multiBody.boundary] forHTTPHeaderField:@"Content-Type"];
@@ -194,7 +194,6 @@
     NSString *signature = signaturePolicyDic[@"signature"];
     NSString *policy = signaturePolicyDic[@"policy"];
     
-    [UPMutUploaderManager setServer:[MutAPIDomain copy]];
     UPMutUploaderManager *manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
 
     __weak typeof(self)weakSelf = self;
