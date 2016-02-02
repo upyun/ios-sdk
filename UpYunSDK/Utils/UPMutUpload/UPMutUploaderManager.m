@@ -241,7 +241,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     NSDictionary *parameters = @{@"policy":uploadPolicy, @"signature":[self createSignatureWithToken:tokenSecret parameters:policyParameters]};
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [UPYUNConfig sharedInstance].FormAPIDomain, self.bucket]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [UPYUNConfig sharedInstance].MutAPIDomain, self.bucket]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url.absoluteString]];
     
     UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
@@ -316,7 +316,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
                          completeBlock:(UPCompeleteBlock)completeBlock {
 
     NSDictionary *requestParameters = @{@"policy":policy, @"signature":signature};
-    
+    NSLog(@"self.bucket %@", requestParameters);
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [UPYUNConfig sharedInstance].MutAPIDomain, self.bucket]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = @"POST";
