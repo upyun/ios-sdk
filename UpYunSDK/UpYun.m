@@ -26,7 +26,7 @@
         self.passcode = [DEFAULT_PASSCODE copy];
         self.mutUploadSize = DEFAULT_MUTUPLOAD_SIZE;
         self.retryTimes = DEFAULT_RETRY_TIMES;
-        self.uploadMethod = UPFileSizeUpload;
+        self.uploadMethod = UPFormUpload;
     }
     return self;
 }
@@ -67,13 +67,13 @@
     }
     
     switch (_uploadMethod) {
-        case UPFileSizeUpload:
-            if (fileSize > self.mutUploadSize) {
-                [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
-            } else {
-                [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
-            }
-            break;
+//        case UPFileSizeUpload:
+//            if (fileSize > self.mutUploadSize) {
+//                [self mutUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
+//            } else {
+//                [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
+//            }
+//            break;
         case UPFormUpload:
             [self formUploadWithFileData:data FilePath:filePath SaveKey:savekey RetryTimes:_retryTimes];
             break;
@@ -85,6 +85,9 @@
 }
 
 - (void)uploadFile:(id)file saveKey:(NSString *)saveKey {
+    if (file == nil) {
+        file = [NSData data];//默认按照空数据处理
+    }
 
     if([file isKindOfClass:[UIImage class]]) {
         [self uploadImage:file savekey:saveKey];
@@ -163,7 +166,12 @@
     
     UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
     [multiBody addDictionary:@{@"policy":policy, @"signature":signature}];
-    [multiBody addFileData:data OrFilePath:filePath fileName:@"file" fileType:nil];
+    
+    NSString *fileName = [filePath lastPathComponent];
+    if (!fileName) {
+        fileName = @"fileName";
+    }
+    [multiBody addFileData:data OrFilePath:filePath fileName:fileName fileType:nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:REQUEST_URL(self.bucket)];
     request.HTTPMethod = @"POST";
@@ -216,6 +224,11 @@
  */
 - (NSDictionary *)constructingSignatureAndPolicyWithFileInfo:(NSDictionary *)fileInfo saveKey:(NSString*) saveKey{
     NSMutableDictionary *mutableDic = [[NSMutableDictionary alloc]initWithDictionary:fileInfo];
+    if (self.params) {
+        for (NSString *key in self.params.keyEnumerator) {
+            [mutableDic setObject:[self.params objectForKey:key] forKey:key];
+        }
+    }
     [mutableDic setObject:DATE_STRING(self.expiresIn) forKey:@"expiration"];//设置授权过期时间
     [mutableDic setObject:saveKey forKey:@"path"];//设置保存路径
     /**
@@ -256,7 +269,6 @@
     if (savekey && ![savekey isEqualToString:@""]) {
         [dic setObject:savekey forKey:@"save-key"];
     }
-    
     if (self.params) {
         for (NSString *key in self.params.keyEnumerator) {
             [dic setObject:[self.params objectForKey:key] forKey:key];

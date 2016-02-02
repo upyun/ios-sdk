@@ -34,6 +34,7 @@
     
     _upyun.bucket = @"test654123";
     _upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
+//    _upyun.uploadMethod = UPMUtUPload;
 }
 
 - (void)tearDown {
@@ -80,7 +81,6 @@
 }
 
 - (void)testUploadFilePath {
-    
     __weak UpYun *upyun = _upyun;
     XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
     
@@ -112,7 +112,6 @@
 }
 
 - (void)testUploadFileData {
-    
     __weak UpYun *upyun = _upyun;
     XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
     
@@ -166,7 +165,82 @@
     upyun.bucket = @"test654123";
     upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
     [upyun uploadFile:[UIImage imageNamed:@"image.jpg"] saveKey:@"/txt"];
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
+- (void)testSaveKey {
+    __weak UpYun *upyun = _upyun;
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    upyun.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+        NSLog(@"response %@", response);
+        XCTAssertNotNil(response);
+        [expectation fulfill];
+    };
+    upyun.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+    };
+    upyun.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"percent %f", percent);
+    };
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
+    [_upyun uploadFile:filePath saveKey:@"/{year}/{mon}/{filename}{.suffix}"];
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
+- (void)testNoFile {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    __block UpYun *uy = _upyun;
+    uy.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"response body %@", responseData);
+    };
+    uy.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+        XCTAssert(message != nil);
+        [expectation fulfill];
+    };
+    uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"%f", percent);
+    };
+    uy.uploadMethod = UPMUtUPload;
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image1333.jpg"];
+    [uy uploadFile:filePath saveKey:@"/test2.png"];
     
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
+- (void)testNoData {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    __block UpYun *uy = _upyun;
+    uy.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"response body %@", responseData);
+    };
+    uy.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+        XCTAssert(message != nil);
+        [expectation fulfill];
+    };
+    uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"%f", percent);
+    };
+    [uy uploadFile:nil saveKey:@"/test2.png"];
     
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if(error) {
@@ -176,12 +250,96 @@
 }
 
 
+- (void)testWrongBucket {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    __block UpYun *uy = _upyun;
+    uy.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+        NSLog(@"response %@", response);
+        XCTAssertNotNil(response);
+    };
+    uy.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+        XCTAssert(message != nil);
+        [expectation fulfill];
+    };
+    uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"%f", percent);
+    };
+    uy.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
+    uy.bucket = @"test6541233";
 
-//- (void)testPerformanceExample {
-//    // This is an example of a performance test case.
-//    [self measureBlock:^{
-//        // Put the code you want to measure the time of here.
-//    }];
-//}
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
+    [uy uploadFile:filePath saveKey:@"/test2.png"];
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
+- (void)testWrongPasscode {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    __block UpYun *uy = _upyun;
+    uy.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+        NSLog(@"response %@", response);
+        XCTAssertNotNil(response);
+    };
+    uy.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+        XCTAssert(message != nil);
+        [expectation fulfill];
+    };
+    uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"%f", percent);
+    };
+    uy.passcode = @"vcVus6Xo+nn51sJmGjqsW8rTpKs=ppppo";
+    uy.bucket = @"test86400";
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
+    [uy uploadFile:filePath saveKey:@"/test2.png"];
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
+- (void)testParams {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Async Upload!"];
+    __block UpYun *uy = _upyun;
+    uy.successBlocker = ^(NSURLResponse *response, id responseData) {
+        NSLog(@"success %@", responseData);
+        NSLog(@"response %@", response);
+        XCTAssertNotNil(response);
+        [expectation fulfill];
+    };
+    uy.failBlocker = ^(NSError * error) {
+        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSLog(@"error %@", message);
+        XCTAssert(message != nil);
+    };
+    uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        NSLog(@"%f", percent);
+    };
+    NSMutableDictionary *paramsDict = [NSMutableDictionary new];
+    [paramsDict setObject:@"audio/mp3" forKey:@"content-type"];
+    uy.params = paramsDict;
+    void * bytes = malloc(123);
+    NSData * data = [NSData dataWithBytes:bytes length:123];
+    free(bytes);
+
+    [uy uploadFile:data saveKey:@"/test23"];
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if(error) {
+            XCTFail(@"Expectation Failed with error: %@", error);
+        }
+    }];
+}
+
 
 @end

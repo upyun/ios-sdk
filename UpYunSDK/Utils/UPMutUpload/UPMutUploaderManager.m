@@ -256,7 +256,12 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
     [multiBody addDictionary:parameters];
-    [multiBody addFileData:fileBlockData fileName:@"file" fileType:nil];
+    
+    NSString *fileName = [_filePathURL lastPathComponent];
+    if (!fileName) {
+        fileName = @"fileName";
+    }
+    [multiBody addFileData:fileBlockData fileName:fileName fileType:nil];
 
     request.HTTPMethod = @"POST";
     request.HTTPBody = [multiBody dataFromPart];

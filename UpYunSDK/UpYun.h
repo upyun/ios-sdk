@@ -13,7 +13,7 @@
 #import "UPHTTPClient.h"
 
 typedef NS_ENUM(NSUInteger, UPUploadMethod) {
-    UPFileSizeUpload = 1,
+//    UPFileSizeUpload = 1,
     UPFormUpload = 2,
     UPMUtUPload = 3
 };
@@ -38,7 +38,7 @@ static const NSInteger DEFAULT_EXPIRES_IN = 600;
 /**
  *	@brief 默认超过大小后走分块上传，可在init之后修改mutUploadSize的值来更改
  */
-static const NSInteger DEFAULT_MUTUPLOAD_SIZE = 2*1024*1024;
+static const NSInteger DEFAULT_MUTUPLOAD_SIZE = 4*1024*1024;
 
 
 /**
@@ -49,7 +49,7 @@ static const NSInteger DEFAULT_RETRY_TIMES = 2;
 /**
  *  单个分块尺寸100kb(不可小于此值)
  */
-static const NSInteger SingleBlockSize = 1024*100;
+static const NSInteger SingleBlockSize = 1024*500;
 
 static const NSString *FormAPIDomain = @"http://v0.api.upyun.com/";
 

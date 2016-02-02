@@ -71,6 +71,7 @@
               failure:(HttpFailBlock)failureBlock
              progress:(HttpProgressBlock)progressBlock {
     //发起请求
+    [request setValue:@"2" forHTTPHeaderField:@"x-upyun-api-version"];
     _progressBlock = progressBlock;
     _successBlock = successBlock;
     _failureBlock = failureBlock;

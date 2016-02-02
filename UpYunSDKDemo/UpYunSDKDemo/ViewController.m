@@ -51,6 +51,13 @@
         [_pv setProgress:percent];
     };
     uy.uploadMethod = UPMUtUPload;
+    
+//    UPFileSizeUpload = 1,
+//    UPFormUpload = 2,
+//    UPMUtUPload = 3
+
+    
+    
 //    如果 sinature 由服务端生成, 只需要将policy 和 密钥 拼接之后进行MD5, 否则就不用初始化signatureBlocker
 //    uy.signatureBlocker = ^(NSString *policy)
 //    {
