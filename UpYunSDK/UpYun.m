@@ -55,7 +55,7 @@
     if (![self checkSavekey:savekey]) {
         return;
     }
-    if ([self checkFileData:data]) {
+    if (![self checkFileData:data]) {
         return;
     }
     [self uploadSavekey:savekey data:data filePath:nil];
@@ -88,10 +88,11 @@
 }
 
 - (void)uploadFile:(id)file saveKey:(NSString *)saveKey {
-    if (file == nil) {
-        file = [NSData data];//默认按照空数据处理
-    }
 
+    if (![self checkFile:file]) {
+        return;
+    }
+    
     if([file isKindOfClass:[UIImage class]]) {
         [self uploadImage:file savekey:saveKey];
     } else if([file isKindOfClass:[NSData class]]) {
@@ -335,6 +336,21 @@
 - (BOOL)checkFileData:(NSData *)filedata {
     if (!filedata) {
         NSString *message = [NSString stringWithFormat:@"传入filedata 为空！"];
+        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-1997
+                                       userInfo:@{@"message":message}];
+        if (_failBlocker) {
+            _failBlocker(err);
+        }
+        
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)checkFile:(id) file {
+    if (!file) {
+        NSString *message = [NSString stringWithFormat:@"传入file 为空！"];
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1997
                                        userInfo:@{@"message":message}];

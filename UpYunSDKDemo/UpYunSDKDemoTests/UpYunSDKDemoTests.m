@@ -137,7 +137,7 @@
     [upyun uploadFile:fileData saveKey:@"/txt"];
     
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:10 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
