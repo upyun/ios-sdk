@@ -84,7 +84,7 @@ uy.uploadMethod = UPFormUpload;
 * 回调中的参数：
   * `error`: 失败后返回的错误信息
 
-#### 5、`progressBlocker` 上传进度度回调
+#### 5、`progressBlocker` 上传进度回调
 * 回调中的参数：
   * `percent`: 上传进度的百分比
   * `requestDidSendBytes`: 已经发送的数据量
@@ -106,4 +106,4 @@ uy.uploadMethod = UPFormUpload;
 * `-1997`: 参数 `filepath` , 找不到文件
 * `-1998`: 参数 `file` 以 `UIImage` 、 `NSData` 类型传入时, `saveKey` 带有 `{filename}` 
 * `-1999`: 参数 `file `以 `UIImage` 、 `NSData`、 `NSString` 外的类型传入
-* 其他错误代码详见 [表单API错误代码表](http://docs.upyun.com/api/errno/)
+* 其他错误代码详见 [API错误代码表](http://docs.upyun.com/api/errno/)
