@@ -98,7 +98,7 @@ uy.uploadMethod = UPFormUpload;
 #### 7、`params` [可选参数](http://docs.upyun.com/api/form_api/#api_1)
 
 #### 8、`uploadMethod` 上传方法选择
-* 默认根据文件大小选择表单还是分块上传, 可以通过 `uy.uploadMethod = UPFormUpload` 来选择表单上传, `uy.uploadMethod = UPMUtUPload` 来选择分块上传.
+* 默认根据文件大小选择表单还是分块上传, 可以通过 `uy.uploadMethod = UPFormUpload` 来选择表单上传, `uy.uploadMethod = UPMutUPload` 来选择分块上传.
 
 
 
