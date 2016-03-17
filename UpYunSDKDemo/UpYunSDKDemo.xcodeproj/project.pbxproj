@@ -14,6 +14,14 @@
 		AE3CAB3C1C4F5D6B00BF9A38 /* NSString+NSHash.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB3B1C4F5D6B00BF9A38 /* NSString+NSHash.m */; };
 		AE3CAB481C4F5EC700BF9A38 /* UPHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */; };
 		AE3CAB661C50BB2100BF9A38 /* UPMutUploaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3CAB651C50BB2100BF9A38 /* UPMutUploaderManager.m */; };
+		AE4840241C99642600AF8B4D /* UPLivePhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4840221C99642600AF8B4D /* UPLivePhotoViewController.m */; };
+		AE4840251C99642600AF8B4D /* UPLivePhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE4840231C99642600AF8B4D /* UPLivePhotoViewController.xib */; };
+		AE4840281C9A495700AF8B4D /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE4840261C9A492A00AF8B4D /* PhotosUI.framework */; };
+		AE4840291C9A49E600AF8B4D /* UPLivePhotoViewController.m in Resources */ = {isa = PBXBuildFile; fileRef = AE4840221C99642600AF8B4D /* UPLivePhotoViewController.m */; };
+		AE48402B1C9A4ADC00AF8B4D /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE48402A1C9A4ADC00AF8B4D /* Photos.framework */; };
+		AE48402E1C9A4B9A00AF8B4D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE48402C1C9A4B3B00AF8B4D /* MobileCoreServices.framework */; };
+		AE4840311C9A4FD400AF8B4D /* picture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE48402F1C9A4FD400AF8B4D /* picture.jpg */; };
+		AE4840321C9A4FD400AF8B4D /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = AE4840301C9A4FD400AF8B4D /* video.mov */; };
 		AE7730BA1C50E7AD006FD6FC /* test2.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7730B91C50E7AD006FD6FC /* test2.png */; };
 		AE9FFA6A1C6096240055A93B /* UPYUNConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9FFA691C6096240055A93B /* UPYUNConfig.m */; };
 		B8E9D5D617B0C79800146D00 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8E9D5D517B0C79800146D00 /* UIKit.framework */; };
@@ -58,6 +66,14 @@
 		AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPClient.m; sourceTree = "<group>"; };
 		AE3CAB641C50BB2100BF9A38 /* UPMutUploaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UPMutUploaderManager.h; path = UPMutUpload/UPMutUploaderManager.h; sourceTree = "<group>"; };
 		AE3CAB651C50BB2100BF9A38 /* UPMutUploaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = UPMutUploaderManager.m; path = UPMutUpload/UPMutUploaderManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		AE4840211C99642600AF8B4D /* UPLivePhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPLivePhotoViewController.h; sourceTree = "<group>"; };
+		AE4840221C99642600AF8B4D /* UPLivePhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPLivePhotoViewController.m; sourceTree = "<group>"; };
+		AE4840231C99642600AF8B4D /* UPLivePhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UPLivePhotoViewController.xib; sourceTree = "<group>"; };
+		AE4840261C9A492A00AF8B4D /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
+		AE48402A1C9A4ADC00AF8B4D /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		AE48402C1C9A4B3B00AF8B4D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		AE48402F1C9A4FD400AF8B4D /* picture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = picture.jpg; sourceTree = "<group>"; };
+		AE4840301C9A4FD400AF8B4D /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
 		AE7730B91C50E7AD006FD6FC /* test2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test2.png; sourceTree = "<group>"; };
 		AE9FFA681C6096240055A93B /* UPYUNConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPYUNConfig.h; sourceTree = "<group>"; };
 		AE9FFA691C6096240055A93B /* UPYUNConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPYUNConfig.m; sourceTree = "<group>"; };
@@ -95,6 +111,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE48402E1C9A4B9A00AF8B4D /* MobileCoreServices.framework in Frameworks */,
+				AE48402B1C9A4ADC00AF8B4D /* Photos.framework in Frameworks */,
+				AE4840281C9A495700AF8B4D /* PhotosUI.framework in Frameworks */,
 				B8E9D5D617B0C79800146D00 /* UIKit.framework in Frameworks */,
 				B8E9D5D817B0C79800146D00 /* Foundation.framework in Frameworks */,
 			);
@@ -179,6 +198,9 @@
 		B8E9D5D417B0C79800146D00 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AE48402C1C9A4B3B00AF8B4D /* MobileCoreServices.framework */,
+				AE48402A1C9A4ADC00AF8B4D /* Photos.framework */,
+				AE4840261C9A492A00AF8B4D /* PhotosUI.framework */,
 				B8E9D5D517B0C79800146D00 /* UIKit.framework */,
 				B8E9D5D717B0C79800146D00 /* Foundation.framework */,
 				B8E9D5D917B0C79800146D00 /* CoreGraphics.framework */,
@@ -198,6 +220,9 @@
 				B8E9D5E417B0C79800146D00 /* AppDelegate.h */,
 				B8E9D5E517B0C79800146D00 /* AppDelegate.m */,
 				B8E9D5DC17B0C79800146D00 /* Supporting Files */,
+				AE4840211C99642600AF8B4D /* UPLivePhotoViewController.h */,
+				AE4840221C99642600AF8B4D /* UPLivePhotoViewController.m */,
+				AE4840231C99642600AF8B4D /* UPLivePhotoViewController.xib */,
 			);
 			path = UpYunSDKDemo;
 			sourceTree = "<group>";
@@ -218,6 +243,8 @@
 		B8E9D68317B0CA6400146D00 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AE48402F1C9A4FD400AF8B4D /* picture.jpg */,
+				AE4840301C9A4FD400AF8B4D /* video.mov */,
 				AE7730B91C50E7AD006FD6FC /* test2.png */,
 				B8F54BFA17B8EDAD001D1CE9 /* fileTest.file */,
 				B8E9D68417B0CA6C00146D00 /* image.jpg */,
@@ -320,14 +347,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE4840291C9A49E600AF8B4D /* UPLivePhotoViewController.m in Resources */,
 				B8E9D68617B0CB2900146D00 /* ViewController_iPhone.xib in Resources */,
+				AE4840311C9A4FD400AF8B4D /* picture.jpg in Resources */,
 				B8E9D68717B0CB2900146D00 /* ViewController_iPad.xib in Resources */,
 				AE7730BA1C50E7AD006FD6FC /* test2.png in Resources */,
+				AE4840321C9A4FD400AF8B4D /* video.mov in Resources */,
 				B8E9D5E017B0C79800146D00 /* InfoPlist.strings in Resources */,
 				B8E9D5E817B0C79800146D00 /* Default.png in Resources */,
 				B8E9D5EA17B0C79800146D00 /* Default@2x.png in Resources */,
 				B8E9D5EC17B0C79800146D00 /* Default-568h@2x.png in Resources */,
 				B8E9D68517B0CA6C00146D00 /* image.jpg in Resources */,
+				AE4840251C99642600AF8B4D /* UPLivePhotoViewController.xib in Resources */,
 				B8F54BFB17B8EDAD001D1CE9 /* fileTest.file in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -355,6 +386,7 @@
 				B8E9D5E617B0C79800146D00 /* AppDelegate.m in Sources */,
 				AE19D76A1C4DDA6F00513CAC /* UPHTTPBodyPart.m in Sources */,
 				AE19D76D1C4E3D4300513CAC /* UPMultipartBody.m in Sources */,
+				AE4840241C99642600AF8B4D /* UPLivePhotoViewController.m in Sources */,
 				88BAB33C18C6F66B00426A17 /* UpYun.m in Sources */,
 				AE3CAB3C1C4F5D6B00BF9A38 /* NSString+NSHash.m in Sources */,
 				B8FD9D16196E223A00CDEDFF /* NSData+MD5Digest.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "UpYun.h"
+#import "UPLivePhotoViewController.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *image;
@@ -52,13 +53,9 @@
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
         [_pv setProgress:percent];
     };
-    uy.uploadMethod = UPMutUPload;
-    
-//    UPFileSizeUpload = 1,
-//    UPFormUpload = 2,
-//    UPMUtUPload = 3
 
     
+    // uy.uploadMethod = UPMutUPload; 分块
     
 //    如果 sinature 由服务端生成, 只需要将policy 和 密钥 拼接之后进行MD5, 否则就不用初始化signatureBlocker
 //    uy.signatureBlocker = ^(NSString *policy)
@@ -92,7 +89,7 @@
     /**
      *	@brief	方式1 由开发者生成saveKey
      */
-    return [NSString stringWithFormat:@"%@.%@", [self getDateString], suffix];
+    return [NSString stringWithFormat:@"/%@.%@", [self getDateString], suffix];
     /**
      *	@brief	方式2 由服务器生成saveKey
      */
@@ -109,6 +106,29 @@
     NSString * curTime = [formater stringFromDate:curDate];
     curTime = [NSString stringWithFormat:@"%@/%.0f", curTime, [curDate timeIntervalSince1970]];
     return curTime;
+}
+
+// 生成随机文件
++ (NSString *)createTempFileWithSize:(NSUInteger)size {
+    NSString *fileName = [NSString stringWithFormat:@"/test%08X.txt", arc4random()];
+    NSURL *fileUrl = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
+    NSData *data = [NSMutableData dataWithLength:size];
+    NSError *error = nil;
+    
+    [data writeToURL:fileUrl options:NSDataWritingAtomic error:&error];
+    
+    return fileUrl.path;
+}
+
++ (void)removeTempfile:(NSString *)filePath {
+    NSError *error = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+}
+- (IBAction)livePhotoAction:(UIButton *)sender {
+    UPLivePhotoViewController *vc = [[UPLivePhotoViewController alloc]init];
+    
+    [self presentViewController:vc animated:YES completion:nil];
+    
 }
 
 @end

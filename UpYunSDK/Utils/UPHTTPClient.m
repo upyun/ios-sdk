@@ -80,8 +80,6 @@
     [_sessionTask resume];
 }
 
-
-
 #pragma mark NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session
@@ -98,37 +96,38 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     _didCompleted = YES;
-        if (error) {
-            if (_failureBlock) {
-                NSError *upError = error;
-                
-                if (upError.code < NSURLErrorTimedOut &&
-                    upError.code > NSURLErrorZeroByteResource
-                    ) {
-                    upError = [[NSError alloc] initWithDomain:@"UPHTTPClient"
-                                                         code:500
-                                                     userInfo:@{@"message":error.description}];
-                }
-                _failureBlock(upError);
+    if (error) {
+        if (_failureBlock) {
+            NSError *upError = error;
+            if (upError.code < NSURLErrorTimedOut &&
+                upError.code > NSURLErrorCannotLoadFromNetwork
+                ) {
+                upError = [[NSError alloc] initWithDomain:@"UPHTTPClient" code:500
+                                                 userInfo:@{@"message":error.description}];
+            }
+            _failureBlock(upError);
+            
+        }
+    } else {
+        //判断返回状态码错误。
+        NSInteger statusCode =((NSHTTPURLResponse *)_didReceiveResponse).statusCode;
+        NSIndexSet *succesStatus = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
+        if ([succesStatus containsIndex:statusCode]) {
+            if (_successBlock) {
+                _successBlock(_didReceiveResponse , _didReceiveData);
             }
         } else {
-            //判断返回状态码错误。
-            NSInteger statusCode =((NSHTTPURLResponse *)_didReceiveResponse).statusCode;
-            NSIndexSet *succesStatus = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
-            if ([succesStatus containsIndex:statusCode]) {
-                if (_successBlock) {
-                    _successBlock(_didReceiveResponse, self.didReceiveData);
-                }
-            } else {
-                NSString *errorString = [[NSString alloc] initWithData:self.didReceiveData encoding:NSUTF8StringEncoding];
-                NSError *upError = [[NSError alloc] initWithDomain:@"UPHTTPClient"
-                                                            code:statusCode
-                                                        userInfo:@{@"message":errorString}];
-                if (_failureBlock) {
-                    _failureBlock(upError);
-                }
+            NSString *errorString = [[NSString alloc] initWithData:_didReceiveData encoding:NSUTF8StringEncoding];
+            NSError *upError = [[NSError alloc] initWithDomain:@"UPHTTPClient"
+                                                          code:statusCode
+                                                      userInfo:@{@"message":errorString}];
+            if (_failureBlock) {
+                _failureBlock(upError);
             }
         }
+    }
+    
+    [self cleanParam];
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -172,6 +171,18 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (void)cleanParam {
+    _session = nil;
+    _sessionTask = nil;
+    _failureBlock = nil;
+    _progressBlock = nil;
+    _successBlock = nil;
+}
+
+- (void)dealloc {
+    NSLog(@"uphttp client dealloc");
 }
 
 @end

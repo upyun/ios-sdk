@@ -17,6 +17,12 @@
 #define SUB_SAVE_KEY_FILENAME @"{filename}"
 
 
+@interface UpYun ()
+
+@property (nonatomic, strong) NSDictionary *extParams;
+
+@end
+
 @implementation UpYun
 
 - (instancetype)init {
@@ -87,11 +93,128 @@
     }
 }
 
-- (void)uploadFile:(id)file saveKey:(NSString *)saveKey {
+#ifdef __IPHONE_9_1
 
+- (void)uploadLivePhoto:(PHLivePhoto *)livePhotoAsset saveKey:(NSString *)saveKey  {
+    [self uploadLivePhoto:livePhotoAsset saveKey:saveKey extParams:nil];
+}
+
+- (void)uploadLivePhoto:(PHLivePhoto *)livePhotoAsset saveKey:(NSString *)saveKey extParams:(NSDictionary *)extParams {
+    
+    if (![self extractLivePhoto:livePhotoAsset]) {
+        return;
+    };
+    
+    UPSuccessBlock tmpSuccessBlocker = [self.successBlocker copy];
+    UPFailBlock tmpFailBlocker = [self.failBlocker copy];
+    UPProgressBlock tmpProgressBlocker = [self.progressBlocker copy];
+    
+    __block NSError *writeError = nil;
+    __block NSMutableArray *responseArray = [NSMutableArray array];
+    _successBlocker = ^(NSURLResponse *response, id responseData) {
+        
+        [responseArray addObject:responseData];
+        if (tmpSuccessBlocker && (responseArray.count > 1)) {
+            tmpSuccessBlocker(response, responseArray);
+            [[NSFileManager defaultManager] removeItemAtPath:PATH_MOVIE_FILE error:nil];
+            [[NSFileManager defaultManager] removeItemAtPath:PATH_PHOTO_FILE error:nil];
+        }
+    };
+    
+    _failBlocker = ^(NSError * error) {
+        if (tmpFailBlocker && !writeError) {
+            tmpFailBlocker(error);
+        }
+        [[NSFileManager defaultManager] removeItemAtPath:PATH_MOVIE_FILE error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:PATH_PHOTO_FILE error:nil];
+        writeError = error;
+    };
+    
+    NSUInteger photoFileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:PATH_PHOTO_FILE error:nil].fileSize;
+    NSUInteger moveFileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:PATH_MOVIE_FILE error:nil].fileSize;
+    
+    NSUInteger totalSize = (photoFileSize+moveFileSize);
+    _progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
+        if (tmpProgressBlocker) {
+            tmpProgressBlocker(percent*requestDidSendBytes/totalSize, totalSize);
+        }
+    };
+    
+    [self uploadFile:PATH_PHOTO_FILE saveKey:[NSString stringWithFormat:@"%@.jpg",saveKey]];
+    [self uploadFile:PATH_MOVIE_FILE saveKey:[NSString stringWithFormat:@"%@.mov",saveKey] extParams:extParams];
+}
+
+
+- (BOOL)extractLivePhoto:(PHLivePhoto *)livePhotoAsset {
+    if (!livePhotoAsset) {
+        NSError *error = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-2016
+                                       userInfo:@{@"message":@"livePhotoAsset 不存在"}];
+        
+        if (_failBlocker) {
+            _failBlocker(error);
+        }
+        return NO;
+    }
+    
+    [[NSFileManager defaultManager] removeItemAtPath:PATH_MOVIE_FILE error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:PATH_PHOTO_FILE error:nil];
+    
+    NSArray *assetResArray= [PHAssetResource assetResourcesForLivePhoto:livePhotoAsset];
+    PHAssetResource *movieResource;
+    PHAssetResource *photoResource;
+    for (PHAssetResource *assetRes in assetResArray) {
+        if (assetRes.type == PHAssetResourceTypePhoto) {
+            photoResource = assetRes;
+        }
+        if (assetRes.type == PHAssetResourceTypePairedVideo) {
+            movieResource = assetRes;
+        }
+    }
+    __block NSError *writeError = nil;
+    __block BOOL twoHanldeOK = NO;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [[PHAssetResourceManager defaultManager] writeDataForAssetResource:movieResource toFile:[NSURL fileURLWithPath:PATH_MOVIE_FILE] options:nil completionHandler:^(NSError * error) {
+        writeError = error;
+        if (twoHanldeOK) {
+            dispatch_semaphore_signal(semaphore);
+        }
+        twoHanldeOK = YES;
+    }];
+    
+    [[PHAssetResourceManager defaultManager] writeDataForAssetResource:photoResource toFile:[NSURL fileURLWithPath:PATH_PHOTO_FILE] options:nil completionHandler:^(NSError * error) {
+        writeError = error;
+        if (twoHanldeOK) {
+            dispatch_semaphore_signal(semaphore);
+        }
+        twoHanldeOK = YES;
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    
+    if (writeError) {
+        if (_failBlocker) {
+            _failBlocker(writeError);
+        }
+    }
+    
+    return writeError==nil;
+}
+
+#endif
+
+
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey {
+    [self uploadFile:file saveKey:saveKey extParams:nil];
+}
+
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey extParams:(NSDictionary *)extParams {
     if (![self checkFile:file]) {
         return;
     }
+    self.extParams = extParams;
     
     if([file isKindOfClass:[UIImage class]]) {
         [self uploadImage:file savekey:saveKey];
@@ -232,6 +355,13 @@
             [mutableDic setObject:[self.params objectForKey:key] forKey:key];
         }
     }
+    
+    if (self.extParams.count > 0) {
+        for (NSString *key in self.extParams.keyEnumerator) {
+            [mutableDic setObject:[self.extParams objectForKey:key] forKey:key];
+        }
+    }
+    self.extParams = nil;
     [mutableDic setObject:DATE_STRING(self.expiresIn) forKey:@"expiration"];//设置授权过期时间
     [mutableDic setObject:saveKey forKey:@"path"];//设置保存路径
     /**
@@ -277,6 +407,13 @@
             [dic setObject:[self.params objectForKey:key] forKey:key];
         }
     }
+    
+    if (self.extParams.count > 0) {
+        for (NSString *key in self.extParams.keyEnumerator) {
+            [dic setObject:[self.extParams objectForKey:key] forKey:key];
+        }
+    }
+    self.extParams = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
     NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return [json Base64encode];

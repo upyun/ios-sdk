@@ -36,6 +36,14 @@
                     <rect key="frame" x="309" y="688" width="150" height="2"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </progressView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="uwQ-EW-tFX">
+                    <rect key="frame" x="325" y="832" width="119" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="upload LivePhoto"/>
+                    <connections>
+                        <action selector="livePhotoAction:" destination="-1" eventType="touchUpInside" id="pz2-Xy-lbN"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
         </view>

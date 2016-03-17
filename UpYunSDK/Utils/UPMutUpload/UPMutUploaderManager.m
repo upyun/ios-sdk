@@ -364,10 +364,10 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
 //生成单个文件块
 + (NSData *)getBlockWithFilePath:(NSString *)filePath offset:(NSInteger)index {
     NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:filePath];
-    NSInteger blickSize = [UPYUNConfig sharedInstance].SingleBlockSize;
-    NSInteger startLocation = index * blickSize;
+    NSInteger blockSize = [UPYUNConfig sharedInstance].SingleBlockSize;
+    NSInteger startLocation = index * blockSize;
     [handle seekToFileOffset:startLocation];
-    NSData *subData = [handle readDataOfLength:blickSize];
+    NSData *subData = [handle readDataOfLength:blockSize];
     [handle closeFile];
     return [subData copy];
 }

@@ -13,6 +13,19 @@
 
 #import "UPHTTPClient.h"
 
+
+#ifdef __IPHONE_9_1
+
+
+#import <Photos/Photos.h>
+#import <PhotosUI/PHLivePhotoView.h>
+
+#define PATH_MOVIE_FILE  [NSTemporaryDirectory() stringByAppendingPathComponent:@"tempLivePhoto.mov"]
+
+#define PATH_PHOTO_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"tempLivePhoto.jpg"]
+
+#endif
+
 typedef NS_ENUM(NSUInteger, UPUploadMethod) {
 //    UPFileSizeUpload = 1,
     UPFormUpload = 2,
@@ -53,6 +66,26 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 
 @property (nonatomic, assign) UPUploadMethod uploadMethod;
 
+
+#ifdef __IPHONE_9_1
+/**
+ *	@brief	上传LivePhoto文件
+ *
+ *	@param 	livePhotoAsset PHLivePhoto
+ *	@param 	saveKey  保存的文件名, 不带后缀
+ */
+- (void)uploadLivePhoto:(PHLivePhoto *)livePhotoAsset saveKey:(NSString *)saveKey;
+/**
+ *	@brief	上传LivePhoto文件
+ *
+ *	@param 	livePhotoAsset PHLivePhoto
+ *	@param 	saveKey  保存的文件名, 不带后缀
+ *	@param 	extParams 	上传需要额外添加的参数，如:生成另外格式的文件
+ */
+- (void)uploadLivePhoto:(PHLivePhoto *)livePhotoAsset saveKey:(NSString *)saveKey extParams:(NSDictionary *)extParams;
+#endif
+
+
 /**********************/
 /**以下新增接口 建议使用**/
 /**
@@ -65,6 +98,16 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
  */
 - (void)uploadFile:(id)file saveKey:(NSString *)saveKey;
 
+/**
+ *	@brief	上传文件
+ *
+ *	@param 	file 	文件信息 可用值:  1、UIImage(会转成PNG格式，需要其他格式请先转成NSData传入 或者 传入文件路径)、
+ 2、NSData、
+ 3、NSString(文件路径)
+ *	@param 	saveKey 	由开发者自定义的saveKey
+ *	@param 	extParams 	上传需要额外添加的参数，如:生成另外格式的文件
+ */
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey extParams:(NSDictionary *)extParams;
 /**以上新增接口 建议使用**/
 /**********************/
 
