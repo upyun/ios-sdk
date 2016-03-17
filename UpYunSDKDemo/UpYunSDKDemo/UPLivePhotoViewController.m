@@ -5,13 +5,13 @@
 //  Created by 林港 on 16/3/16.
 //  Copyright © 2016年 upyun. All rights reserved.
 //
+#ifdef __IPHONE_9_1
 
 #import "UpYun.h"
 
 #import "UPLivePhotoViewController.h"
 #import <Photos/Photos.h>
 #import <PhotosUI/PHLivePhotoView.h>
-
 
 #define NET_MOVIE_FILE  [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"tempNetLivePhoto.mov"]]
 
@@ -278,3 +278,4 @@
 }
 
 @end
+#endif
