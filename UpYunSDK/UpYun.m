@@ -275,9 +275,7 @@
     NSString *policy = [self getPolicyWithSaveKey:savekey];
     __block NSString *signature = @"";
     if (_signatureBlocker) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            signature = _signatureBlocker([policy stringByAppendingString:@"&"]);
-        });
+        signature = _signatureBlocker([policy stringByAppendingString:@"&"]);
     } else if (self.passcode.length > 0) {
         signature = [self getSignatureWithPolicy:policy];
     } else {
