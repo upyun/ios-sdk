@@ -272,7 +272,7 @@
         }
     };
     
-    NSString *policy = [self getPolicyWithSaveKey:savekey];
+    NSString *policy = self.policy.length > 0 ? self.policy : [self getPolicyWithSaveKey:savekey];
     __block NSString *signature = @"";
     if (_signatureBlocker) {
         signature = _signatureBlocker([policy stringByAppendingString:@"&"]);
