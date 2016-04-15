@@ -272,7 +272,23 @@
         }
     };
     
-    NSString *policy = [self getPolicyWithSaveKey:savekey];
+    NSString *policy = @"";
+    
+    if (_policyBlocker) {
+        policy = _policyBlocker();
+    }
+    
+    if (policy.length == 0) {
+        NSString *message = @"policyBlocker 返回值不正确,将进行本地计算";
+        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-1999
+                                       userInfo:@{@"message":message}];
+        if (_failBlocker) {
+            _failBlocker(err);
+        }
+        policy = [self getPolicyWithSaveKey:savekey];
+    }
+
     __block NSString *signature = @"";
     if (_signatureBlocker) {
         signature = _signatureBlocker([policy stringByAppendingString:@"&"]);
@@ -365,14 +381,27 @@
     /**
      *  这个 mutableDic 可以塞入其他可选参数 见：http://docs.upyun.com/api/multipart_upload/#_2
      */
+    NSString *policy = @"";
     
-    NSString *policy = [self dictionaryToJSONStringBase64Encoding:mutableDic];
+    if (_policyBlocker) {
+        policy = _policyBlocker();
+    }
+    
+    if (policy.length == 0) {
+        NSString *message = @"policyBlocker 返回值不正确,将进行本地计算";
+        NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
+                                           code:-1999
+                                       userInfo:@{@"message":message}];
+        if (_failBlocker) {
+            _failBlocker(err);
+        }
+        
+        policy = [self dictionaryToJSONStringBase64Encoding:mutableDic];
+    }
     
     __block NSString *signature = @"";
     if (_signatureBlocker) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            signature = _signatureBlocker(policy);
-        });
+        signature = _signatureBlocker(policy);
     } else if (self.passcode) {
         NSArray *keys = [[mutableDic allKeys] sortedArrayUsingSelector:@selector(compare:)];
         for (NSString * key in keys) {

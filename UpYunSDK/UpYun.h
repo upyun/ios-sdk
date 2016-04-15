@@ -40,31 +40,33 @@ typedef void(^UPSuccessBlock)(NSURLResponse *response, id responseData);
 typedef void(^UPFailBlock)(NSError *error);
 typedef void(^UPProgressBlock)(CGFloat percent, int64_t requestDidSendBytes);
 typedef NSString*(^UPSignatureBlock)(NSString *policy);
-
+typedef NSString*(^UPPolicyBlock)();
 
 @interface UpYun : NSObject
 
-@property (nonatomic, copy) NSString *bucket;
+@property (nonatomic, copy) NSString                  *bucket;
 
-@property (nonatomic, assign) NSTimeInterval expiresIn;
+@property (nonatomic, assign) NSTimeInterval        expiresIn;
 
-@property (nonatomic, copy) NSMutableDictionary *params;
+@property (nonatomic, copy) NSMutableDictionary       *params;
 
-@property (nonatomic, copy) NSString *passcode;
+@property (nonatomic, copy) NSString                *passcode;
 
-@property (nonatomic, assign) NSInteger mutUploadSize;
+@property (nonatomic, assign) NSInteger         mutUploadSize;
 
-@property (nonatomic, assign) NSInteger retryTimes;
+@property (nonatomic, assign) NSInteger            retryTimes;
 
-@property (nonatomic, copy) UPSuccessBlock    successBlocker;
+@property (nonatomic, copy) UPSuccessBlock     successBlocker;
 
-@property (nonatomic, copy) UPFailBlock       failBlocker;
+@property (nonatomic, copy) UPFailBlock           failBlocker;
 
-@property (nonatomic, copy) UPProgressBlock  progressBlocker;
+@property (nonatomic, copy) UPProgressBlock   progressBlocker;
 
-@property (nonatomic, copy) UPSignatureBlock  signatureBlocker;
+@property (nonatomic, copy) UPSignatureBlock signatureBlocker;
 
-@property (nonatomic, assign) UPUploadMethod uploadMethod;
+@property (nonatomic, copy) UPPolicyBlock       policyBlocker;
+
+@property (nonatomic, assign) UPUploadMethod     uploadMethod;
 
 
 #ifdef __IPHONE_9_1

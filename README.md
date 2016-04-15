@@ -100,10 +100,14 @@ uy.uploadMethod = UPFormUpload;
   * `policy`: 经过处理的 policy 字符串, 用户可以直接上传到用户服务端与 `密钥` 拼接, 
 * 返回的参数：
   * `sinature`: 用户服务端使用上传的 `policy` 生成的 sinature , 或者用户自己生成 `sinature`
- 
-#### 7、`params` [可选参数](http://docs.upyun.com/api/form_api/#api_1)
 
-#### 8、`uploadMethod` 上传方法选择
+#### 7、`policyBlocker` 用户获取 policy 回调 
+* 返回的参数：
+  * `policy`: 用户服务端生成的 `policy` , 或者用户自己生成 `policy`
+
+#### 8、`params` [可选参数](http://docs.upyun.com/api/form_api/#api_1)
+
+#### 9、`uploadMethod` 上传方法选择
 * 默认根据文件大小选择表单还是分块上传, 可以通过 `uy.uploadMethod = UPFormUpload` 来选择表单上传, `uy.uploadMethod = UPMutUPload` 来选择分块上传.
 
 

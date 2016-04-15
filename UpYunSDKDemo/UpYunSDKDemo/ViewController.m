@@ -55,14 +55,19 @@
     };
 
     
-    // uy.uploadMethod = UPMutUPload; 分块
-    
-//    如果 sinature 由服务端生成, 只需要将policy 和 密钥 拼接之后进行MD5, 否则就不用初始化signatureBlocker
+//    uy.uploadMethod = UPMutUPload; 分块
+//    如果 policy 由服务端生成, 只需要 return policy
+//    uy.policyBlocker = ^()
+//    {
+//        return @"";
+//    };
+//    如果 sinature 由服务端生成, 服务端只需要将 policy 和 密钥 拼接之后进行 MD5, 否则就不用初始化signatureBlocker
 //    uy.signatureBlocker = ^(NSString *policy)
 //    {
 //        return @"";
 //    };
 
+    
     
     /**
      *	@brief	根据 UIImage 上传
