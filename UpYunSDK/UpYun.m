@@ -272,7 +272,7 @@
         }
     };
     
-    NSString *policy = [self getPolicyWithSaveKey:savekey];
+    NSString *policy = self.policy.length > 0 ? self.policy : [self getPolicyWithSaveKey:savekey];
     __block NSString *signature = @"";
     if (_signatureBlocker) {
         signature = _signatureBlocker([policy stringByAppendingString:@"&"]);
@@ -370,9 +370,7 @@
     
     __block NSString *signature = @"";
     if (_signatureBlocker) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            signature = _signatureBlocker(policy);
-        });
+        signature = _signatureBlocker(policy);
     } else if (self.passcode) {
         NSArray *keys = [[mutableDic allKeys] sortedArrayUsingSelector:@selector(compare:)];
         for (NSString * key in keys) {

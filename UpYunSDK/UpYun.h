@@ -66,6 +66,11 @@ typedef NSString*(^UPSignatureBlock)(NSString *policy);
 
 @property (nonatomic, assign) UPUploadMethod uploadMethod;
 
+/**
+ * 自定义policy
+ */
+@property (nonatomic, copy) NSString *policy;
+
 
 #ifdef __IPHONE_9_1
 /**
