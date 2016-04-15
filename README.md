@@ -12,10 +12,11 @@ UPYUN iOS SDK, 集成:
 - iOS 7.0 及以上版本, ARC 模式, 使用系统网络库 NSURLSession 
  
 - 如想使用 LivePhot 的相关功能, 要求 iOS 9.1 及以上版本, ARC 模式, (需要 Photos , PhotosUI, MobileCoreServices 等framework , 没有导入会 bulid failed)
-## 使用说明：
-1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用
 
-2.通过 CocoaPods 
+## 使用说明：
+ 1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用
+
+ 2.通过 CocoaPods 
         ```
 	      pod 'UPYUN', '~> 1.0.0'
         ``` , `#import "UpYun.h"` 即可使用
