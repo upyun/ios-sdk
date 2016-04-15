@@ -370,9 +370,7 @@
     
     __block NSString *signature = @"";
     if (_signatureBlocker) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            signature = _signatureBlocker(policy);
-        });
+        signature = _signatureBlocker(policy);
     } else if (self.passcode) {
         NSArray *keys = [[mutableDic allKeys] sortedArrayUsingSelector:@selector(compare:)];
         for (NSString * key in keys) {
