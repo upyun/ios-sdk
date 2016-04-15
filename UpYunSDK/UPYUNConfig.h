@@ -22,6 +22,11 @@
  *	@brief	默认当前上传授权的过期时间，单位为“秒” （必填项，较大文件需要较长时间)，默认1800秒
  */
 @property (nonatomic, assign) NSInteger DEFAULT_EXPIRES_IN;
+
+/**
+ *	@brief	默认用户服务端生成的过期时间,防止用户手机时间不正确出现的上传错误,一般用不上
+ */
+@property (nonatomic, copy) NSString *DEFAULT_EXPIRES_STRING;
 /**
  *	@brief 默认超过大小后走分块上传，可在init之后修改mutUploadSize的值来更改
  */

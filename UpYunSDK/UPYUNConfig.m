@@ -18,6 +18,7 @@
         sharedInstance.DEFAULT_BUCKET = @"";
         sharedInstance.DEFAULT_PASSCODE = @"";
         sharedInstance.DEFAULT_EXPIRES_IN = 1800;
+        sharedInstance.DEFAULT_EXPIRES_STRING = @"";
         sharedInstance.DEFAULT_MUTUPLOAD_SIZE = 4*1024*1024;
         sharedInstance.DEFAULT_RETRY_TIMES = 2;
         sharedInstance.SingleBlockSize = 500*1024;

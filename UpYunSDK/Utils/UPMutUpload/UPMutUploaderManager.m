@@ -235,7 +235,12 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
                        progressBlock:(void (^)(float percent))progressBlock
                        completeBlock:(UPCompeleteBlock)completeBlock {
     
-    NSDictionary *policyParameters = @{@"save_token":saveToken, @"expiration":DATE_STRING(ValidTimeSpan), @"block_index":@(blockIndex), @"block_hash":[fileBlockData MD5HexDigest]};
+    
+    
+    NSString *expiresIn = self.dateExpiresIn.length == 0 ? DATE_STRING(ValidTimeSpan) : self.dateExpiresIn;
+    
+    
+    NSDictionary *policyParameters = @{@"save_token":saveToken, @"expiration":expiresIn, @"block_index":@(blockIndex), @"block_hash":[fileBlockData MD5HexDigest]};
     
     NSString *uploadPolicy = [self dictionaryToJSONStringBase64Encoding:policyParameters];
     
@@ -297,8 +302,10 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
                         completeBlock:(void (^)(NSError * error,
                                                 NSDictionary * result,
                                                 BOOL completed))completeBlock {
+    
+    NSString *expiresIn = self.dateExpiresIn.length == 0 ? DATE_STRING(ValidTimeSpan) : self.dateExpiresIn;
     NSDictionary *parameters = @{@"save_token":saveToken,
-                                  @"expiration":DATE_STRING(ValidTimeSpan)};
+                                  @"expiration":expiresIn};
     
     NSString *mergePolicy = [self dictionaryToJSONStringBase64Encoding:parameters];
     [self ministrantRequestWithSignature:[self createSignatureWithToken:tokenSecret

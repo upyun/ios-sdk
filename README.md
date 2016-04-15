@@ -110,6 +110,9 @@ uy.uploadMethod = UPFormUpload;
 #### 9、`uploadMethod` 上传方法选择
 * 默认根据文件大小选择表单还是分块上传, 可以通过 `uy.uploadMethod = UPFormUpload` 来选择表单上传, `uy.uploadMethod = UPMutUPload` 来选择分块上传.
 
+#### 10、`dateExpiresIn` 用户服务端生成的过期时间
+* 默认用户服务端生成的过期时间,防止手机时间和服务端时间不一致出现的上传错误,一般情况用不上.用户可以自行在上传的时候配置。注意必须符合文档要求
+
 
 
 ### 错误代码

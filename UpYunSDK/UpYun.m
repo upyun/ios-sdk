@@ -336,7 +336,7 @@
     NSString *policy = signaturePolicyDic[@"policy"];
     
     UPMutUploaderManager *manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
-
+    manager.dateExpiresIn = self.dateExpiresIn;
     __weak typeof(self)weakSelf = self;
     [manager uploadWithFile:data OrFilePath: filePath policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
             if (completed) {
@@ -376,7 +376,9 @@
         }
     }
     self.extParams = nil;
-    [mutableDic setObject:DATE_STRING(self.expiresIn) forKey:@"expiration"];//设置授权过期时间
+    
+    NSString *expiresIn = self.dateExpiresIn.length == 0 ? DATE_STRING(self.expiresIn) : self.dateExpiresIn;
+    [mutableDic setObject:expiresIn forKey:@"expiration"];//设置授权过期时间
     [mutableDic setObject:saveKey forKey:@"path"];//设置保存路径
     /**
      *  这个 mutableDic 可以塞入其他可选参数 见：http://docs.upyun.com/api/multipart_upload/#_2
@@ -423,9 +425,10 @@
 }
 
 - (NSString *)getPolicyWithSaveKey:(NSString *)savekey {
+    NSString *expiresIn = self.dateExpiresIn.length == 0 ? DATE_STRING(self.expiresIn) : self.dateExpiresIn;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setObject:self.bucket forKey:@"bucket"];
-    [dic setObject:DATE_STRING(self.expiresIn) forKey:@"expiration"];
+    [dic setObject:expiresIn forKey:@"expiration"];
     if (savekey && ![savekey isEqualToString:@""]) {
         [dic setObject:savekey forKey:@"save-key"];
     }

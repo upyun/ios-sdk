@@ -23,6 +23,8 @@
 
 - (instancetype)initWithBucket:(NSString *)bucket;
 
+@property (nonatomic, copy) NSString   *dateExpiresIn;
+
 #pragma mark - Method
 
 /**
