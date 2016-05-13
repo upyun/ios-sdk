@@ -50,7 +50,7 @@ typedef NSString*(^UPPolicyBlock)();
 // 默认用户服务端生成的过期时间,防止用户手机时间不正确出现的上传错误,一般用不上
 @property (nonatomic, copy) NSString           *dateExpiresIn;
 
-@property (nonatomic, copy) NSMutableDictionary       *params;
+@property (nonatomic, strong) NSMutableDictionary       *params;
 
 @property (nonatomic, copy) NSString                *passcode;
 

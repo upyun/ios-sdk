@@ -33,6 +33,8 @@
         self.mutUploadSize = [UPYUNConfig sharedInstance].DEFAULT_MUTUPLOAD_SIZE;
         self.retryTimes = [UPYUNConfig sharedInstance].DEFAULT_RETRY_TIMES;
         self.uploadMethod = UPFormUpload;
+        self.params = [NSMutableDictionary new];
+        self.extParams = [NSMutableDictionary new];
     }
     return self;
 }
@@ -283,8 +285,9 @@
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1999
                                        userInfo:@{@"message":message}];
-        if (_failBlocker) {
+        if (_failBlocker && _policyBlocker) {
             _failBlocker(err);
+            return;
         }
         policy = [self getPolicyWithSaveKey:savekey];
     }
@@ -331,6 +334,9 @@
                    RetryTimes:(NSInteger)retryTimes {
     NSDictionary *fileInfo = [UPMutUploaderManager getFileInfoDicWithFileData:data OrFilePath:filePath];
     NSDictionary *signaturePolicyDic = [self constructingSignatureAndPolicyWithFileInfo:fileInfo saveKey:savekey];
+    if (!signaturePolicyDic) {
+        return;
+    }
     
     NSString *signature = signaturePolicyDic[@"signature"];
     NSString *policy = signaturePolicyDic[@"policy"];
@@ -364,6 +370,10 @@
  */
 - (NSDictionary *)constructingSignatureAndPolicyWithFileInfo:(NSDictionary *)fileInfo saveKey:(NSString*) saveKey{
     NSMutableDictionary *mutableDic = [[NSMutableDictionary alloc]initWithDictionary:fileInfo];
+    NSString *expiresIn = self.dateExpiresIn.length == 0 ? DATE_STRING(self.expiresIn) : self.dateExpiresIn;
+    [mutableDic setObject:expiresIn forKey:@"expiration"];//设置授权过期时间
+    [mutableDic setObject:saveKey forKey:@"path"];//设置保存路径
+    
     if (self.params) {
         for (NSString *key in self.params.keyEnumerator) {
             [mutableDic setObject:[self.params objectForKey:key] forKey:key];
@@ -377,9 +387,6 @@
     }
     self.extParams = nil;
     
-    NSString *expiresIn = self.dateExpiresIn.length == 0 ? DATE_STRING(self.expiresIn) : self.dateExpiresIn;
-    [mutableDic setObject:expiresIn forKey:@"expiration"];//设置授权过期时间
-    [mutableDic setObject:saveKey forKey:@"path"];//设置保存路径
     /**
      *  这个 mutableDic 可以塞入其他可选参数 见：http://docs.upyun.com/api/multipart_upload/#_2
      */
@@ -394,8 +401,9 @@
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1999
                                        userInfo:@{@"message":message}];
-        if (_failBlocker) {
+        if (_failBlocker && _policyBlocker) {
             _failBlocker(err);
+            return nil;
         }
         
         policy = [self dictionaryToJSONStringBase64Encoding:mutableDic];
@@ -418,6 +426,7 @@
                                        userInfo:@{@"message":message}];
         if (_failBlocker) {
             _failBlocker(err);
+            return nil;
         }
     }
     return @{@"signature":[signature MD5],
@@ -445,7 +454,9 @@
     }
     self.extParams = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+    
     NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
     return [json Base64encode];
 }
 
