@@ -298,7 +298,7 @@
     } else if (self.passcode.length > 0) {
         signature = [self getSignatureWithPolicy:policy];
     } else {
-        NSString *message = _signatureBlocker ? @"没有提供密钥" : @"没有实现signatureBlock";
+        NSString *message = _signatureBlocker ? @"signatureBlock 没有返回 signature" : @"没有提供密钥";
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1999
                                        userInfo:@{@"message":message}];
@@ -420,7 +420,7 @@
         }
         signature = [signature stringByAppendingString:self.passcode];
     } else {
-        NSString *message = _signatureBlocker ? @"没有提供密钥" : @"没有实现signatureBlock";
+        NSString *message = _signatureBlocker ? @"signatureBlock 没有返回 signature" : @"没有提供密钥";
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1999
                                        userInfo:@{@"message":message}];
