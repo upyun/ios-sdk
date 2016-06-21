@@ -419,6 +419,7 @@
             signature = [NSString stringWithFormat:@"%@%@%@", signature, key, value];
         }
         signature = [signature stringByAppendingString:self.passcode];
+        signature = [signature MD5];
     } else {
         NSString *message = _signatureBlocker ? @"signatureBlock 没有返回 signature" : @"没有提供密钥";
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
@@ -429,7 +430,7 @@
             return nil;
         }
     }
-    return @{@"signature":[signature MD5],
+    return @{@"signature":signature,
              @"policy":policy};
 }
 
