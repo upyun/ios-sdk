@@ -34,6 +34,8 @@
     self = [super init];
     if (self) {
         _didCompleted = NO;
+        _timeoutForRequest = 20;
+        _timeoutForResource = 20;
     }
     return self;
 }
