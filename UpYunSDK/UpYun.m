@@ -229,7 +229,7 @@
 
 #pragma mark----form upload
 
-- (void)formUploadWithFileData:(NSData *)data
+- (UPHTTPClient*)formUploadWithFileData:(NSData *)data
                       FilePath:(NSString *)filePath
                        SaveKey:(NSString *)savekey
                     RetryTimes:(NSInteger)retryTimes {
@@ -287,7 +287,7 @@
                                        userInfo:@{@"message":message}];
         if (_failBlocker && _policyBlocker) {
             _failBlocker(err);
-            return;
+            return nil;
         }
         policy = [self getPolicyWithSaveKey:savekey];
     }
@@ -305,7 +305,7 @@
         if (_failBlocker) {
             _failBlocker(err);
         }
-        return;
+        return nil;
     }
     
     UPMultipartBody *multiBody = [[UPMultipartBody alloc]init];
@@ -324,18 +324,19 @@
     
     UPHTTPClient *client = [[UPHTTPClient alloc]init];
     [client uploadRequest:request success:httpSuccess failure:httpFail progress:httpProgress];
+    return client;
 }
 
 #pragma mark----mut upload
 
-- (void)mutUploadWithFileData:(NSData *)data
+- (UPMutUploaderManager*)mutUploadWithFileData:(NSData *)data
                      FilePath:(NSString *)filePath
                       SaveKey:(NSString *)savekey
                    RetryTimes:(NSInteger)retryTimes {
     NSDictionary *fileInfo = [UPMutUploaderManager getFileInfoDicWithFileData:data OrFilePath:filePath];
     NSDictionary *signaturePolicyDic = [self constructingSignatureAndPolicyWithFileInfo:fileInfo saveKey:savekey];
     if (!signaturePolicyDic) {
-        return;
+        return nil;
     }
     
     NSString *signature = signaturePolicyDic[@"signature"];
@@ -359,6 +360,8 @@
                 }
             }
     }];
+    return manager;
+    
 }
 
 #pragma mark--Utils---
