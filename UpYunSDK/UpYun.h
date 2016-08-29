@@ -42,6 +42,9 @@ typedef void(^UPProgressBlock)(CGFloat percent, int64_t requestDidSendBytes);
 typedef NSString*(^UPSignatureBlock)(NSString *policy);
 typedef NSString*(^UPPolicyBlock)();
 
+
+@class UPMutUploaderManager;
+
 @interface UpYun : NSObject
 
 @property (nonatomic, copy) NSString                  *bucket;
@@ -139,6 +142,19 @@ typedef NSString*(^UPPolicyBlock)();
  *	@param 	savekey 	savekey
  */
 - (void)uploadImageData:(NSData *)data savekey:(NSString *)savekey;
+
+#pragma mark -
+#pragma mark  HBUploadUtility 添加的相关接口，用于实现取消上传等功能
+
+- (UPHTTPClient*)formUploadWithFileData:(NSData *)data
+                               FilePath:(NSString *)filePath
+                                SaveKey:(NSString *)savekey
+                             RetryTimes:(NSInteger)retryTimes;
+
+- (UPMutUploaderManager *)mutUploadWithFileData:(NSData *)data
+                                       FilePath:(NSString *)filePath
+                                        SaveKey:(NSString *)savekey
+                                     RetryTimes:(NSInteger)retryTimes;
 
 
 @end
