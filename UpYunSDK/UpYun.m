@@ -20,6 +20,8 @@
 @interface UpYun ()
 
 @property (nonatomic, strong) NSDictionary *extParams;
+@property (nonatomic, strong) UPHTTPClient *client;
+@property (nonatomic, strong) UPMutUploaderManager *manager;
 
 @end
 
@@ -322,8 +324,8 @@
     request.HTTPBody = [multiBody dataFromPart];
     [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", multiBody.boundary] forHTTPHeaderField:@"Content-Type"];
     
-    UPHTTPClient *client = [[UPHTTPClient alloc]init];
-    [client uploadRequest:request success:httpSuccess failure:httpFail progress:httpProgress];
+    _client = [[UPHTTPClient alloc]init];
+    [_client uploadRequest:request success:httpSuccess failure:httpFail progress:httpProgress];
 }
 
 #pragma mark----mut upload
@@ -341,10 +343,10 @@
     NSString *signature = signaturePolicyDic[@"signature"];
     NSString *policy = signaturePolicyDic[@"policy"];
     
-    UPMutUploaderManager *manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
-    manager.dateExpiresIn = self.dateExpiresIn;
+    _manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
+    _manager.dateExpiresIn = self.dateExpiresIn;
     __weak typeof(self)weakSelf = self;
-    [manager uploadWithFile:data OrFilePath: filePath policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
+    [_manager uploadWithFile:data OrFilePath: filePath policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
             if (completed) {
                 if (_successBlocker) {
                     _successBlocker(result[@"response"], result[@"responseData"]);
@@ -359,6 +361,12 @@
                 }
             }
     }];
+}
+
+
+- (void)cancel {
+    [_client cancel];
+    [_manager cancelAllTasks];
 }
 
 #pragma mark--Utils---

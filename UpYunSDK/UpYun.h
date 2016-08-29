@@ -140,5 +140,9 @@ typedef NSString*(^UPPolicyBlock)();
  */
 - (void)uploadImageData:(NSData *)data savekey:(NSString *)savekey;
 
+/**
+ *	@brief	上传取消接口
+ */
+- (void)cancel;
 
 @end

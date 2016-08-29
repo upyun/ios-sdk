@@ -45,7 +45,7 @@
         NSLog(@"response body %@", responseData);
     };
     uy.failBlocker = ^(NSError * error) {
-        NSString *message = [error.userInfo objectForKey:@"message"];
+        NSString *message = error.description;
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"message" message:message delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
         NSLog(@"error %@", message);
@@ -55,7 +55,7 @@
     };
 
     
-//    uy.uploadMethod = UPMutUPload; 分块
+//    uy.uploadMethod = UPMutUPload; //分块
 //    如果 policy 由服务端生成, 只需要 return policy
 //    uy.policyBlocker = ^()
 //    {
