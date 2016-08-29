@@ -413,12 +413,7 @@
     if (_signatureBlocker) {
         signature = _signatureBlocker(policy);
     } else if (self.passcode) {
-        NSArray *keys = [[mutableDic allKeys] sortedArrayUsingSelector:@selector(compare:)];
-        for (NSString * key in keys) {
-            NSString * value = mutableDic[key];
-            signature = [NSString stringWithFormat:@"%@%@%@", signature, key, value];
-        }
-        signature = [signature stringByAppendingString:self.passcode];
+        signature = [NSString stringWithFormat:@"%@&%@", policy, self.passcode];
         signature = [signature MD5];
     } else {
         NSString *message = _signatureBlocker ? @"signatureBlock 没有返回 signature" : @"没有提供密钥";
