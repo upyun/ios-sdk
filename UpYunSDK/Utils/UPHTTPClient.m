@@ -34,8 +34,7 @@
     self = [super init];
     if (self) {
         _didCompleted = NO;
-        _timeoutForRequest = 20;
-        _timeoutForResource = 20;
+        _timeoutForRequest = 10;
     }
     return self;
 }
@@ -62,7 +61,8 @@
     if (!_session) {
         NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration ephemeralSessionConfiguration];
         sessionConfig.timeoutIntervalForRequest = self.timeoutForRequest;
-        sessionConfig.timeoutIntervalForResource = self.timeoutForResource;
+        /// 默认不设置请求完成超时
+//        sessionConfig.timeoutIntervalForResource = 1.5;
         _session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     }
     return _session;

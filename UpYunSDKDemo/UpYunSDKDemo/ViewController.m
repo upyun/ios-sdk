@@ -48,7 +48,7 @@
         NSString *message = error.description;
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"message" message:message delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
-        NSLog(@"error %@", message);
+        NSLog(@"error %@", error);
     };
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
         [_pv setProgress:percent];

@@ -22,9 +22,9 @@ typedef void(^HttpProgressBlock)(int64_t completedBytesCount, int64_t totalBytes
              progress:(HttpProgressBlock)progressBlock;
 
 - (void)cancel;
-/// 默认超时 20s
+/// 默认链接超时 10s
 - (void)timeoutIntervalForRequest:(NSTimeInterval)timeoutForRequest;
-/// 默认超时 20s
-- (void)timeoutIntervalForResource:(NSTimeInterval)timeoutForResource;
+/// 默认不设置请求完成超时
+//- (void)timeoutIntervalForResource:(NSTimeInterval)timeoutForResource;
 
 @end

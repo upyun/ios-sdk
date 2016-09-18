@@ -82,29 +82,31 @@
 
 
 - (NSData *)dataFromPart {
-    
-    NSMutableData *data = [[NSMutableData alloc]init];
-    for (int i = 0; i< self.bodyParts.count; i++) {
-        UPHTTPBodyPart *part = self.bodyParts[i];
-        
-        NSData *beginData = [AFMultipartFormEncapsulationBoundary(self.boundary) dataUsingEncoding:NSUTF8StringEncoding];
-        [data appendData:beginData];
-        
-        NSData *headerData = [[part stringForHeaders] dataUsingEncoding:NSUTF8StringEncoding];
-        [data appendData:headerData];
-        
-        if ([part.body isKindOfClass:[NSData class]]) {
-            [data appendData:part.body];
-        } else if ([part.body isKindOfClass:[NSString class]]) {
-            NSData *fileData = [NSData dataWithContentsOfFile:part.body];
-            [data appendData:fileData];
+    @autoreleasepool {
+        NSMutableData *data = [[NSMutableData alloc]init];
+
+        for (int i = 0; i< self.bodyParts.count; i++) {
+            UPHTTPBodyPart *part = self.bodyParts[i];
+            
+            NSData *beginData = [AFMultipartFormEncapsulationBoundary(self.boundary) dataUsingEncoding:NSUTF8StringEncoding];
+            [data appendData:beginData];
+            
+            NSData *headerData = [[part stringForHeaders] dataUsingEncoding:NSUTF8StringEncoding];
+            [data appendData:headerData];
+            
+            if ([part.body isKindOfClass:[NSData class]]) {
+                [data appendData:part.body];
+            } else if ([part.body isKindOfClass:[NSString class]]) {
+                NSData *fileData = [NSData dataWithContentsOfFile:part.body];
+                [data appendData:fileData];
+                fileData = nil;
+            }
         }
+        
+        NSData *endData = [AFMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:NSUTF8StringEncoding];
+        [data appendData:endData];
+        return [NSData dataWithData:data];
     }
-    
-    NSData *endData = [AFMultipartFormFinalBoundary(self.boundary) dataUsingEncoding:NSUTF8StringEncoding];
-    [data appendData:endData];
-    
-    return data;
 }
 
 - (void)dealloc {
