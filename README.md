@@ -31,7 +31,13 @@ UPYUN iOS SDK, 集成:
 * `DEFAULT_RETRY_TIMES` : 失败之后重传次数, 默认2次
 * `SingleBlockSize` : 单个分块大小, 默认500KB
 
-**注意: 如果需要在上传的过程中不断变动一些参数值, 建议初始化 `UpYun` 之后, 通过 `UpYun` 的属性来修改**
+**注意1: 如果需要在上传的过程中不断变动一些参数值, 建议初始化 `UpYun` 之后, 通过 `UpYun` 的属性来修改** 
+
+**注意2: 如果发现上传失败的时候,内存没有释放, 建议修改 [UPYUNConfig.m](https://github.com/upyun/ios-sdk/blob/master/UpYunSDK/UPYUNConfig.m) 的 `FormAPIDomain` 和 `MutAPIDomain` 修改为 http 可以解决. 该问题仅在请求的数据传输中断的情况下出现 2016-9-18**
+```` 
+sharedInstance.FormAPIDomain = @"http://v0.api.upyun.com/" 
+sharedInstance.MutAPIDomain = @"http://m0.api.upyun.com/" 
+```` 
 
 
 ## 上传接口
