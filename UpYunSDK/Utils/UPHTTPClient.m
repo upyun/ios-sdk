@@ -120,6 +120,9 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             }
         } else {
             NSString *errorString = [[NSString alloc] initWithData:_didReceiveData encoding:NSUTF8StringEncoding];
+            if (!errorString) {
+                errorString = @"没有返回数据 或 返回数据格式有问题, 建议 debug 看一下_didReceiveData";
+            }
             NSError *upError = [[NSError alloc] initWithDomain:@"UPHTTPClient"
                                                           code:statusCode
                                                       userInfo:@{@"message":errorString}];
