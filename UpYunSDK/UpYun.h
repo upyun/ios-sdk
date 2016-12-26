@@ -70,6 +70,8 @@ typedef NSString*(^UPPolicyBlock)();
 
 @property (nonatomic, assign) UPUploadMethod     uploadMethod;
 
+@property (nonatomic, readonly) UPHTTPClient *client;
+
 
 #ifdef __IPHONE_9_1
 /**

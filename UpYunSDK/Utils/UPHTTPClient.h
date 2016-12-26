@@ -16,6 +16,9 @@ typedef void(^HttpProgressBlock)(int64_t completedBytesCount, int64_t totalBytes
 
 @interface UPHTTPClient : NSObject
 
+@property (nonatomic, readonly) NSURLSession *session;
+@property (nonatomic, readonly) NSURLSessionTask *sessionTask;
+
 - (void)uploadRequest:(NSMutableURLRequest *)request
               success:(HttpSuccessBlock)successBlock
               failure:(HttpFailBlock)failureBlock

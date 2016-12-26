@@ -48,7 +48,6 @@
  *                                   为  YES 上传成功，可以从result中获取返回信息，
  *                                   为  NO  上传失败，可以从error 获取失败信息
  *
- *  @return UMUUploaderOperation
  */
 - (void)uploadWithFile:(NSData *)fileData OrFilePath:(NSString *)filePath
                                   policy:(NSString *)policy
