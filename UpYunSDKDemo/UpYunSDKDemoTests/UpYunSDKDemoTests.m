@@ -104,7 +104,7 @@
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
     [_upyun uploadFile:filePath saveKey:@"/test2.png"];
 
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -137,7 +137,7 @@
     [upyun uploadFile:fileData saveKey:@"/txt"];
     
     
-    [self waitForExpectationsWithTimeout:10 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -164,8 +164,10 @@
     
     upyun.bucket = @"test654123";
     upyun.passcode = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
-    [upyun uploadFile:[UIImage imageNamed:@"image.jpg"] saveKey:@"/txt"];
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [upyun uploadFile:[UIImage imageNamed:@"image.jpg"] saveKey:@"/image.jpg"];
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
+        //"too many requests of the same uri
+        //travis
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -191,7 +193,7 @@
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
     [_upyun uploadFile:filePath saveKey:@"/{year}/{mon}/{filename}{.suffix}"];
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -218,7 +220,7 @@
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image1333.jpg"];
     [uy uploadFile:filePath saveKey:@"/test2.png"];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -242,7 +244,7 @@
     };
     [uy uploadFile:nil saveKey:@"/test2.png"];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -273,7 +275,7 @@
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
     [uy uploadFile:filePath saveKey:@"/test2.png"];
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -302,7 +304,7 @@
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
     [uy uploadFile:filePath saveKey:@"/test2.png"];
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }
@@ -334,7 +336,7 @@
     free(bytes);
 
     [uy uploadFile:data saveKey:@"/test23"];
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:60.0 handler:^(NSError *error) {
         if(error) {
             XCTFail(@"Expectation Failed with error: %@", error);
         }

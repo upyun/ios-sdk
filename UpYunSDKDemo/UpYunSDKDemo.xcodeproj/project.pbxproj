@@ -313,7 +313,11 @@
 				TargetAttributes = {
 					AE1A43201C5A053B00B1C795 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = DCJ5V29KGG;
 						TestTargetID = B8E9D5D117B0C79800146D00;
+					};
+					B8E9D5D117B0C79800146D00 = {
+						DevelopmentTeam = DCJ5V29KGG;
 					};
 				};
 			};
@@ -425,6 +429,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = DCJ5V29KGG;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -454,6 +459,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DCJ5V29KGG;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -532,6 +538,7 @@
 		B8E9D5F017B0C79800146D00 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = DCJ5V29KGG;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UpYunSDKDemo/UpYunSDKDemo-Prefix.pch";
@@ -549,6 +556,7 @@
 		B8E9D5F117B0C79800146D00 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = DCJ5V29KGG;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UpYunSDKDemo/UpYunSDKDemo-Prefix.pch";
