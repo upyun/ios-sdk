@@ -18,7 +18,7 @@ UPYUN iOS SDK, 集成:
 
  2.通过 CocoaPods 
         ```
-	      pod 'UPYUN', '~> 1.0.0'
+	      pod 'UPYUN', '~> 1.0.2'
         ``` , `#import "UpYun.h"` 即可使用
 
 
