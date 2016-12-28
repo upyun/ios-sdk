@@ -153,13 +153,15 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     id singleUploadProgressBlcok = ^(float percent) {
         @synchronized(_progressArray) {
-                _progressArray[index] = [NSNumber numberWithFloat:percent];
-                float sumPercent = 0;
-                for (NSNumber *num in _progressArray) {
-                    sumPercent += [num floatValue];
-                }
-                float totalPercent = sumPercent/_progressArray.count;
+            _progressArray[index] = [NSNumber numberWithFloat:percent];
+            float sumPercent = 0;
+            for (NSNumber *num in _progressArray) {
+                sumPercent += [num floatValue];
+            }
+            float totalPercent = sumPercent/_progressArray.count;
+            if (progressBlock) {
                 progressBlock(totalPercent, 100);
+            }
         }
     };
     
