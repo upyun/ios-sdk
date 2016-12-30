@@ -8,7 +8,7 @@ s.license = { :type => 'MIT', :text => <<-LICENSE
 s.summary = 'UPYUN Upload SDK For iOS.'
 s.homepage = 'https://github.com/upyun/ios-sdk'
 s.authors = { 'UPYUN' => 'iOSTeam@upyun.com' }
-s.source = { :git => 'https://github.com/upyun/ios-sdk.git', :tag => "v#{s.version.to_s}" }
+s.source = { :git => 'https://github.com/upyun/ios-sdk.git', :tag => s.version.to_s }
 s.requires_arc = true
 s.ios.deployment_target = '7.0'
 s.source_files = ['UpYunSDK/*.{h,m}', 'UpYunSDK/Utils/*.{h,m}', 'UpYunSDK/Utils/**/*.{h,m}']
