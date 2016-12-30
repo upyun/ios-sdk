@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name = 'UPYUN'
-s.version = '1.0.2'
+s.version = '1.0.3'
 s.license = { :type => 'MIT', :text => <<-LICENSE
                    Copyright (c) 2016年 UPYUN. All rights reserved.
                  LICENSE
