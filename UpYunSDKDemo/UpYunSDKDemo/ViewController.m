@@ -88,6 +88,11 @@
      */
 //    NSData * fileData = [NSData dataWithContentsOfFile:filePath];
 //    [uy uploadFile:fileData saveKey:[self getSaveKeyWith:@"png"]];
+    
+    
+//    UIImage *image = [UIImage imageNamed:@"Default"];
+//
+//    [uy uploadFile:image saveKey:[NSString stringWithFormat:@"/{year}/{mon}/c0974f7a-627a-44d6-9a70-dc977beb3447{.suffix}"] fileName:@"aa.png" extParams:nil];
 }
 
 - (NSString * )getSaveKeyWith:(NSString *)suffix {

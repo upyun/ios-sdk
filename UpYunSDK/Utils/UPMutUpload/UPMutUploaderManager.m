@@ -256,6 +256,9 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     NSString *fileName = [_filePathURL lastPathComponent];
     if (!fileName) {
+        fileName = self.fileName;
+    }
+    if (!fileName) {
         fileName = @"fileName";
     }
     [multiBody addFileData:fileBlockData fileName:fileName fileType:nil];

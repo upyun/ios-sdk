@@ -25,6 +25,8 @@
 
 @property (nonatomic, copy) NSString   *dateExpiresIn;
 
+@property (nonatomic, copy) NSString   *fileName;
+
 #pragma mark - Method
 
 /**

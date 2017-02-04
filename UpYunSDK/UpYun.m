@@ -23,6 +23,8 @@
 @property (nonatomic, strong) UPHTTPClient *client;
 @property (nonatomic, strong) UPMutUploaderManager *manager;
 
+@property (nonatomic, strong) NSString *fileName;
+
 @end
 
 @implementation UpYun
@@ -214,11 +216,32 @@
     [self uploadFile:file saveKey:saveKey extParams:nil];
 }
 
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey fileType:(NSString *)fileType {
+    [self uploadFile:file saveKey:saveKey extParams:nil];
+}
+
 - (void)uploadFile:(id)file saveKey:(NSString *)saveKey extParams:(NSDictionary *)extParams {
     if (![self checkFile:file]) {
         return;
     }
     self.extParams = extParams;
+    self.fileName = nil;
+    
+    if([file isKindOfClass:[UIImage class]]) {
+        [self uploadImage:file savekey:saveKey];
+    } else if([file isKindOfClass:[NSData class]]) {
+        [self uploadFileData:file savekey:saveKey];
+    } else if([file isKindOfClass:[NSString class]]) {
+        [self uploadFilePath:file savekey:saveKey];
+    }
+}
+
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey fileName:(NSString *)fileName extParams:(NSDictionary *)extParams {
+    if (![self checkFile:file]) {
+        return;
+    }
+    self.extParams = extParams;
+    self.fileName = fileName;
     
     if([file isKindOfClass:[UIImage class]]) {
         [self uploadImage:file savekey:saveKey];
@@ -315,6 +338,9 @@
     
     NSString *fileName = [filePath lastPathComponent];
     if (!fileName) {
+        fileName = self.fileName;
+    }
+    if (!fileName) {
         fileName = @"fileName";
     }
     [multiBody addFileData:data OrFilePath:filePath fileName:fileName fileType:nil];
@@ -345,6 +371,7 @@
     
     _manager = [[UPMutUploaderManager alloc]initWithBucket:self.bucket];
     _manager.dateExpiresIn = self.dateExpiresIn;
+    _manager.fileName = self.fileName;
     __weak typeof(self)weakSelf = self;
     [_manager uploadWithFile:data OrFilePath: filePath policy:policy signature:signature progressBlock:_progressBlocker completeBlock:^(NSError *error, NSDictionary *result, BOOL completed) {
             if (completed) {
@@ -488,6 +515,11 @@
     }
 
     if(rangeFileName.location != NSNotFound || rangeFileNameOnDic.location != NSNotFound) {
+        
+        if (self.fileName) {
+            return YES;
+        }
+        
         NSString *message = [NSString stringWithFormat:@"传入file为NSData或者UIImage时,不能使用%@方式生成savekey", SUB_SAVE_KEY_FILENAME];
         NSError *err = [NSError errorWithDomain:ERROR_DOMAIN
                                            code:-1998

@@ -114,6 +114,20 @@ typedef NSString*(^UPPolicyBlock)();
  *	@param 	extParams 	上传需要额外添加的参数，如:生成另外格式的文件
  */
 - (void)uploadFile:(id)file saveKey:(NSString *)saveKey extParams:(NSDictionary *)extParams;
+
+/**
+ *	@brief	上传文件
+ *
+ *	@param 	file 	文件信息 可用值:  1、UIImage(会转成PNG格式，需要其他格式请先转成NSData传入 或者 传入文件路径)、
+ 2、NSData、
+ 3、NSString(文件路径)
+ *	@param 	saveKey 	由开发者自定义的saveKey
+ *	@param 	fileName 	由开发者自定义的 文件后缀, FORM 格式里面的 filename 字段值
+ *	@param 	extParams 	上传需要额外添加的参数，如:生成另外格式的文件
+ */
+- (void)uploadFile:(id)file saveKey:(NSString *)saveKey fileName:(NSString *)fileName extParams:(NSDictionary *)extParams;
+
+
 /**以上新增接口 建议使用**/
 /**********************/
 
