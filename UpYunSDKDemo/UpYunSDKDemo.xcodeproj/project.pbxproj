@@ -29,13 +29,9 @@
 		B8E9D5E017B0C79800146D00 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B8E9D5DE17B0C79800146D00 /* InfoPlist.strings */; };
 		B8E9D5E217B0C79800146D00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E9D5E117B0C79800146D00 /* main.m */; };
 		B8E9D5E617B0C79800146D00 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E9D5E517B0C79800146D00 /* AppDelegate.m */; };
-		B8E9D5E817B0C79800146D00 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = B8E9D5E717B0C79800146D00 /* Default.png */; };
-		B8E9D5EA17B0C79800146D00 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B8E9D5E917B0C79800146D00 /* Default@2x.png */; };
-		B8E9D5EC17B0C79800146D00 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B8E9D5EB17B0C79800146D00 /* Default-568h@2x.png */; };
 		B8E9D68217B0C9E400146D00 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E9D67F17B0C94500146D00 /* ViewController.m */; };
 		B8E9D68517B0CA6C00146D00 /* image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B8E9D68417B0CA6C00146D00 /* image.jpg */; };
 		B8E9D68617B0CB2900146D00 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8E9D68017B0C94500146D00 /* ViewController_iPhone.xib */; };
-		B8E9D68717B0CB2900146D00 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8E9D68117B0C94500146D00 /* ViewController_iPad.xib */; };
 		B8F54BFB17B8EDAD001D1CE9 /* fileTest.file in Resources */ = {isa = PBXBuildFile; fileRef = B8F54BFA17B8EDAD001D1CE9 /* fileTest.file */; };
 		B8FD9D16196E223A00CDEDFF /* NSData+MD5Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = B8FD9D15196E223A00CDEDFF /* NSData+MD5Digest.m */; };
 /* End PBXBuildFile section */
@@ -86,13 +82,9 @@
 		B8E9D5E117B0C79800146D00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B8E9D5E417B0C79800146D00 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B8E9D5E517B0C79800146D00 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B8E9D5E717B0C79800146D00 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		B8E9D5E917B0C79800146D00 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		B8E9D5EB17B0C79800146D00 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		B8E9D67E17B0C94500146D00 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		B8E9D67F17B0C94500146D00 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B8E9D68017B0C94500146D00 /* ViewController_iPhone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController_iPhone.xib; sourceTree = "<group>"; };
-		B8E9D68117B0C94500146D00 /* ViewController_iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController_iPad.xib; sourceTree = "<group>"; };
 		B8E9D68417B0CA6C00146D00 /* image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = image.jpg; sourceTree = "<group>"; };
 		B8F54BFA17B8EDAD001D1CE9 /* fileTest.file */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fileTest.file; sourceTree = "<group>"; };
 		B8FD9D14196E223A00CDEDFF /* NSData+MD5Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MD5Digest.h"; sourceTree = "<group>"; };
@@ -139,8 +131,6 @@
 			isa = PBXGroup;
 			children = (
 				AE3CAB631C50BB1200BF9A38 /* UPMutUpload */,
-				AE3CAB461C4F5EC700BF9A38 /* UPHTTPClient.h */,
-				AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */,
 				AE19D7671C4DD87500513CAC /* HttpUtils */,
 				B8FD9D13196E223A00CDEDFF /* NSObject+MD5Digest */,
 			);
@@ -150,6 +140,8 @@
 		AE19D7671C4DD87500513CAC /* HttpUtils */ = {
 			isa = PBXGroup;
 			children = (
+				AE3CAB461C4F5EC700BF9A38 /* UPHTTPClient.h */,
+				AE3CAB471C4F5EC700BF9A38 /* UPHTTPClient.m */,
 				AE19D7681C4DDA6F00513CAC /* UPHTTPBodyPart.h */,
 				AE19D7691C4DDA6F00513CAC /* UPHTTPBodyPart.m */,
 				AE19D76B1C4E3D4300513CAC /* UPMultipartBody.h */,
@@ -216,7 +208,6 @@
 				B8E9D67E17B0C94500146D00 /* ViewController.h */,
 				B8E9D67F17B0C94500146D00 /* ViewController.m */,
 				B8E9D68017B0C94500146D00 /* ViewController_iPhone.xib */,
-				B8E9D68117B0C94500146D00 /* ViewController_iPad.xib */,
 				B8E9D5E417B0C79800146D00 /* AppDelegate.h */,
 				B8E9D5E517B0C79800146D00 /* AppDelegate.m */,
 				B8E9D5DC17B0C79800146D00 /* Supporting Files */,
@@ -233,9 +224,6 @@
 				B8E9D5DD17B0C79800146D00 /* UpYunSDKDemo-Info.plist */,
 				B8E9D5DE17B0C79800146D00 /* InfoPlist.strings */,
 				B8E9D5E117B0C79800146D00 /* main.m */,
-				B8E9D5E717B0C79800146D00 /* Default.png */,
-				B8E9D5E917B0C79800146D00 /* Default@2x.png */,
-				B8E9D5EB17B0C79800146D00 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -354,13 +342,9 @@
 				AE4840291C9A49E600AF8B4D /* UPLivePhotoViewController.m in Resources */,
 				B8E9D68617B0CB2900146D00 /* ViewController_iPhone.xib in Resources */,
 				AE4840311C9A4FD400AF8B4D /* picture.jpg in Resources */,
-				B8E9D68717B0CB2900146D00 /* ViewController_iPad.xib in Resources */,
 				AE7730BA1C50E7AD006FD6FC /* test2.png in Resources */,
 				AE4840321C9A4FD400AF8B4D /* video.mov in Resources */,
 				B8E9D5E017B0C79800146D00 /* InfoPlist.strings in Resources */,
-				B8E9D5E817B0C79800146D00 /* Default.png in Resources */,
-				B8E9D5EA17B0C79800146D00 /* Default@2x.png in Resources */,
-				B8E9D5EC17B0C79800146D00 /* Default-568h@2x.png in Resources */,
 				B8E9D68517B0CA6C00146D00 /* image.jpg in Resources */,
 				AE4840251C99642600AF8B4D /* UPLivePhotoViewController.xib in Resources */,
 				B8F54BFB17B8EDAD001D1CE9 /* fileTest.file in Resources */,

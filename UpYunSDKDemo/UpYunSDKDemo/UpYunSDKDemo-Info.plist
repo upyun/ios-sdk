@@ -29,6 +29,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>照片权限</string>
+	<key>UILaunchStoryboardName</key>
+	<string>ViewController_iPhone</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -37,8 +41,5 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-    
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>照片权限</string>
 </dict>
 </plist>

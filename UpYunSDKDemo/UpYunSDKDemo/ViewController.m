@@ -36,8 +36,13 @@
 }
 
 - (IBAction)uploadFile:(id)sender {
+    
+    //设置空间名
     [UPYUNConfig sharedInstance].DEFAULT_BUCKET = @"test654123";
+    //设置空间表单密钥
     [UPYUNConfig sharedInstance].DEFAULT_PASSCODE = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";
+    
+    
     __block UpYun *uy = [[UpYun alloc] init];
     uy.successBlocker = ^(NSURLResponse *response, id responseData) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"" message:@"上传成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
@@ -53,60 +58,66 @@
     uy.progressBlocker = ^(CGFloat percent, int64_t requestDidSendBytes) {
         [_pv setProgress:percent];
     };
-
     
-//    uy.uploadMethod = UPMutUPload; //分块
-//    如果 policy 由服务端生成, 只需要 return policy
+    
+    
+//    设置上传方式：分块上传 or 表单上传  默认表单上传，大文件需要分块上传
+//    uy.uploadMethod = UPMutUPload; //分块上传方式 or 表单上传方式
+  
+    
+//    如果 policy 由业务服务端生成, 这里只需要 return policy（提前从业务服务器获取的 policy），否则就不用初始化 policyBlocker
 //    uy.policyBlocker = ^()
 //    {
-//        return @"";
+//        return @"policy_created_by_app_server";
 //    };
-//    如果 sinature 由服务端生成, 服务端只需要将 policy 和 密钥 拼接之后进行 MD5, 否则就不用初始化signatureBlocker
+    
+    
+//    如果 sinature 由业务服务端签名, 这里只需要 return signature（提前从业务服务器获取的签名成功的 signature）, 否则就不用初始化 signatureBlocker
 //    uy.signatureBlocker = ^(NSString *policy)
 //    {
-//        return @"";
+//        return @"signature_signed_by_app_server";
 //    };
 
     
+//    根据 文件路径 上传
+      NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+      NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
+      [uy uploadFile:filePath saveKey:@"/test2.png"];
     
-    /**
-     *	@brief	根据 UIImage 上传
-     */
+
+//    直接上传 UIImage 类型数据
 //    UIImage * image = [UIImage imageNamed:@"test2.png"];
 //    [uy uploadFile:image saveKey:[self getSaveKeyWith:@"jpg"]];
+    
 
-//    [uy uploadFile:image saveKey:@"2016.jpg"];
-//    [uy uploadImage:image savekey:[self getSaveKeyWith:@"png"]];
-    /**
-     *	@brief	根据 文件路径 上传
-     */
-    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"image.jpg"];
-    [uy uploadFile:filePath saveKey:@"/test2.png"];
-    /**
-     *	@brief	根据 NSDate  上传
-     */
+    
+//    直接上传 NSDate 类型数据
 //    NSData * fileData = [NSData dataWithContentsOfFile:filePath];
 //    [uy uploadFile:fileData saveKey:[self getSaveKeyWith:@"png"]];
+
     
     
+    
+//    参数更详细的接口：可以设置 form 表单的 filename 及
 //    UIImage *image = [UIImage imageNamed:@"Default"];
-//
-//    [uy uploadFile:image saveKey:[NSString stringWithFormat:@"/{year}/{mon}/c0974f7a-627a-44d6-9a70-dc977beb3447{.suffix}"] fileName:@"aa.png" extParams:nil];
+//    [uy uploadFile:image
+//           saveKey:[NSString stringWithFormat:@"/{year}/{mon}/c0974f7a-627a-44d6-9a70-dc977beb3447{.suffix}"]
+//          fileName:@"aa.png"
+//         extParams:nil];
+    
+    
 }
 
 - (NSString * )getSaveKeyWith:(NSString *)suffix {
-    /**
-     *	@brief	方式1 由开发者生成saveKey
-     */
+    //设置存储路径：生成 saveKey
+    
+    //方式1 本地生产绝对值 saveKey
     return [NSString stringWithFormat:@"/%@.%@", [self getDateString], suffix];
-    /**
-     *	@brief	方式2 由服务器生成saveKey
-     */
-//    return [NSString stringWithFormat:@"/{year}/{mon}/{filename}{.suffix}"];
-    /**
-     *	@brief	更多方式 参阅 http://docs.upyun.com/api/form_api/#_4
-     */
+    
+    //方式2 由服务器根据格式生成 saveKey
+    //return [NSString stringWithFormat:@"/{year}/{mon}/{filename}{.suffix}"];
+    
+    //更多方式 参阅 http://docs.upyun.com/api/form_api/#_5
 }
 
 - (NSString *)getDateString {
@@ -134,9 +145,10 @@
     NSError *error = nil;
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
 }
+
+//livePhoto 相关可以参考博客：http://io.upyun.com/2016/03/23/the-real-files-in-alasset-and-phasset/
 - (IBAction)livePhotoAction:(UIButton *)sender {
     UPLivePhotoViewController *vc = [[UPLivePhotoViewController alloc]init];
-    
     [self presentViewController:vc animated:YES completion:nil];
     
 }
