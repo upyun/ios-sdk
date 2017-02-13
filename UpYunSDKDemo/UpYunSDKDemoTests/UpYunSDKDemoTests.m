@@ -10,6 +10,12 @@
 #import "UpYun.h"
 #import "NSString+NSHash.h"
 
+//新接口：
+#import "UpApiUtils.h"
+#import "UpYunFormUploader.h"
+
+
+
 @interface UpYunSDKDemoTests : XCTestCase
 @property UpYun *upyun;
 @end
@@ -341,6 +347,56 @@
             XCTFail(@"Expectation Failed with error: %@", error);
         }
     }];
+}
+
+- (void)testGetPolicy {
+    NSDictionary *paras = @{@"bucket": @"upyun-temp",
+                            @"save-key": @"/demo.jpg",
+                            @"expiration": @"1478674618",
+                            @"date": @"Wed, 9 Nov 2016 14:26:58 GMT",
+                            @"content-md5": @"7ac66c0f148de9519b8bd264312c4d64"};
+     NSString *policy = [UpApiUtils getPolicyWithParameters:paras];
+     NSLog(@"policy %@", policy);
+     XCTAssert(policy != nil, @"Pass");
+}
+
+- (void)testGetSha1Hash {
+    NSString *sha1Hash = [UpApiUtils getHmacSha1HashWithKey:@"ab296a01090ca2eab5fe5b246999da54" string:@"PUT&/upyun-temp/demo.jpg&Wed, 9 Nov 2016 14:26:58 GMT&7ac66c0f148de9519b8bd264312c4d64"];
+    NSLog(@"sha1Hash %@", sha1Hash);
+    XCTAssert([sha1Hash isEqualToString:@"9xZ6Z8dZXJm7cy3Jt6kskVS7cic="]);
+}
+
+- (void)testGetSignature {
+    NSArray *paras = @[@"POST", @"/upyun-temp/", @"Wed, 9 Nov 2016 14:26:58 GMT",@"eyJidWNrZXQiOiAidXB5dW4tdGVtcCIsICJzYXZlLWtleSI6ICIvZGVtby5qcGciLCAiZXhwaXJhdGlvbiI6ICIxNDc4Njc0NjE4IiwgImRhdGUiOiAiV2VkLCA5IE5vdiAyMDE2IDE0OjI2OjU4IEdNVCIsICJjb250ZW50LW1kNSI6ICI3YWM2NmMwZjE0OGRlOTUxOWI4YmQyNjQzMTJjNGQ2NCJ9",@"7ac66c0f148de9519b8bd264312c4d64"];
+    
+    NSString *signature = [UpApiUtils getSignatureWithPassword:@"ab296a01090ca2eab5fe5b246999da54" parameters:paras];
+    NSLog(@"signature %@", signature);
+    XCTAssert([signature isEqualToString:@"NnMeoZosYLnOGUiY/Skb0W1DMNA="]);
+}
+
+- (void)testUpYunFormUploader {
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"fileTest.file"];
+    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+    
+    UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
+    [up uploadWithBucketName:@"upyun-temp"
+                  formAPIKey:@"ab296a01090ca2eab5fe5b246999da54"
+                    fileData:fileData
+                    fileName:@"fileTest.file"
+                      saveKey:@"ios_sdk_new/fileTest.file"
+             otherParameters:nil
+                     success:^(NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         
+                      } failure:^(NSError *error,
+                                  NSHTTPURLResponse *response,
+                                  NSDictionary *responseBody) {
+                          
+                      } progress:^(int64_t completedBytesCount,
+                                   int64_t totalBytesCount) {
+                          
+                      }];
 }
 
 

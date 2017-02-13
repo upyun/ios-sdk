@@ -1,0 +1,66 @@
+//
+//  UpYunFormUploader.h
+//  UpYunSDKDemo
+//
+//  Created by DING FENG on 2/13/17.
+//  Copyright © 2017 upyun. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+//表单上传服务器
+#define UpYunFormUploaderServerHost  @"https://v0.api.upyun.com"
+
+typedef void (^UpLoaderSuccessBlock)(NSHTTPURLResponse *response, NSDictionary *responseBody);
+typedef void (^UpLoaderFailureBlock)(NSError *error, NSHTTPURLResponse *response, NSDictionary *responseBody);
+typedef void (^UpLoaderProgressBlock)(int64_t completedBytesCount, int64_t totalBytesCount);
+
+@interface UpYunFormUploader : NSObject
+
+
+/*表单上传接口
+ 参数  bucketName:           上传空间名
+ 参数  formAPIKey:           表单密钥
+ 参数  fileData:             上传文件数据
+ 参数  fileName:             上传文件名
+ 参数  saveKey:              上传文件的保存路径, 例如：“/2015/0901/file1.jpg”。可用占位符，参考：http://docs.upyun.com/api/form_api/#note1
+ 参数  otherParameters:      可选的其它参数可以为nil. 参考文档：表单-API-参数http://docs.upyun.com/api/form_api/#api_1
+ 参数  successBlock:         上传成功回调
+ 参数  failureBlock:         上传失败回调
+ 参数  progressBlock:        上传进度回调
+ */
+
+- (void)uploadWithBucketName:(NSString *)bucketName
+                  formAPIKey:(NSString *)formAPIKey
+                    fileData:(NSData *)fileData
+                    fileName:(NSString *)fileName
+                     saveKey:(NSString *)saveKey
+             otherParameters:(NSDictionary *)otherParameters
+                     success:(UpLoaderSuccessBlock)successBlock
+                     failure:(UpLoaderFailureBlock)failureBlock
+                    progress:(UpLoaderProgressBlock)progressBlock;
+
+
+/*表单上传接口，上传策略和签名可以是从服务器获取
+ 参数  policy:          上传策略
+ 参数  signature:       上传策略签名
+ 参数  fileData:        上传的数据
+ 参数  fileName:        上传文件名
+ 参数  success:         上传成功回调
+ 参数  failure:         上传失败回调
+ 参数  progress:        上传进度回调
+ */
+- (void)uploadWithPolicy:(NSString *)policy
+               signature:(NSString *)signature
+                fileData:(NSData *)fileData
+                fileName:(NSString *)fileName
+                 success:(UpLoaderSuccessBlock)successBlock
+                 failure:(UpLoaderFailureBlock)failureBlock
+                progress:(UpLoaderProgressBlock)progressBlock;
+
+
+
+//取消上传
+- (void)cancel;
+
+@end

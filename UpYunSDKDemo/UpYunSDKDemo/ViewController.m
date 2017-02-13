@@ -9,6 +9,9 @@
 #import "ViewController.h"
 #import "UpYun.h"
 #import "UPLivePhotoViewController.h"
+#import "UpYunFormUploader.h"
+
+
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *image;
@@ -19,6 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self testUpYunFormUploader];
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -151,6 +156,32 @@
     UPLivePhotoViewController *vc = [[UPLivePhotoViewController alloc]init];
     [self presentViewController:vc animated:YES completion:nil];
     
+    
 }
 
+
+- (void)testUpYunFormUploader {
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"fileTest.file"];
+    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+    
+    UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
+    [up uploadWithBucketName:@"test86400"
+                  formAPIKey:@"test86400"
+                    fileData:fileData
+                    fileName:@"fileTest.file"
+                     saveKey:@"ios_sdk_new/fileTest.file"
+             otherParameters:nil
+                     success:^(NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         
+                     } failure:^(NSError *error,
+                                 NSHTTPURLResponse *response,
+                                 NSDictionary *responseBody) {
+                         
+                     } progress:^(int64_t completedBytesCount,
+                                  int64_t totalBytesCount) {
+                         
+                     }];
+}
 @end
