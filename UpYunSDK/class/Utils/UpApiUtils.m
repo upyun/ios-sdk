@@ -21,6 +21,7 @@
       第 2 步：将第 1 步所得到的字符串进行 Base64 Encode 处理，得到 policy。
      */
     
+    NSString *policy;
     NSDictionary *info = parameter;
     NSString *jsonString;
     if ([NSJSONSerialization isValidJSONObject:info]) {
@@ -32,13 +33,15 @@
         jsonString = [[NSString alloc] initWithData:jsonData
                                            encoding:NSUTF8StringEncoding];
         if (!error && jsonString) {
-            
-            NSString *policy = [UpApiUtils base64EncodeFromString:jsonString];
-            return policy;//最终生成上传策略
+            policy = [UpApiUtils base64EncodeFromString:jsonString];
         }
         
     }
-    return nil;
+    
+    if (!policy) {
+        policy = @"";//一个无效policy
+    }
+    return policy;
 }
 
 + (NSString *)getSignatureWithPassword:(NSString *)password
@@ -51,12 +54,19 @@
      <Content-MD5>
      ))
      */
+    
     NSString *parameterString = [parameter componentsJoinedByString:@"&"];
+    
+
     NSString *passwordHash = [UpApiUtils getMD5HashFromData:[NSData dataWithBytes:password.UTF8String
                                                                            length:password.length]];
     
     NSString *signature = [UpApiUtils getHmacSha1HashWithKey:passwordHash
                                                       string:parameterString];
+    
+    if (!signature) {
+        signature = @"";//一个无效signature
+    }
     return signature;//signature 已经是 Base64 编码
 }
 
@@ -112,13 +122,17 @@
 + (NSString *)base64EncodeFromString:(NSString *)string {
     NSData *stingData = [NSData dataWithBytes:string.UTF8String length:string.length];
     NSData *base64Data = [stingData base64EncodedDataWithOptions:0];
-    NSString *base64String = [NSString stringWithUTF8String:base64Data.bytes];
+    NSString *base64String = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+    if (!base64String) {
+        NSLog(@"===  %@ %@", string, base64Data);
+    }
     return base64String;
 }
 
 + (NSString *)base64DecodeFromString:(NSString *)base64String {
     NSData *stringData = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
-    NSString *string = [NSString stringWithUTF8String:stringData.bytes];
+    NSString *string = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+    
     return string;
 }
 
@@ -129,7 +143,9 @@
     CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
     NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC length:CC_SHA1_DIGEST_LENGTH];
     NSData *hashData = [HMAC base64EncodedDataWithOptions:0];
-    NSString *hashString = [NSString stringWithUTF8String:hashData.bytes];
+    NSString *hashString = [[NSString alloc] initWithData:hashData encoding:NSUTF8StringEncoding];
+    
+    
     return hashString;
 }
 

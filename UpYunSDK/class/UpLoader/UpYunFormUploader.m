@@ -11,7 +11,7 @@
 #import "UpApiUtils.h"
 
 
-#define  NSErrorDomain
+#define  NSErrorDomain_UpYunFormUploader   @"NSErrorDomain_UpYunFormUploader"
 
 @interface UpYunFormUploader()
 {
@@ -56,19 +56,21 @@
                                  @"content-md5": content_md5};
     NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunFormUploaderServerHost, bucketName];
     NSString *police = [UpApiUtils getPolicyWithParameters:policyDict];
+//    NSLog(@"urlString %@", urlString);
+//    NSLog(@"police %@", police);
     
-    NSLog(@"urlString %@", urlString);
-    NSLog(@"police %@", police);
-    
-//    getSignatureWithPassword
     NSString *uri = [NSString stringWithFormat:@"/%@/", bucketName];
     NSString *signature = [UpApiUtils getSignatureWithPassword:operatorPassword
                                                     parameters:@[@"POST", uri, date, police, content_md5]];
     
-    NSLog(@"signature %@", signature);
+//    NSLog(@"signature %@", signature);
     NSString *authorization = [NSString stringWithFormat:@"UPYUN %@:%@", operatorName, signature];
     NSDictionary *parameters = @{@"policy": police, @"authorization": authorization};
 
+    
+    if (fileName.length <= 0) {
+        fileName = @"fileName";
+    }
     _httpClient = [UpSimpleHttpClient POST:urlString
                                 parameters:parameters
                                   formName:@"file"
@@ -82,47 +84,48 @@
                                              id response,
                                              NSData *body) {
                              
-                             
-                             
                              NSHTTPURLResponse *res = response;
                              NSDictionary *retObj  = NULL;// 期待返回的数据结构
-                             NSString *retMessage  = @""; // 可阅读的描述消息
                              NSError *error_json; //接口期望的是 json 数据
 
-                             
-                             
                              if (body) {
                                  //有返回 body ：尝试按照 json 解析。
                                  NSDictionary *json = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:&error];
                                  retObj = json;
                                  if (error_json) {
-                                     NSLog(@"json parse failed %@", error_json);
+                                     NSLog(@"NSErrorDomain_UpYunFormUploader json parse failed %@", error_json);
+                                     NSLog(@"NSErrorDomain_UpYunFormUploader res.body content %@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
                                  }
                              }
                              
-                             
-//                             
-//                             typedef void (^UpLoaderSuccessBlock)(NSHTTPURLResponse *response, NSDictionary *responseBody);
-//                             typedef void (^UpLoaderFailureBlock)(NSError *error, NSHTTPURLResponse *response, NSDictionary *responseBody);
-//                             typedef void (^UpLoaderProgressBlock)(int64_t completedBytesCount, int64_t totalBytesCount);
-//                             
-//
-                             
-                             // http 请求错误。取消，超时，断开等
+                             // http 请求错误，网络错误。取消，超时，断开等
                              if (error) {
                                  failureBlock(error, res, retObj);
+                                 return ;
                              }
                              
+                             // http 请求 res body 格式错误，无法进行 json 序列化
+                             if (error_json) {
+                                 failureBlock(error_json, res, nil);
+                                 return ;
+                             }
+                             
+                             // api 接口错误。参数错误，权限错误
                              if (res.statusCode >= 400) {
                                  if (!error) {
-                                     error  = [[NSError alloc] initWithDomain:NSErrorDomain code:res.statusCode userInfo:NULL];
+                                     error  = [[NSError alloc] initWithDomain:NSErrorDomain_UpYunFormUploader
+                                                                         code:res.statusCode
+                                                                     userInfo:NULL];
                                  }
+                                 
+                                 NSLog(@"parameters %@", parameters);
+                                 failureBlock(error, res, retObj);
+                                 
+                                 return ;
                              }
                              
-                             
-                             
-                             NSLog(@"response %@", response);
-                             NSLog(@"body %@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
+                             // 上传成功
+                             successBlock(res, retObj);
                          }];
 
 
