@@ -20,6 +20,8 @@ typedef void (^UpLoaderProgressBlock)(int64_t completedBytesCount, int64_t total
 
 /*表单上传接口
  参数  bucketName:           上传空间名
+ 参数  operator:             空间操作员
+ 参数  password:             空间操作员秘密
  参数  formAPIKey:           表单密钥
  参数  fileData:             上传文件数据
  参数  fileName:             上传文件名
@@ -31,7 +33,8 @@ typedef void (^UpLoaderProgressBlock)(int64_t completedBytesCount, int64_t total
  */
 
 - (void)uploadWithBucketName:(NSString *)bucketName
-                  formAPIKey:(NSString *)formAPIKey
+                    operator:(NSString *)operatorName
+                    password:(NSString *)operatorPassword
                     fileData:(NSData *)fileData
                     fileName:(NSString *)fileName
                      saveKey:(NSString *)saveKey
