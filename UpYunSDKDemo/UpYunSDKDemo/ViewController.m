@@ -155,48 +155,39 @@
 - (IBAction)livePhotoAction:(UIButton *)sender {
     UPLivePhotoViewController *vc = [[UPLivePhotoViewController alloc]init];
     [self presentViewController:vc animated:YES completion:nil];
-    
-    
 }
-
 
 - (void)testUpYunFormUploader {
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"fileTest.file"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
-    
-    int i = 1;
-    
-    
-    while ( i > 0 ) {
-        i --;
-        UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
-        [up uploadWithBucketName:@"test86400"
-                        operator:@"test86400"
-                        password:@"test86400"
-                        fileData:fileData
-                        fileName:nil
-                         saveKey:@"ios_sdk_new/test.txt"
-                 otherParameters:nil
-                         success:^(NSHTTPURLResponse *response,
-                                   NSDictionary *responseBody) {
-                             NSLog(@"上传成功 responseBody：%@", responseBody);
-                             NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
+    UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
+    [up uploadWithBucketName:@"test86400"
+                    operator:@"test86400"
+                    password:@"test86400"
+                    fileData:fileData
+                    fileName:nil
+                     saveKey:@"ios_sdk_new/123picture.jpg"
+             otherParameters:nil
+                     success:^(NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         NSLog(@"上传成功 responseBody：%@", responseBody);
+                         NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
+                     }
+     
+                     failure:^(NSError *error,
+                               NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         NSLog(@"上传失败 error：%@", error);
+                         NSLog(@"上传失败 responseBody：%@", responseBody);
+                         NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                     }
+     
+                    progress:^(int64_t completedBytesCount,
+                               int64_t totalBytesCount) {
+                        NSLog(@"upload progress: %lld / %lld", completedBytesCount, totalBytesCount);
+                    }];
 
-                         }
-                         failure:^(NSError *error,
-                                   NSHTTPURLResponse *response,
-                                   NSDictionary *responseBody) {
-                             NSLog(@"上传失败 error：%@", error);
-                             NSLog(@"上传失败 responseBody：%@", responseBody);
-                             NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
-                         }
-                        progress:^(int64_t completedBytesCount,
-                                   int64_t totalBytesCount) {
-                        }];
-
-    }
-    
-    
 }
+
 @end

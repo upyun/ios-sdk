@@ -25,8 +25,8 @@ typedef void (^UpLoaderProgressBlock)(int64_t completedBytesCount, int64_t total
  参数  formAPIKey:           表单密钥
  参数  fileData:             上传文件数据
  参数  fileName:             上传文件名
- 参数  saveKey:              上传文件的保存路径, 例如：“/2015/0901/file1.jpg”。可用占位符，参考：http://docs.upyun.com/api/form_api/#note1
- 参数  otherParameters:      可选的其它参数可以为nil. 参考文档：表单-API-参数http://docs.upyun.com/api/form_api/#api_1
+ 参数  saveKey:              上传文件的保存路径, 例如：“/2015/0901/file1.jpg”。可用占位符，参考：http://docs.upyun.com/api/form_api/#save-key
+ 参数  otherParameters:      可选的其它参数可以为nil. 参考文档：表单-API-参数http://docs.upyun.com/api/form_api/#_2
  参数  successBlock:         上传成功回调
  参数  failureBlock:         上传失败回调
  参数  progressBlock:        上传进度回调

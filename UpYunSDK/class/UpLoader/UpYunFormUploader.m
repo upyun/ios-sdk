@@ -16,6 +16,7 @@
 @interface UpYunFormUploader()
 {
     UpSimpleHttpClient *_httpClient;
+    int64_t _totalUnitCountToSend;
 }
 @end
 
@@ -36,34 +37,44 @@
                      failure:(UpLoaderFailureBlock)failureBlock
                     progress:(UpLoaderProgressBlock)progressBlock {
     
-    
     NSDate *now = [NSDate date];
-    NSString *expiration = [NSString stringWithFormat:@"%.0f",[now timeIntervalSince1970] + 1800];//自签名30分钟后过期
-    
-    
+    NSString *expiration = [NSString stringWithFormat:@"%.0f",[now timeIntervalSince1970] + 1800];//本地自签名30分钟后过期
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
     
     
     NSString *date = [dateFormatter stringFromDate:now];
     NSString *content_md5 = [UpApiUtils getMD5HashFromData:fileData];
-    NSDictionary *policyDict = @{@"bucket": bucketName,
-                                 @"save-key": saveKey,
-                                 @"expiration": expiration,
-                                 @"date": date,
-                                 @"content-md5": content_md5};
+
+    
+    NSMutableDictionary *policyDict = [NSMutableDictionary new];
+    NSDictionary *policyDict_part1 = @{@"bucket": bucketName,
+                                       @"save-key": saveKey,
+                                       @"expiration": expiration,
+                                       @"date": date,
+                                       @"content-md5": content_md5};
+    
+    NSDictionary *policyDict_part2 = [NSDictionary new];
+    if (otherParameters) {
+        policyDict_part2 = otherParameters;
+    }
+    
+    //所有上传参数都是放到上传策略 policy 中
+    [policyDict addEntriesFromDictionary:policyDict_part1];
+    [policyDict addEntriesFromDictionary:policyDict_part2];
+    
+    NSLog(@"policyDict  %@", policyDict);
+
+    
     NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunFormUploaderServerHost, bucketName];
     NSString *police = [UpApiUtils getPolicyWithParameters:policyDict];
-//    NSLog(@"urlString %@", urlString);
-//    NSLog(@"police %@", police);
-    
+//  NSLog(@"police %@", police);
     NSString *uri = [NSString stringWithFormat:@"/%@/", bucketName];
     NSString *signature = [UpApiUtils getSignatureWithPassword:operatorPassword
                                                     parameters:@[@"POST", uri, date, police, content_md5]];
     
-//    NSLog(@"signature %@", signature);
+//  NSLog(@"signature %@", signature);
     NSString *authorization = [NSString stringWithFormat:@"UPYUN %@:%@", operatorName, signature];
     NSDictionary *parameters = @{@"policy": police, @"authorization": authorization};
 
@@ -78,7 +89,8 @@
                                   mimeType:@""
                                       file:fileData
                          sendProgressBlock:^(NSProgress *progress) {
-                             
+                             _totalUnitCountToSend = progress.totalUnitCount;
+                             progressBlock(progress.completedUnitCount, progress.totalUnitCount);
                          }
                          completionHandler:^(NSError *error,
                                              id response,
@@ -97,7 +109,6 @@
                                      NSLog(@"NSErrorDomain_UpYunFormUploader res.body content %@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
                                  }
                              }
-                             
                              // http 请求错误，网络错误。取消，超时，断开等
                              if (error) {
                                  failureBlock(error, res, retObj);
@@ -118,19 +129,15 @@
                                                                      userInfo:NULL];
                                  }
                                  
-                                 NSLog(@"parameters %@", parameters);
                                  failureBlock(error, res, retObj);
-                                 
                                  return ;
                              }
                              
                              // 上传成功
+                             progressBlock(_totalUnitCountToSend, _totalUnitCountToSend);//使发送进度为 100%
                              successBlock(res, retObj);
                          }];
-
-
 }
-
 
 - (void)uploadWithPolicy:(NSString *)policy
                signature:(NSString *)signature
@@ -142,7 +149,11 @@
 }
 
 - (void)cancel {
+    [_httpClient cancel];
+}
 
+- (void)dealloc {
+    NSLog(@"UpYunFormUploader  dealloc");
 }
 
 @end
