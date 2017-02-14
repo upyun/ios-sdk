@@ -20,6 +20,9 @@
 
 
 
++ (NSDictionary *)getDictFromPolicyString:(NSString *)policy;
+
+
 
 //hash 方法
 + (NSString *)getMD5HashFromData:(NSData *)data;

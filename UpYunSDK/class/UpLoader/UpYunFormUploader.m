@@ -64,24 +64,43 @@
     [policyDict addEntriesFromDictionary:policyDict_part1];
     [policyDict addEntriesFromDictionary:policyDict_part2];
     
-    NSLog(@"policyDict  %@", policyDict);
 
-    
-    NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunFormUploaderServerHost, bucketName];
-    NSString *police = [UpApiUtils getPolicyWithParameters:policyDict];
-//  NSLog(@"police %@", police);
+    NSString *policy = [UpApiUtils getPolicyWithParameters:policyDict];
     NSString *uri = [NSString stringWithFormat:@"/%@/", bucketName];
     NSString *signature = [UpApiUtils getSignatureWithPassword:operatorPassword
-                                                    parameters:@[@"POST", uri, date, police, content_md5]];
-    
-//  NSLog(@"signature %@", signature);
-    NSString *authorization = [NSString stringWithFormat:@"UPYUN %@:%@", operatorName, signature];
-    NSDictionary *parameters = @{@"policy": police, @"authorization": authorization};
+                                                    parameters:@[@"POST", uri, date, policy, content_md5]];
 
+    [self uploadWithOperator:operatorName
+                      policy:policy
+                   signature:signature
+                    fileData:fileData
+                    fileName:fileName
+                     success:successBlock
+                     failure:failureBlock
+                    progress:progressBlock];
+}
+
+
+- (void)uploadWithOperator:(NSString *)operatorName
+                    policy:(NSString *)policy
+                 signature:(NSString *)signature
+                  fileData:(NSData *)fileData
+                  fileName:(NSString *)fileName
+                   success:(UpLoaderSuccessBlock)successBlock
+                   failure:(UpLoaderFailureBlock)failureBlock
+                  progress:(UpLoaderProgressBlock)progressBlock {
+    
+    
+    NSString *authorization = [NSString stringWithFormat:@"UPYUN %@:%@", operatorName, signature];
+    NSDictionary *parameters = @{@"policy": policy, @"authorization": authorization};
     
     if (fileName.length <= 0) {
         fileName = @"fileName";
     }
+    
+    NSDictionary *polcyDictDecoded = [UpApiUtils getDictFromPolicyString:policy];
+    NSString *bucketName_new = [polcyDictDecoded objectForKey:@"bucket"];
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunFormUploaderServerHost, bucketName_new];
     _httpClient = [UpSimpleHttpClient POST:urlString
                                 parameters:parameters
                                   formName:@"file"
@@ -99,7 +118,7 @@
                              NSHTTPURLResponse *res = response;
                              NSDictionary *retObj  = NULL;// 期待返回的数据结构
                              NSError *error_json; //接口期望的是 json 数据
-
+                             
                              if (body) {
                                  //有返回 body ：尝试按照 json 解析。
                                  NSDictionary *json = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:&error];
@@ -137,23 +156,16 @@
                              progressBlock(_totalUnitCountToSend, _totalUnitCountToSend);//使发送进度为 100%
                              successBlock(res, retObj);
                          }];
+
+
 }
 
-- (void)uploadWithPolicy:(NSString *)policy
-               signature:(NSString *)signature
-                fileData:(NSData *)fileData
-                fileName:(NSString *)fileName
-                 success:(UpLoaderSuccessBlock)successBlock
-                 failure:(UpLoaderFailureBlock)failureBlock
-                progress:(UpLoaderProgressBlock)progressBlock{
-}
 
 - (void)cancel {
     [_httpClient cancel];
 }
 
 - (void)dealloc {
-    NSLog(@"UpYunFormUploader  dealloc");
 }
 
 @end

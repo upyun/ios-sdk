@@ -16,6 +16,7 @@
 		1E1C73271E51669F006719F9 /* UpSimpleHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1C73261E51669F006719F9 /* UpSimpleHttpClient.m */; };
 		1E1C732A1E51824D006719F9 /* UpApiUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1C73291E51824D006719F9 /* UpApiUtils.m */; };
 		1E1C732D1E519C34006719F9 /* UpYunFormUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E1C732C1E519C34006719F9 /* UpYunFormUploader.m */; };
+		1E2C95541E530CE500E1D8E7 /* ViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E2C95531E530CE500E1D8E7 /* ViewController2.m */; };
 		88BAB33C18C6F66B00426A17 /* UpYun.m in Sources */ = {isa = PBXBuildFile; fileRef = 88BAB33618C6F66B00426A17 /* UpYun.m */; };
 		AE1A43241C5A053B00B1C795 /* UpYunSDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AE1A43231C5A053B00B1C795 /* UpYunSDKDemoTests.m */; };
 		AE4840241C99642600AF8B4D /* UPLivePhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4840221C99642600AF8B4D /* UPLivePhotoViewController.m */; };
@@ -68,6 +69,8 @@
 		1E1C73291E51824D006719F9 /* UpApiUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpApiUtils.m; sourceTree = "<group>"; };
 		1E1C732B1E519C34006719F9 /* UpYunFormUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYunFormUploader.h; sourceTree = "<group>"; };
 		1E1C732C1E519C34006719F9 /* UpYunFormUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYunFormUploader.m; sourceTree = "<group>"; };
+		1E2C95521E530CE500E1D8E7 /* ViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController2.h; sourceTree = "<group>"; };
+		1E2C95531E530CE500E1D8E7 /* ViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController2.m; sourceTree = "<group>"; };
 		88BAB33518C6F66B00426A17 /* UpYun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = UpYun.h; path = ../UpYun.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		88BAB33618C6F66B00426A17 /* UpYun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = UpYun.m; path = ../UpYun.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AE1A43211C5A053B00B1C795 /* UpYunSDKDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UpYunSDKDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -257,6 +260,8 @@
 				B8E9D68317B0CA6400146D00 /* Resources */,
 				B8E9D67E17B0C94500146D00 /* ViewController.h */,
 				B8E9D67F17B0C94500146D00 /* ViewController.m */,
+				1E2C95521E530CE500E1D8E7 /* ViewController2.h */,
+				1E2C95531E530CE500E1D8E7 /* ViewController2.m */,
 				B8E9D68017B0C94500146D00 /* ViewController_iPhone.xib */,
 				B8E9D5E417B0C79800146D00 /* AppDelegate.h */,
 				B8E9D5E517B0C79800146D00 /* AppDelegate.m */,
@@ -417,6 +422,7 @@
 				1E1C732D1E519C34006719F9 /* UpYunFormUploader.m in Sources */,
 				1E1C73151E51630B006719F9 /* NSData+MD5Digest.m in Sources */,
 				1E1C73271E51669F006719F9 /* UpSimpleHttpClient.m in Sources */,
+				1E2C95541E530CE500E1D8E7 /* ViewController2.m in Sources */,
 				AE4840241C99642600AF8B4D /* UPLivePhotoViewController.m in Sources */,
 				88BAB33C18C6F66B00426A17 /* UpYun.m in Sources */,
 			);

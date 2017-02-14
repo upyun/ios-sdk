@@ -8,6 +8,9 @@
 
 #import "AppDelegate.h"
 
+#import "ViewController2.h"//新api接口 demo 页面
+#import "ViewController.h" //旧api接口 demo 页面
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -16,14 +19,11 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
-    } else {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
-    }
+    
+//  self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
+    self.viewController = [[ViewController2 alloc] init];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
-    return YES;
     return YES;
 }
 

@@ -44,6 +44,22 @@
     return policy;
 }
 
++ (NSDictionary *)getDictFromPolicyString:(NSString *)policyString {
+    
+    NSString *jsonString = [UpApiUtils base64DecodeFromString:policyString];
+    NSError *error;
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                         options:kNilOptions
+                                                           error:&error];
+
+    if (!error && json) {
+        return  json;
+        
+    }
+    return  nil;
+}
+
+
 + (NSString *)getSignatureWithPassword:(NSString *)password
                             parameters:(NSArray *)parameter {
     /*Signature 计算方式

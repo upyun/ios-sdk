@@ -45,6 +45,7 @@ typedef void (^UpLoaderProgressBlock)(int64_t completedBytesCount, int64_t total
 
 
 /*表单上传接口，上传策略和签名可以是从服务器获取
+ 参数  operator:        空间操作员
  参数  policy:          上传策略
  参数  signature:       上传策略签名
  参数  fileData:        上传的数据
@@ -53,15 +54,14 @@ typedef void (^UpLoaderProgressBlock)(int64_t completedBytesCount, int64_t total
  参数  failure:         上传失败回调
  参数  progress:        上传进度回调
  */
-- (void)uploadWithPolicy:(NSString *)policy
-               signature:(NSString *)signature
-                fileData:(NSData *)fileData
-                fileName:(NSString *)fileName
-                 success:(UpLoaderSuccessBlock)successBlock
-                 failure:(UpLoaderFailureBlock)failureBlock
-                progress:(UpLoaderProgressBlock)progressBlock;
-
-
+- (void)uploadWithOperator:(NSString *)operatorName
+                    policy:(NSString *)policy
+                 signature:(NSString *)signature
+                  fileData:(NSData *)fileData
+                  fileName:(NSString *)fileName
+                   success:(UpLoaderSuccessBlock)successBlock
+                   failure:(UpLoaderFailureBlock)failureBlock
+                  progress:(UpLoaderProgressBlock)progressBlock;
 
 //取消上传
 - (void)cancel;
