@@ -13,7 +13,6 @@
 @property (nonatomic, strong) SimpleHttpTaskDataSendProgressHandler dataSendProgressHandler;
 @property (nonatomic, strong) SimpleHttpTaskDataReceiveProgressHandler dataReceiveProgressHandler;
 
-
 @property (nonatomic, strong) NSURLSessionTask *nSURLSessionTask;
 @property (nonatomic, strong) NSMutableData *didReceiveBody;
 @property (nonatomic, strong) NSURLResponse *didReceiveResponse;
@@ -108,8 +107,6 @@
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    
-    
     NSDictionary *info = @{};
     if (parameters) {
         info = parameters;
@@ -133,11 +130,8 @@
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.completionHandler = completionHandler;
     [sessionTask resume];
- 
     return sHttpClient;
 }
-
-
 
 + (UpSimpleHttpClient *)POST:(NSString *)URLString
                 parameters:(NSDictionary *)parameters
@@ -279,7 +273,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc %@", self);
+//    NSLog(@"dealloc %@", self);
 }
 
 - (void)complete {
@@ -358,7 +352,6 @@ didReceiveResponse:(NSURLResponse *)response
         self.dataReceiveProgressHandler(progress, data);
         return;
     }
-    
     
     //小文件，直接收集拼接 Body 数据
     if (_didReceiveBody) {

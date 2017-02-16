@@ -7,48 +7,59 @@
 //
 
 #import "ViewController2.h"
-#import "UpYun.h"
-#import "UPLivePhotoViewController.h"
-#import "UpYunFormUploader.h" //适合内存数据，图片，小文件，短视频
-#import "UpYunBlockUpLoader.h" //分块上传，断点续传，适合大文件上传
+#import "UpYunFormUploader.h" //图片，小文件，短视频
+#import "UpYunBlockUpLoader.h" //分块上传，适合大文件上传
+
+#import "ViewController.h"
 
 
 @interface ViewController2 ()
-@property (weak, nonatomic) IBOutlet UIImageView *image;
-@property (weak, nonatomic) IBOutlet UIProgressView *pv;
+@property (strong, nonatomic) UIButton *uploadBtn;
+@property (strong, nonatomic) UIButton *uploadBtn1;
+
+
 @end
 
 @implementation ViewController2
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UIButton *uploadBtn = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 100, 44)];
-    uploadBtn.backgroundColor = [UIColor lightGrayColor];
-    [uploadBtn setTitle:@"upload"
+    
+    self.uploadBtn = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 44)];
+    self.uploadBtn.backgroundColor = [UIColor lightGrayColor];
+    [self.uploadBtn setTitle:@"upload"
                forState:UIControlStateNormal];
-    [uploadBtn addTarget:self
+    [self.uploadBtn addTarget:self
                   action:@selector(uploadBtntap:)
         forControlEvents:UIControlEventTouchUpInside];
     
+    [self.view addSubview:self.uploadBtn];
     
     
-    [self.view addSubview:uploadBtn];
+    self.uploadBtn1 = [[UIButton alloc] initWithFrame:CGRectMake(100, 300, 200, 44)];
+    self.uploadBtn1.backgroundColor = [UIColor lightGrayColor];
+    [self.uploadBtn1 setTitle:@"旧版本"
+                    forState:UIControlStateNormal];
+    [self.uploadBtn1 addTarget:self
+                       action:@selector(uploadBtn1Tap:)
+             forControlEvents:UIControlEventTouchUpInside];
     
+    [self.view addSubview:self.uploadBtn1];
 
+    
 }
+
+
 
 - (void)uploadBtntap:(id)sender {
-    //[self testFormUploader1];
+    [self testFormUploader1];
     //[self testFormUploader2];
-    [self testBlockUpLoader1];
-
+    //[self testBlockUpLoader1];
 }
-
-
 
 //本地签名的表单上传。
 - (void)testFormUploader1 {
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mov"];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
     [up uploadWithBucketName:@"test86400"
@@ -56,7 +67,7 @@
                     password:@"password123"
                     fileData:fileData
                     fileName:nil
-                     saveKey:@"ios_sdk_new/111picture.jpg"
+                     saveKey:@"ios_sdk_new/video.mov"
              otherParameters:nil
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
@@ -74,12 +85,18 @@
      
                     progress:^(int64_t completedBytesCount,
                                int64_t totalBytesCount) {
-                        NSLog(@"upload progress: %lld / %lld", completedBytesCount, totalBytesCount);
+                        NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
+                        NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
+                        NSLog(@"upload progress: %@", progress);
+                        //到主线程刷新ui
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
+                        });
                     }];
 
 }
 
-//服务器端签名
+//服务器端签名的表单上传（模拟）
 - (void)testFormUploader2 {
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
@@ -118,10 +135,10 @@
                   }];
 }
 
-
+//分块上传
 - (void)testBlockUpLoader1{
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mov"];
     
     UpYunBlockUpLoader *up = [[UpYunBlockUpLoader alloc] init];
     NSString *bucketName = @"test86400";
@@ -147,12 +164,12 @@
                     progress:^(int64_t completedBytesCount,
                                int64_t totalBytesCount) {
                         NSLog(@"upload progress: %lld / %lld", completedBytesCount, totalBytesCount);
-                        
-//                        if (completedBytesCount > 3145728) {
-//                            [up cancel];
-//                        }
-
                     }];
+}
+
+- (void)uploadBtn1Tap:(id)sender {
+    ViewController *vc = [[ViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 

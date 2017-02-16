@@ -358,11 +358,10 @@
     
     [fileInfo setValue:blocks forKey:@"blocks"];
     return fileInfo;
-
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc %@", self);
+//    NSLog(@"dealloc %@", self);
 }
 
 @end
