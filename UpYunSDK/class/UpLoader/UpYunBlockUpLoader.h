@@ -1,15 +1,15 @@
 //
-//  UpYunFormUploader.h
+//  UpYunBlockUpLoader.h
 //  UpYunSDKDemo
 //
-//  Created by DING FENG on 2/13/17.
+//  Created by DING FENG on 2/16/17.
 //  Copyright © 2017 upyun. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "UpYunUploader.h"
 
-@interface UpYunFormUploader : NSObject
+@interface UpYunBlockUpLoader : NSObject
 
 
 /*表单上传接口
@@ -29,34 +29,11 @@
 - (void)uploadWithBucketName:(NSString *)bucketName
                     operator:(NSString *)operatorName
                     password:(NSString *)operatorPassword
-                    fileData:(NSData *)fileData
-                    fileName:(NSString *)fileName
-                     saveKey:(NSString *)saveKey
-             otherParameters:(NSDictionary *)otherParameters
+                        file:(NSString *)filePath
+                    savePath:(NSString *)savePath
                      success:(UpLoaderSuccessBlock)successBlock
                      failure:(UpLoaderFailureBlock)failureBlock
                     progress:(UpLoaderProgressBlock)progressBlock;
-
-
-/*表单上传接口，上传策略和签名可以是从服务器获取
- 参数  operator:        空间操作员
- 参数  policy:          上传策略
- 参数  signature:       上传策略签名
- 参数  fileData:        上传的数据
- 参数  fileName:        上传文件名
- 参数  success:         上传成功回调
- 参数  failure:         上传失败回调
- 参数  progress:        上传进度回调
- */
-- (void)uploadWithOperator:(NSString *)operatorName
-                    policy:(NSString *)policy
-                 signature:(NSString *)signature
-                  fileData:(NSData *)fileData
-                  fileName:(NSString *)fileName
-                   success:(UpLoaderSuccessBlock)successBlock
-                   failure:(UpLoaderFailureBlock)failureBlock
-                  progress:(UpLoaderProgressBlock)progressBlock;
-
 //取消上传
 - (void)cancel;
 

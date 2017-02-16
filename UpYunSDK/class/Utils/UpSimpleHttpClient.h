@@ -29,19 +29,19 @@ typedef void(^SimpleHttpTaskDataReceiveProgressHandler)(NSProgress *progress, NS
 #pragma mark 简单接口。用于 GET/POST json，xml 等小文件和数据，无需获取进度信息。
 //GET   可用于获取 json 等数据接口。
 + (UpSimpleHttpClient *)GET:(NSString *)URLString
-        completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
+          completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
 
 
 //POST  发送 body 的 content-type：application/x-www-form-urlencoded
 + (UpSimpleHttpClient *)POST:(NSString *)URLString
-                parameters:(NSDictionary *)parameters
-         completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
+                  parameters:(NSDictionary *)parameters
+           completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
 
 
 //POST  发送 body 的 content-type：application/json
 + (UpSimpleHttpClient *)POST2:(NSString *)URLString
-                 parameters:(NSDictionary *)parameters
-          completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
+                   parameters:(NSDictionary *)parameters
+            completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
 
 
 
@@ -59,14 +59,30 @@ typedef void(^SimpleHttpTaskDataReceiveProgressHandler)(NSProgress *progress, NS
  */
 
 + (UpSimpleHttpClient *)POST:(NSString *)URLString
-                parameters:(NSDictionary *)parameters
-                  formName:(NSString *)name
-                  fileName:(NSString *)fileName
-                  mimeType:(NSString *)mimeType
-                      file:(id)filePathOrData
-         sendProgressBlock:(SimpleHttpTaskDataSendProgressHandler)sendProgressBlock
-         completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
+                  parameters:(NSDictionary *)parameters
+                    formName:(NSString *)name
+                    fileName:(NSString *)fileName
+                    mimeType:(NSString *)mimeType
+                        file:(id)filePathOrData
+           sendProgressBlock:(SimpleHttpTaskDataSendProgressHandler)sendProgressBlock
+           completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
 
+
+
+
+/*
+ PUT 上传 body 的 content-type：application/octet-stream。
+ 一般用来发送文件图片等，所以可以用 progressBlock 获取数据发送进度。
+ 
+ headers: http 头部参数
+ filePathOrData：文件参数－文件数据或者位置
+ */
+
++ (UpSimpleHttpClient *)PUT:(NSString *)URLString
+                    headers:(NSDictionary *)headers
+                       file:(id)filePathOrData
+          sendProgressBlock:(SimpleHttpTaskDataSendProgressHandler)sendProgressBlock
+          completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
 
 
 /*
@@ -77,8 +93,8 @@ typedef void(^SimpleHttpTaskDataReceiveProgressHandler)(NSProgress *progress, NS
  
  */
 + (UpSimpleHttpClient *)GET:(NSString *)URLString
-     receiveProgressBlock:(SimpleHttpTaskDataReceiveProgressHandler)receiveProgressBlock
-        completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
+       receiveProgressBlock:(SimpleHttpTaskDataReceiveProgressHandler)receiveProgressBlock
+          completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler;
 
 
 //取消请求任务

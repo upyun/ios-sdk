@@ -31,5 +31,10 @@
 + (NSString *)base64DecodeFromString:(NSString *)base64String;
 + (NSString *)getHmacSha1HashWithKey:(NSString *)key
                               string:(NSString *)string;
+
++ (NSString*)mimeTypeOfFileAtPath:(NSString *) path;
++ (NSString*)lengthOfFileAtPath:(NSString *) path;
+
+
 @end
 

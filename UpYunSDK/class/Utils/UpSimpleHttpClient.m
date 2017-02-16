@@ -206,6 +206,41 @@
     return sHttpClient;
 }
 
++ (UpSimpleHttpClient *)PUT:(NSString *)URLString
+                    headers:(NSDictionary *)headers
+                       file:(id)filePathOrData
+          sendProgressBlock:(SimpleHttpTaskDataSendProgressHandler)sendProgressBlock
+          completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler {
+    
+    NSData *data = [[NSData alloc] init];
+    if ([filePathOrData isKindOfClass:[NSString class]]) {
+        data = [[NSFileManager defaultManager] contentsAtPath:filePathOrData];
+    } else if ([filePathOrData isKindOfClass:[NSData class]]) {
+        data = filePathOrData;
+    }
+
+    UpSimpleHttpClient *sHttpClient = [[UpSimpleHttpClient alloc] init];
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    sessionConfiguration.HTTPCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    sessionConfiguration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
+    sessionConfiguration.HTTPShouldSetCookies = YES;
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:sHttpClient delegateQueue:nil];
+    NSURL *url = [[NSURL alloc] initWithString:URLString];
+    NSMutableURLRequest *request = (NSMutableURLRequest *)[NSMutableURLRequest requestWithURL:url];
+    request.HTTPMethod = @"PUT";
+    request.HTTPBody = data;
+    [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
+    for (NSString *key in headers.allKeys) {
+        [request setValue:[headers objectForKey:key] forHTTPHeaderField:key];
+    }
+    NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.nSURLSessionTask = sessionTask;
+    sHttpClient.completionHandler = completionHandler;
+    [sessionTask resume];
+    return sHttpClient;
+}
+
 
 + (UpSimpleHttpClient *)GET:(NSString *)URLString
      receiveProgressBlock:(SimpleHttpTaskDataReceiveProgressHandler)receiveProgressBlock
@@ -240,12 +275,11 @@
 
 
 - (void)cancel {
-    
     [_nSURLSessionTask cancel];
 }
 
 - (void)dealloc {
-    
+    NSLog(@"dealloc %@", self);
 }
 
 - (void)complete {
@@ -304,7 +338,6 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
-    
     //较大文件下载
     if (self.dataReceiveProgressHandler) {
         //有 dataReceiveProgressHandler，应该是下载的较大文件，用这个接口将每片数据回调出去，自主拼接完成整个文件。

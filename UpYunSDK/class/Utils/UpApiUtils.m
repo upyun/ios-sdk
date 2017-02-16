@@ -165,5 +165,35 @@
     return hashString;
 }
 
+//http://stackoverflow.com/questions/1363813/how-can-you-read-a-files-mime-type-in-objective-c
++ (NSString*)mimeTypeOfFileAtPath: (NSString *) path {
+    // NSURL will read the entire file and may exceed available memory if the file is large enough. Therefore, we will write the first fiew bytes of the file to a head-stub for NSURL to get the MIMEType from.
+    NSFileHandle *readFileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+    NSData *fileHead = [readFileHandle readDataOfLength:100]; // we probably only need 2 bytes. we'll get the first 100 instead.
+    NSString *tempPath = [NSHomeDirectory() stringByAppendingPathComponent: @"tmp/fileHead.tmp"];
+    [[NSFileManager defaultManager] removeItemAtPath:tempPath error:nil]; // delete any existing version of fileHead.tmp
+    if ([fileHead writeToFile:tempPath atomically:YES])
+    {
+        NSURL* fileUrl = [NSURL fileURLWithPath:path];
+        NSURLRequest* fileUrlRequest = [[NSURLRequest alloc] initWithURL:fileUrl
+                                                             cachePolicy:NSURLRequestReloadIgnoringCacheData
+                                                         timeoutInterval:.1];
+        
+        NSError* error = nil;
+        NSURLResponse* response = nil;
+        [NSURLConnection sendSynchronousRequest:fileUrlRequest returningResponse:&response error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:tempPath error:nil];
+        return [response MIMEType];
+    }
+    return @"application/octet-stream";
+}
+
++ (NSString*)lengthOfFileAtPath:(NSString *) path {
+    NSError *attributesError = nil;
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path
+                                                                                    error:&attributesError];
+    return  [NSString stringWithFormat:@"%@", [fileAttributes objectForKey:@"NSFileSize"]];
+}
+
 
 @end

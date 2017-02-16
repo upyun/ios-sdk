@@ -8,7 +8,6 @@
 
 #import "UpYunFormUploader.h"
 #import "UpSimpleHttpClient.h"
-#import "UpApiUtils.h"
 
 
 #define  NSErrorDomain_UpYunFormUploader   @"NSErrorDomain_UpYunFormUploader"
@@ -100,7 +99,7 @@
     
     NSDictionary *polcyDictDecoded = [UpApiUtils getDictFromPolicyString:policy];
     NSString *bucketName_new = [polcyDictDecoded objectForKey:@"bucket"];
-    NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunFormUploaderServerHost, bucketName_new];
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunStorageServer, bucketName_new];
     _httpClient = [UpSimpleHttpClient POST:urlString
                                 parameters:parameters
                                   formName:@"file"
@@ -156,10 +155,7 @@
                              progressBlock(_totalUnitCountToSend, _totalUnitCountToSend);//使发送进度为 100%
                              successBlock(res, retObj);
                          }];
-
-
 }
-
 
 - (void)cancel {
     [_httpClient cancel];
