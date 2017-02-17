@@ -48,8 +48,8 @@
 
 - (void)uploadBtntap:(id)sender {
     [self testFormUploader1];
-    //[self testFormUploader2];
-    //[self testBlockUpLoader1];
+//    [self testFormUploader2];
+//    [self testBlockUpLoader1];
 }
 
 //本地签名的表单上传。
@@ -165,7 +165,7 @@
     [up uploadWithBucketName:bucketName
                     operator:@"operator123"
                     password:@"password123"
-                        file:filePath
+                    filePath:filePath
                     savePath:savePath
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
@@ -196,6 +196,8 @@
                     }];
 }
 
+
+//旧版本 sdk demo
 - (void)uploadBtn1Tap:(id)sender {
     ViewController *vc = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     [self presentViewController:vc animated:YES completion:nil];

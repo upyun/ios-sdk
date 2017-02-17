@@ -34,7 +34,7 @@
 - (void)uploadWithBucketName:(NSString *)bucketName
                     operator:(NSString *)operatorName
                     password:(NSString *)operatorPassword
-                        file:(NSString *)filePath
+                    filePath:(NSString *)filePath
                     savePath:(NSString *)savePath
                      success:(UpLoaderSuccessBlock)successBlock
                      failure:(UpLoaderFailureBlock)failureBlock
