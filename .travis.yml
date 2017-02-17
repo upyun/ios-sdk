@@ -6,6 +6,7 @@
 language: objective-c
 xcode_project: UpYunSDKDemo/UpYunSDKDemo.xcodeproj # path to your xcodeproj folder
 xcode_scheme: UpYunSDKDemo
+osx_image: xcode8.1
 
 
 script:
