@@ -154,6 +154,9 @@
     UPLivePhotoViewController *vc = [[UPLivePhotoViewController alloc]init];
     [self presentViewController:vc animated:YES completion:nil];
 }
+- (IBAction)closeVC:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 
 @end

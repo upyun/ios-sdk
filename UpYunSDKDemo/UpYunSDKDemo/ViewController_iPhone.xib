@@ -48,6 +48,14 @@
                         <action selector="livePhotoAction:" destination="-1" eventType="touchUpInside" id="8Bf-0W-KfE"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="oMP-FN-tms">
+                    <rect key="frame" x="37" y="27" width="31" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="关闭"/>
+                    <connections>
+                        <action selector="closeVC:" destination="-1" eventType="touchUpInside" id="vxi-bF-m56"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="0.75" green="0.75" blue="0.75" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

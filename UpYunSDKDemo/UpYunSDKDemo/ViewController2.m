@@ -44,8 +44,8 @@
              forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.uploadBtn1];
-
     
+
 }
 
 
@@ -73,6 +73,7 @@
                                NSDictionary *responseBody) {
                          NSLog(@"上传成功 responseBody：%@", responseBody);
                          NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
+                         //主线程刷新ui
                      }
      
                      failure:^(NSError *error,
@@ -81,6 +82,21 @@
                          NSLog(@"上传失败 error：%@", error);
                          NSLog(@"上传失败 responseBody：%@", responseBody);
                          NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                         //主线程刷新ui
+                         dispatch_async(dispatch_get_main_queue(), ^(){
+                             NSString *message = [responseBody objectForKey:@"message"];
+                             if (!message) {
+                                 message = [NSString stringWithFormat:@"%@", error.localizedDescription];
+                             }
+                             UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"上传失败!"
+                                                                                            message:message
+                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                             UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                                     style:UIAlertActionStyleDefault
+                                                                                   handler:nil];
+                             [alert addAction:defaultAction];
+                             [self presentViewController:alert animated:YES completion:nil];
+                         });
                      }
      
                     progress:^(int64_t completedBytesCount,
@@ -88,7 +104,8 @@
                         NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
                         NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
                         NSLog(@"upload progress: %@", progress);
-                        //到主线程刷新ui
+                       
+                        //主线程刷新ui
                         dispatch_async(dispatch_get_main_queue(), ^(){
                             [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
                         });
@@ -118,6 +135,8 @@
                              NSDictionary *responseBody) {
                        NSLog(@"上传成功 responseBody：%@", responseBody);
                        NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
+                       //主线程刷新ui
+
                    }
      
                    failure:^(NSError *error,
@@ -126,11 +145,15 @@
                        NSLog(@"上传失败 error：%@", error);
                        NSLog(@"上传失败 responseBody：%@", responseBody);
                        NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                       //主线程刷新ui
+
                    }
      
                   progress:^(int64_t completedBytesCount,
                              int64_t totalBytesCount) {
                       NSLog(@"upload progress: %lld / %lld", completedBytesCount, totalBytesCount);
+                      //主线程刷新ui
+
                       
                   }];
 }
@@ -153,6 +176,8 @@
                                NSDictionary *responseBody) {
                          NSLog(@"上传成功");
                          NSLog(@"file url：https://%@.b0.upaiyun.com/%@",bucketName, savePath);
+                         //主线程刷新ui
+
                      }
                      failure:^(NSError *error,
                                NSHTTPURLResponse *response,
@@ -160,15 +185,20 @@
                          NSLog(@"上传失败 error：%@", error);
                          NSLog(@"上传失败 responseBody：%@", responseBody);
                          NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                         //主线程刷新ui
+
                      }
                     progress:^(int64_t completedBytesCount,
                                int64_t totalBytesCount) {
                         NSLog(@"upload progress: %lld / %lld", completedBytesCount, totalBytesCount);
+                        //主线程刷新ui
+
                     }];
 }
 
 - (void)uploadBtn1Tap:(id)sender {
-    ViewController *vc = [[ViewController alloc] init];
+    
+    ViewController *vc = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
