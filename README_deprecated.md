@@ -1,21 +1,25 @@
 # UPYUN iOS SDK
 [![Build Status](https://travis-ci.org/upyun/ios-sdk.svg?branch=master)](https://travis-ci.org/upyun/ios-sdk)
+[![Latest Stable Version](https://img.shields.io/cocoapods/v/UPYUN.svg)](https://github.com/upyun/ios-sdk/releases)
 ![Platform](http://img.shields.io/cocoapods/p/UPYUN.svg)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](License.md)
 
-
 UPYUN iOS SDK, 集成:
-- [又拍云存储 FORM API 表单上传接口](http://docs.upyun.com/api/form_api/) 
-- [又拍云存储 REST API 断点续传接口](http://docs.upyun.com/api/rest_api/#_3)
+- [又拍云存储 表单 API接口](http://docs.upyun.com/api/form_api/) 
+- [又拍云存储 分块上传接口](http://docs.upyun.com/api/multipart_upload/)
 
 ## 运行环境
-- iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 
+- iOS 7.0 及以上版本, ARC 模式, 使用系统网络库 NSURLSession 
  
-## 安装使用说明：
- 1.直接下载, 将 `UPYUNSDK` 文件夹拖到工程中, `#import "UpYun.h"` 即可使用
+- 如想使用 LivePhot 的相关功能, 要求 iOS 9.1 及以上版本, ARC 模式, (需要 Photos , PhotosUI, MobileCoreServices 等framework , 没有导入会 bulid failed)
 
- 2.最新版本 2.0.0 暂时无法用 CocoaPods 安装。请手动安装。
+## 使用说明：
+ 1.直接下载, 引入 `UPYUNSDK` 文件夹, `#import "UpYun.h"` 即可使用
 
+ 2.通过 CocoaPods 
+        ```
+	      pod 'UPYUN', '~> 1.0.3'
+        ``` , `#import "UpYun.h"` 即可使用
 
 
 ## 参数设置

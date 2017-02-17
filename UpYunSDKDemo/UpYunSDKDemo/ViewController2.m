@@ -44,22 +44,18 @@
              forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.uploadBtn1];
-    
-
 }
 
-
-
 - (void)uploadBtntap:(id)sender {
-//    [self testFormUploader1];
+    [self testFormUploader1];
     //[self testFormUploader2];
-    [self testBlockUpLoader1];
+    //[self testBlockUpLoader1];
 }
 
 //本地签名的表单上传。
 - (void)testFormUploader1 {
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mov"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
     
@@ -69,17 +65,14 @@
                     password:@"password123"
                     fileData:fileData
                     fileName:nil
-                     saveKey:@"ios_sdk_new/video.mov"
+                     saveKey:@"ios_sdk_new/video.mp4"
              otherParameters:nil
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
                          NSLog(@"上传成功 responseBody：%@", responseBody);
                          NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
-
-                         NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
                          //主线程刷新ui
                      }
-     
                      failure:^(NSError *error,
                                NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
@@ -204,7 +197,6 @@
 }
 
 - (void)uploadBtn1Tap:(id)sender {
-    
     ViewController *vc = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     [self presentViewController:vc animated:YES completion:nil];
 }

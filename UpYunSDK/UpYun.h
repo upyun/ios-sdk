@@ -42,6 +42,8 @@ typedef void(^UPProgressBlock)(CGFloat percent, int64_t requestDidSendBytes);
 typedef NSString*(^UPSignatureBlock)(NSString *policy);
 typedef NSString*(^UPPolicyBlock)();
 
+
+__attribute__((deprecated("旧上传 SDK 即将过期")))
 @interface UpYun : NSObject
 
 @property (nonatomic, copy) NSString                  *bucket;
