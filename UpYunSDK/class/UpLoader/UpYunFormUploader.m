@@ -39,9 +39,10 @@
     NSDate *now = [NSDate date];
     NSString *expiration = [NSString stringWithFormat:@"%.0f",[now timeIntervalSince1970] + 1800];//本地自签名30分钟后过期
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setLocale:usLocale];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
-    
     
     NSString *date = [dateFormatter stringFromDate:now];
     NSString *content_md5 = [UpApiUtils getMD5HashFromData:fileData];
@@ -96,8 +97,9 @@
     if (fileName.length <= 0) {
         fileName = @"fileName";
     }
-    
     NSDictionary *polcyDictDecoded = [UpApiUtils getDictFromPolicyString:policy];
+    
+
     NSString *bucketName_new = [polcyDictDecoded objectForKey:@"bucket"];
     NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunStorageServer, bucketName_new];
     _httpClient = [UpSimpleHttpClient POST:urlString

@@ -151,6 +151,8 @@
     
     NSDate *now = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setLocale:usLocale];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
     NSString *date = [dateFormatter stringFromDate:now];
@@ -251,6 +253,8 @@
     NSString *Content_MD5 =  [targetBlcokInfo objectForKey:@"block_hash"];
     NSDate *now = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setLocale:usLocale];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
     NSString *date = [dateFormatter stringFromDate:now];
@@ -355,6 +359,8 @@
     
     NSDate *now = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setLocale:usLocale];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
     NSString *date = [dateFormatter stringFromDate:now];
