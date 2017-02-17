@@ -6,6 +6,13 @@
 //  Copyright © 2017 upyun. All rights reserved.
 //
 
+
+
+/*实现的存储接口及文档
+ 表单API。文档地址：http://docs.upyun.com/api/form_api/
+ 认证鉴权－在 Body 中包含签名。 文档地址：http://docs.upyun.com/api/authorization/#body
+ */
+
 #import <Foundation/Foundation.h>
 #import "UpYunUploader.h"
 

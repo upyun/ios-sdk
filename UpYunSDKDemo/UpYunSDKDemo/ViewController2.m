@@ -51,9 +51,9 @@
 
 
 - (void)uploadBtntap:(id)sender {
-    [self testFormUploader1];
+//    [self testFormUploader1];
     //[self testFormUploader2];
-    //[self testBlockUpLoader1];
+    [self testBlockUpLoader1];
 }
 
 //本地签名的表单上传。
@@ -115,17 +115,17 @@
 
 //服务器端签名的表单上传（模拟）
 - (void)testFormUploader2 {
-    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
-    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
-    UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
-    
     //从 app 服务器获取的上传策略 policy
     NSString *policy = @"ewogICJjb250ZW50LW1kNSIgOiAiNDRiN2E4ZjMyN2Q3OTk1NjIzY2Q5MmJhZDYzYTc2MmMiLAogICJzYXZlLWtleSIgOiAiaW9zX3Nka19uZXdcLzExMXBpY3R1cmUuanBnIiwKICAiYnVja2V0IiA6ICJ0ZXN0ODY0MDAiLAogICJleHBpcmF0aW9uIiA6ICIxNDg3MDY3NjUyIiwKICAiZGF0ZSIgOiAiVHVlLCAxNCBGZWIgMjAxNyAwOTo1MDo1MSBHTVQiCn0=";
     
     //从 app 服务器获取的上传策略签名 signature
     NSString *signature = @"nbkIJVuqQvOckxFzdY5GkQ6dk5A=";
     
+    
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
+    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+    UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
     [up uploadWithOperator:@"test86400"
                     policy:policy
                  signature:signature
@@ -136,7 +136,6 @@
                        NSLog(@"上传成功 responseBody：%@", responseBody);
                        NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
                        //主线程刷新ui
-
                    }
      
                    failure:^(NSError *error,
@@ -146,15 +145,12 @@
                        NSLog(@"上传失败 responseBody：%@", responseBody);
                        NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
                        //主线程刷新ui
-
                    }
      
                   progress:^(int64_t completedBytesCount,
                              int64_t totalBytesCount) {
                       NSLog(@"upload progress: %lld / %lld", completedBytesCount, totalBytesCount);
                       //主线程刷新ui
-
-                      
                   }];
 }
 
