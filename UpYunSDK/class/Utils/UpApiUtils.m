@@ -55,6 +55,8 @@
     if (!error && json) {
         return  json;
         
+    } else {
+        NSLog(@"error %@", error);
     }
     return  nil;
 }
@@ -136,7 +138,7 @@
 
 
 + (NSString *)base64EncodeFromString:(NSString *)string {
-    NSData *stingData = [NSData dataWithBytes:string.UTF8String length:string.length];
+    NSData *stingData = [string dataUsingEncoding:NSUTF8StringEncoding];
     NSData *base64Data = [stingData base64EncodedDataWithOptions:0];
     NSString *base64String = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
     if (!base64String) {

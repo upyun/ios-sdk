@@ -99,7 +99,6 @@
     }
     NSDictionary *polcyDictDecoded = [UpApiUtils getDictFromPolicyString:policy];
     
-
     NSString *bucketName_new = [polcyDictDecoded objectForKey:@"bucket"];
     NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunStorageServer, bucketName_new];
     _httpClient = [UpSimpleHttpClient POST:urlString
