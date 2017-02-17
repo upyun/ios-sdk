@@ -62,7 +62,9 @@
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mov"];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
-    [up uploadWithBucketName:@"test86400"
+    
+    NSString *bucketName = @"test86400";
+    [up uploadWithBucketName:bucketName
                     operator:@"operator123"
                     password:@"password123"
                     fileData:fileData
@@ -72,6 +74,8 @@
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
                          NSLog(@"上传成功 responseBody：%@", responseBody);
+                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
+
                          NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
                          //主线程刷新ui
                      }
@@ -126,7 +130,9 @@
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
-    [up uploadWithOperator:@"test86400"
+    
+    NSString *bucketName = @"test86400";
+    [up uploadWithOperator:bucketName
                     policy:policy
                  signature:signature
                   fileData:fileData
@@ -134,7 +140,7 @@
                    success:^(NSHTTPURLResponse *response,
                              NSDictionary *responseBody) {
                        NSLog(@"上传成功 responseBody：%@", responseBody);
-                       NSLog(@"file url：https://test86400.b0.upaiyun.com/%@", [responseBody objectForKey:@"url"]);
+                       NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName,[responseBody objectForKey:@"url"]);
                        //主线程刷新ui
                    }
      
@@ -157,11 +163,11 @@
 //分块上传
 - (void)testBlockUpLoader1{
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mov"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
     
     UpYunBlockUpLoader *up = [[UpYunBlockUpLoader alloc] init];
     NSString *bucketName = @"test86400";
-    NSString *savePath = @"iossdk/blockupload/picture.jpg";
+    NSString *savePath = @"iossdk/blockupload/video.mp4";
     
     [up uploadWithBucketName:bucketName
                     operator:@"operator123"
@@ -186,9 +192,14 @@
                      }
                     progress:^(int64_t completedBytesCount,
                                int64_t totalBytesCount) {
-                        NSLog(@"upload progress: %lld / %lld", completedBytesCount, totalBytesCount);
+                        NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
+                        NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
+                        NSLog(@"upload progress: %@", progress);
+                        
                         //主线程刷新ui
-
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
+                        });
                     }];
 }
 

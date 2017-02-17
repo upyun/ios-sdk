@@ -27,7 +27,7 @@
 		AE48402B1C9A4ADC00AF8B4D /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE48402A1C9A4ADC00AF8B4D /* Photos.framework */; };
 		AE48402E1C9A4B9A00AF8B4D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE48402C1C9A4B3B00AF8B4D /* MobileCoreServices.framework */; };
 		AE4840311C9A4FD400AF8B4D /* picture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AE48402F1C9A4FD400AF8B4D /* picture.jpg */; };
-		AE4840321C9A4FD400AF8B4D /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = AE4840301C9A4FD400AF8B4D /* video.mov */; };
+		AE4840321C9A4FD400AF8B4D /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = AE4840301C9A4FD400AF8B4D /* video.mp4 */; };
 		AE7730BA1C50E7AD006FD6FC /* test2.png in Resources */ = {isa = PBXBuildFile; fileRef = AE7730B91C50E7AD006FD6FC /* test2.png */; };
 		AE9FFA6A1C6096240055A93B /* UPYUNConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9FFA691C6096240055A93B /* UPYUNConfig.m */; };
 		B8E9D5D617B0C79800146D00 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8E9D5D517B0C79800146D00 /* UIKit.framework */; };
@@ -87,7 +87,7 @@
 		AE48402A1C9A4ADC00AF8B4D /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		AE48402C1C9A4B3B00AF8B4D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AE48402F1C9A4FD400AF8B4D /* picture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = picture.jpg; sourceTree = "<group>"; };
-		AE4840301C9A4FD400AF8B4D /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
+		AE4840301C9A4FD400AF8B4D /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video.mp4; sourceTree = "<group>"; };
 		AE7730B91C50E7AD006FD6FC /* test2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test2.png; sourceTree = "<group>"; };
 		AE9FFA681C6096240055A93B /* UPYUNConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UPYUNConfig.h; path = ../UPYUNConfig.h; sourceTree = "<group>"; };
 		AE9FFA691C6096240055A93B /* UPYUNConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UPYUNConfig.m; path = ../UPYUNConfig.m; sourceTree = "<group>"; };
@@ -294,7 +294,7 @@
 			isa = PBXGroup;
 			children = (
 				AE48402F1C9A4FD400AF8B4D /* picture.jpg */,
-				AE4840301C9A4FD400AF8B4D /* video.mov */,
+				AE4840301C9A4FD400AF8B4D /* video.mp4 */,
 				AE7730B91C50E7AD006FD6FC /* test2.png */,
 				B8F54BFA17B8EDAD001D1CE9 /* fileTest.file */,
 				B8E9D68417B0CA6C00146D00 /* image.jpg */,
@@ -393,7 +393,7 @@
 				B8E9D68617B0CB2900146D00 /* ViewController_iPhone.xib in Resources */,
 				AE4840311C9A4FD400AF8B4D /* picture.jpg in Resources */,
 				AE7730BA1C50E7AD006FD6FC /* test2.png in Resources */,
-				AE4840321C9A4FD400AF8B4D /* video.mov in Resources */,
+				AE4840321C9A4FD400AF8B4D /* video.mp4 in Resources */,
 				B8E9D5E017B0C79800146D00 /* InfoPlist.strings in Resources */,
 				B8E9D68517B0CA6C00146D00 /* image.jpg in Resources */,
 				AE4840251C99642600AF8B4D /* UPLivePhotoViewController.xib in Resources */,
