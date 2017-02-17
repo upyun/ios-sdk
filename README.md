@@ -4,13 +4,13 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](License.md)
 
 
-UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ``` 和分块上传 ``` UpYunBlockUpLoader``` 两部分，分别实现了以下文档接口：    
+UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ```  和分块上传  ``` UpYunBlockUpLoader```   两部分，分别实现了以下文档接口：    
 - [又拍云存储 FORM API 表单上传接口](http://docs.upyun.com/api/form_api/)        
 - [又拍云存储 REST API 断点续传接口](http://docs.upyun.com/api/rest_api/#_3)
 
 
 
-```表单上传```适用于上传图片、短视频等小文件，```分块上传```适用于大文件上传和断点续传。（特别地，断点续传上传的图片不支持预处理）
+```表单上传```  适用于上传图片、短视频等小文件， ```分块上传```  适用于大文件上传和断点续传。（特别地，断点续传上传的图片不支持预处理）
 
 
 ## 运行环境
@@ -24,7 +24,8 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
  UpYunSDK 文件目录： 
 
  
- ```  
+ ```			
+ 
 ├── class  
 │   ├── UpLoader
 │   │   ├── UpYunBlockUpLoader.h    //分块上传接口
@@ -37,20 +38,23 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 │  
 └── class_deprecated // 旧版本 SDK
 
+
  
- ```
+ ```			
  
  
- 使用时候，请引入相应的头文件   
+ 使用时候，请引入相应的头文件  	 
  
- ```  
+ ```  				
+ 
  //表单上传，适用于上传图片、短视频等小文件。   
  #import "UpYunFormUploader.h" 
  
  //分块上传，适合大文件上传。
  #import "UpYunBlockUpLoader.h"
  
- ```
+ 
+ ```			
  
 
 
@@ -64,7 +68,8 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 
 
 
-```
+```					
+
 
 /*表单上传接口
  参数  bucketName:           上传空间名
@@ -115,7 +120,10 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 - (void)cancel;
 
 
-```
+
+
+
+```					
 
 
 
@@ -125,7 +133,7 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 使用时候，请引入相应的头文件 ```#import "UpYunBlockUpLoader.h"```。 具体使用方式参考 demo 页面文件 "ViewController2.m".
 
 
-```  
+```  				
 
 /*表单上传接口
  参数  bucketName:           上传空间名
@@ -149,7 +157,7 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 //取消上传
 - (void)cancel;
 
-``` 
+``` 				
 
  
  
