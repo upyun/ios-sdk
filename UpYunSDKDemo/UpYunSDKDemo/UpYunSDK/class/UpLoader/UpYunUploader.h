@@ -6,6 +6,7 @@
 //  Copyright © 2017 upyun. All rights reserved.
 //
 
+#define UpYunSDKVersion @"2.0.0"
 
 /*** UpYunStorageServer list  http://docs.upyun.com/api/rest_api/
  智能选路（推荐）：v0.api.upyun.com

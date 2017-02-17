@@ -25,7 +25,7 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 
  
  ```			
- 
+/UpYunSDK 
 ├── class  
 │   ├── UpLoader
 │   │   ├── UpYunBlockUpLoader.h    //分块上传接口
@@ -43,7 +43,7 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
  ```			
  
  
- 使用时候，请引入相应的头文件  	 
+ 使用时候，请引入相应的头文件。  	 
  
  ```  				
  
@@ -64,7 +64,7 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 ###表单上传
 
 表单上传接口共有两个，分别适用于__本地签名__和__服务器签名__两种上传方式。
-使用时候，请引入相应的头文件 ```#import "UpYunFormUploader.h"```。 具体使用方式参考 demo 页面文件 "ViewController2.m".
+使用时请引入头文件 ```#import "UpYunFormUploader.h"```。 具体使用方式请参考 demo 页面文件 "ViewController2.m".
 
 
 
@@ -130,7 +130,7 @@ iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 ###分块上传
 
 分块上传接口只有一个，需要__本地签名__进行上传。
-使用时候，请引入相应的头文件 ```#import "UpYunBlockUpLoader.h"```。 具体使用方式参考 demo 页面文件 "ViewController2.m".
+使用时请引入相应的头文件 ```#import "UpYunBlockUpLoader.h"```。 具体使用方式请参考 demo 页面文件 "ViewController2.m".
 
 
 ```  				
