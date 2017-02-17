@@ -582,7 +582,7 @@
 				GCC_PREFIX_HEADER = "UpYunSDKDemo/UpYunSDKDemo-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "UpYunSDKDemo/UpYunSDKDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = upyun.UpYunSDKDemo;
@@ -600,7 +600,7 @@
 				GCC_PREFIX_HEADER = "UpYunSDKDemo/UpYunSDKDemo-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "UpYunSDKDemo/UpYunSDKDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = upyun.UpYunSDKDemo;
 				PRODUCT_NAME = UpYunSDKDemo;

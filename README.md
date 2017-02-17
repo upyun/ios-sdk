@@ -14,7 +14,7 @@ UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ```  和分块上传  `
 
 
 ## 运行环境
-iOS 7.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 HTTP 请求。
+iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 HTTP 请求。
  
 ## 安装使用说明：
  下载 SDK，然后将 `UpYunSDK` 文件夹拖到工程中。（最新版本 2.0.0 暂时无法用 CocoaPods 安装。）

@@ -371,7 +371,7 @@
     
     NSString *signature = [UpApiUtils getSignatureWithPassword:@"ab296a01090ca2eab5fe5b246999da54" parameters:paras];
     NSLog(@"signature %@", signature);
-    XCTAssert([signature isEqualToString:@"NnMeoZosYLnOGUiY/Skb0W1DMNA="]);
+    XCTAssert([signature isEqualToString:@"mWP9yv8M73apVdwJRiup+fu37JE="]);
 }
 
 - (void)testAppAsycTask {
