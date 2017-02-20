@@ -22,8 +22,7 @@
 /*表单上传接口
  参数  bucketName:           上传空间名
  参数  operator:             空间操作员
- 参数  password:             空间操作员秘密
- 参数  formAPIKey:           表单密钥
+ 参数  password:             空间操作员密码
  参数  fileData:             上传文件数据
  参数  fileName:             上传文件名
  参数  saveKey:              上传文件的保存路径, 例如：“/2015/0901/file1.jpg”。可用占位符，参考：http://docs.upyun.com/api/form_api/#save-key

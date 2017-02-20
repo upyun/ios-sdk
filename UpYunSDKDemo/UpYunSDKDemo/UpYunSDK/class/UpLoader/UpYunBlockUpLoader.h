@@ -23,7 +23,7 @@
 /*表单上传接口
  参数  bucketName:           上传空间名
  参数  operator:             空间操作员
- 参数  operatorPassword:     空间操作员秘密
+ 参数  operatorPassword:     空间操作员密码
  参数  filePath:             上传文件本地路径
  参数  savePath:             上传文件的保存路径, 例如：“/2015/0901/file1.jpg”
  参数  successBlock:         上传成功回调

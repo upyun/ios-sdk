@@ -74,8 +74,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 /*表单上传接口
  参数  bucketName:           上传空间名
  参数  operator:             空间操作员
- 参数  password:             空间操作员秘密
- 参数  formAPIKey:           表单密钥
+ 参数  password:             空间操作员密码
  参数  fileData:             上传文件数据
  参数  fileName:             上传文件名
  参数  saveKey:              上传文件的保存路径, 例如：“/2015/0901/file1.jpg”。可用占位符，参考：http://docs.upyun.com/api/form_api/#save-key
@@ -138,7 +137,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 /*表单上传接口
  参数  bucketName:           上传空间名
  参数  operator:             空间操作员
- 参数  operatorPassword:     空间操作员秘密
+ 参数  operatorPassword:     空间操作员密码
  参数  filePath:             上传文件本地路径
  参数  savePath:             上传文件的保存路径, 例如：“/2015/0901/file1.jpg”
  参数  successBlock:         上传成功回调
