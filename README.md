@@ -4,19 +4,23 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](License.md)
 
 
+
+## 1 SDK 功能简介
+
 UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ```  和分块上传  ``` UpYunBlockUpLoader```   两部分，分别实现了以下文档接口：    
 - [又拍云存储 FORM API 表单上传接口](http://docs.upyun.com/api/form_api/)        
 - [又拍云存储 REST API 断点续传接口](http://docs.upyun.com/api/rest_api/#_3)
 
 
 
-```表单上传```  适用于上传图片、短视频等小文件， ```分块上传```  适用于大文件上传和断点续传。（特别地，断点续传上传的图片不支持预处理）
+```表单上传```  适用于上传图片、短视频等小文件。（另外通过 otherParameters 可实现方便的```图片视频预处理```功能）			
+ ```分块上传```  适用于大文件上传和断点续传。（特别地，断点续传上传的图片不支持预处理）
 
 
-## 运行环境
+## 2 运行环境
 iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 HTTP 请求。
  
-## 安装使用说明：
+## 3 安装使用说明：
  下载 SDK，然后将 `UpYunSDK` 文件夹拖到工程中。（最新版本 2.0.0 暂时无法用 CocoaPods 安装。）
  
  
@@ -58,10 +62,10 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
  
 
 
-## 接口与参数说明： 
+## 4 接口与参数说明： 
 
 
-###表单上传
+### 4.1表单上传
 
 表单上传接口共有两个，分别适用于__本地签名__和__服务器签名__两种上传方式。
 使用时请引入头文件 ```#import "UpYunFormUploader.h"```。 具体使用方式请参考 demo 页面文件 "ViewController2.m".
@@ -124,9 +128,10 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 
 ```					
 
+注意：表单上传接口接口中 otherParameters 提供更丰富的上传参数定义，比如图片和音视频预处理参数 ```apps``` ,具体请参考文档[表单-API-参数](http://docs.upyun.com/api/form_api/#_2)
 
 
-###分块上传
+### 4.2分块上传
 
 分块上传接口只有一个，需要__本地签名__进行上传。
 使用时请引入相应的头文件 ```#import "UpYunBlockUpLoader.h"```。 具体使用方式请参考 demo 页面文件 "ViewController2.m".
@@ -159,7 +164,29 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 ``` 				
 
  
+## 5 DEMO工程与使用示例： 
+
+下载运行 demo 工程即可以直接进行上传文件的测试。主要功能代码在 ```ViewController2.m``` 文件中。
+
+```  
+
+- (void)uploadBtntap:(id)sender {
+    
+  [self testFormUploader1];  //本地签名的表单上传
+  [self testFormUploader2];  //服务器端签名的表单上传（模拟）
+  [self testBlockUpLoader1]; //分块上传
+  [self testFormUploaderAndAsycTask]; //表单上传加异步多媒体处理－－视频截图
+
+}
+
+```  
+
+
+
+
+
  
+    
     
  
  

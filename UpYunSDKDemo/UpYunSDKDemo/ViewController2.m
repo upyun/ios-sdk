@@ -47,9 +47,12 @@
 }
 
 - (void)uploadBtntap:(id)sender {
-    [self testFormUploader1];
+    
+      [self testFormUploader1];
 //    [self testFormUploader2];
 //    [self testBlockUpLoader1];
+//    [self testFormUploaderAndAsycTask];
+
 }
 
 //本地签名的表单上传。
@@ -196,6 +199,72 @@
                     }];
 }
 
+
+
+//表单上传加异步多媒体处理－－视频截图
+- (void)testFormUploaderAndAsycTask {
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
+    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+    UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
+    
+    //异步视频截图处理。更详细参数参考：云处理文档－音视频处理－视频截图 http://docs.upyun.com/cloud/av/#_16
+    NSDictionary *asycTask = @{@"name": @"naga",@"type": @"thumbnail",
+                               @"save_as": @"ios_sdk_new/test2/video.jpg",
+                               @"avopts": @"/o/true/n/1/",
+                               @"notify_url": @"http://124.160.114.202:18989/echo"};
+    NSArray *apps = @[asycTask];
+    
+    NSString *bucketName = @"test86400";
+    [up uploadWithBucketName:bucketName
+                    operator:@"operator123"
+                    password:@"password123"
+                    fileData:fileData
+                    fileName:nil
+                     saveKey:@"ios_sdk_new/test2/video.mp4"
+             otherParameters:@{@"apps": apps}
+                     success:^(NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         NSLog(@"上传成功 responseBody：%@", responseBody);
+                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
+                         //主线程刷新ui
+                     }
+                     failure:^(NSError *error,
+                               NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         NSLog(@"上传失败 error：%@", error);
+                         NSLog(@"上传失败 responseBody：%@", responseBody);
+                         NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                         //主线程刷新ui
+                         dispatch_async(dispatch_get_main_queue(), ^(){
+                             NSString *message = [responseBody objectForKey:@"message"];
+                             if (!message) {
+                                 message = [NSString stringWithFormat:@"%@", error.localizedDescription];
+                             }
+                             UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"上传失败!"
+                                                                                            message:message
+                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                             UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                                     style:UIAlertActionStyleDefault
+                                                                                   handler:nil];
+                             [alert addAction:defaultAction];
+                             [self presentViewController:alert animated:YES completion:nil];
+                         });
+                     }
+     
+                    progress:^(int64_t completedBytesCount,
+                               int64_t totalBytesCount) {
+                        NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
+                        NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
+                        NSLog(@"upload progress: %@", progress);
+                        
+                        //主线程刷新ui
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
+                        });
+                    }];
+
+}
 
 //旧版本 sdk demo
 - (void)uploadBtn1Tap:(id)sender {
