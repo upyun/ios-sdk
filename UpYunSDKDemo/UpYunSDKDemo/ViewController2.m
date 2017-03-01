@@ -51,7 +51,7 @@
       [self testFormUploader1];
 //    [self testFormUploader2];
 //    [self testBlockUpLoader1];
-//    [self testFormUploaderAndAsycTask];
+//    [self testFormUploaderAndAsyncTask];
 
 }
 
@@ -202,7 +202,7 @@
 
 
 //表单上传加异步多媒体处理－－视频截图
-- (void)testFormUploaderAndAsycTask {
+- (void)testFormUploaderAndAsyncTask {
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];

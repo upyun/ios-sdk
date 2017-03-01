@@ -175,7 +175,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
   [self testFormUploader1];  //本地签名的表单上传
   [self testFormUploader2];  //服务器端签名的表单上传（模拟）
   [self testBlockUpLoader1]; //分块上传
-  [self testFormUploaderAndAsycTask]; //表单上传加异步多媒体处理－－视频截图
+  [self testFormUploaderAndAsyncTask]; //表单上传加异步多媒体处理－－视频截图
 
 }
 
