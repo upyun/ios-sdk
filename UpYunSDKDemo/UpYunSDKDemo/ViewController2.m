@@ -48,10 +48,10 @@
 
 - (void)uploadBtntap:(id)sender {
     
-      [self testFormUploader1];
-//    [self testFormUploader2];
-//    [self testBlockUpLoader1];
-//    [self testFormUploaderAndAsyncTask];
+        [self testFormUploader1];
+//      [self testFormUploader2];
+//      [self testBlockUpLoader1];
+//      [self testFormUploaderAndAsyncTask];
 
 }
 
@@ -116,10 +116,10 @@
 //服务器端签名的表单上传（模拟）
 - (void)testFormUploader2 {
     //从 app 服务器获取的上传策略 policy
-    NSString *policy = @"ewogICJjb250ZW50LW1kNSIgOiAiNDRiN2E4ZjMyN2Q3OTk1NjIzY2Q5MmJhZDYzYTc2MmMiLAogICJzYXZlLWtleSIgOiAiaW9zX3Nka19uZXdcLzExMXBpY3R1cmUuanBnIiwKICAiYnVja2V0IiA6ICJ0ZXN0ODY0MDAiLAogICJleHBpcmF0aW9uIiA6ICIxNDg3MDY3NjUyIiwKICAiZGF0ZSIgOiAiVHVlLCAxNCBGZWIgMjAxNyAwOTo1MDo1MSBHTVQiCn0=";
+    NSString *policy = @"eyJleHBpcmF0aW9uIjoxNDg5Mzc4NjExLCJyZXR1cm4tdXJsIjoiaHR0cGJpbi5vcmdcL3Bvc3QiLCJidWNrZXQiOiJmb3JtdGVzdCIsInNhdmUta2V5IjoiXC91cGxvYWRzXC97eWVhcn17bW9ufXtkYXl9XC97cmFuZG9tMzJ9ey5zdWZmaXh9In0=";
     
     //从 app 服务器获取的上传策略签名 signature
-    NSString *signature = @"nbkIJVuqQvOckxFzdY5GkQ6dk5A=";
+    NSString *signature = @"BIC22iXgu5fBUXgoMGGpdWNpsak=";
     
     
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
@@ -127,8 +127,8 @@
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
     
-    NSString *bucketName = @"test86400";
-    [up uploadWithOperator:bucketName
+    NSString *operatorName = @"one";
+    [up uploadWithOperator:operatorName
                     policy:policy
                  signature:signature
                   fileData:fileData
@@ -136,7 +136,6 @@
                    success:^(NSHTTPURLResponse *response,
                              NSDictionary *responseBody) {
                        NSLog(@"上传成功 responseBody：%@", responseBody);
-                       NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName,[responseBody objectForKey:@"url"]);
                        //主线程刷新ui
                    }
      
