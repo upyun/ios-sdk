@@ -47,7 +47,6 @@
 }
 
 - (void)uploadBtntap:(id)sender {
-    
         [self testFormUploader1];
 //      [self testFormUploader2];
 //      [self testBlockUpLoader1];
@@ -104,6 +103,10 @@
                         NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
                         NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
                         NSLog(@"upload progress: %@", progress);
+                        
+                        if ([progress floatValue] > 0.4) {
+                            [up cancel];
+                        }
                        
                         //主线程刷新ui
                         dispatch_async(dispatch_get_main_queue(), ^(){
