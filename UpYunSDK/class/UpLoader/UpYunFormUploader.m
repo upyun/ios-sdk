@@ -66,7 +66,7 @@
     
 
     NSString *policy = [UpApiUtils getPolicyWithParameters:policyDict];
-    NSString *uri = [NSString stringWithFormat:@"/%@/", bucketName];
+    NSString *uri = [NSString stringWithFormat:@"/%@", bucketName];
     NSString *signature = [UpApiUtils getSignatureWithPassword:operatorPassword
                                                     parameters:@[@"POST", uri, date, policy, content_md5]];
 
@@ -100,7 +100,7 @@
     NSDictionary *polcyDictDecoded = [UpApiUtils getDictFromPolicyString:policy];
     
     NSString *bucketName_new = [polcyDictDecoded objectForKey:@"bucket"];
-    NSString *urlString = [NSString stringWithFormat:@"%@/%@/", UpYunStorageServer, bucketName_new];
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@", UpYunStorageServer, bucketName_new];
     _httpClient = [UpSimpleHttpClient POST:urlString
                                 parameters:parameters
                                   formName:@"file"

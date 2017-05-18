@@ -8,18 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		1E2C95541E530CE500E1D8E7 /* ViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E2C95531E530CE500E1D8E7 /* ViewController2.m */; };
-		1EF684681E56F25B00698AEC /* UpYunBlockUpLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6844B1E56F25B00698AEC /* UpYunBlockUpLoader.m */; };
-		1EF684691E56F25B00698AEC /* UpYunFormUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6844D1E56F25B00698AEC /* UpYunFormUploader.m */; };
-		1EF6846A1E56F25B00698AEC /* UpApiUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684511E56F25B00698AEC /* UpApiUtils.m */; };
-		1EF6846B1E56F25B00698AEC /* UpSimpleHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684531E56F25B00698AEC /* UpSimpleHttpClient.m */; };
-		1EF6846C1E56F25B00698AEC /* UPHTTPBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684571E56F25B00698AEC /* UPHTTPBodyPart.m */; };
-		1EF6846D1E56F25B00698AEC /* UPHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684591E56F25B00698AEC /* UPHTTPClient.m */; };
-		1EF6846E1E56F25B00698AEC /* UPMultipartBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6845B1E56F25B00698AEC /* UPMultipartBody.m */; };
-		1EF6846F1E56F25B00698AEC /* NSData+MD5Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6845E1E56F25B00698AEC /* NSData+MD5Digest.m */; };
-		1EF684701E56F25B00698AEC /* NSString+NSHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684601E56F25B00698AEC /* NSString+NSHash.m */; };
-		1EF684711E56F25B00698AEC /* UPMutUploaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684631E56F25B00698AEC /* UPMutUploaderManager.m */; };
-		1EF684721E56F25B00698AEC /* UpYun.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684651E56F25B00698AEC /* UpYun.m */; };
-		1EF684731E56F25B00698AEC /* UPYUNConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF684671E56F25B00698AEC /* UPYUNConfig.m */; };
+		1E536C6F1ECD9AC1000608F1 /* UpYunBlockUpLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C521ECD9AC1000608F1 /* UpYunBlockUpLoader.m */; };
+		1E536C701ECD9AC1000608F1 /* UpYunBlockUpLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C521ECD9AC1000608F1 /* UpYunBlockUpLoader.m */; };
+		1E536C711ECD9AC1000608F1 /* UpYunFormUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C541ECD9AC1000608F1 /* UpYunFormUploader.m */; };
+		1E536C721ECD9AC1000608F1 /* UpYunFormUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C541ECD9AC1000608F1 /* UpYunFormUploader.m */; };
+		1E536C731ECD9AC1000608F1 /* UpApiUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C581ECD9AC1000608F1 /* UpApiUtils.m */; };
+		1E536C741ECD9AC1000608F1 /* UpApiUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C581ECD9AC1000608F1 /* UpApiUtils.m */; };
+		1E536C751ECD9AC1000608F1 /* UpSimpleHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C5A1ECD9AC1000608F1 /* UpSimpleHttpClient.m */; };
+		1E536C761ECD9AC1000608F1 /* UpSimpleHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C5A1ECD9AC1000608F1 /* UpSimpleHttpClient.m */; };
+		1E536C771ECD9AC1000608F1 /* UPHTTPBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C5E1ECD9AC1000608F1 /* UPHTTPBodyPart.m */; };
+		1E536C781ECD9AC1000608F1 /* UPHTTPBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C5E1ECD9AC1000608F1 /* UPHTTPBodyPart.m */; };
+		1E536C791ECD9AC1000608F1 /* UPHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C601ECD9AC1000608F1 /* UPHTTPClient.m */; };
+		1E536C7A1ECD9AC1000608F1 /* UPHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C601ECD9AC1000608F1 /* UPHTTPClient.m */; };
+		1E536C7B1ECD9AC1000608F1 /* UPMultipartBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C621ECD9AC1000608F1 /* UPMultipartBody.m */; };
+		1E536C7C1ECD9AC1000608F1 /* UPMultipartBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C621ECD9AC1000608F1 /* UPMultipartBody.m */; };
+		1E536C7D1ECD9AC1000608F1 /* NSData+MD5Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C651ECD9AC1000608F1 /* NSData+MD5Digest.m */; };
+		1E536C7E1ECD9AC1000608F1 /* NSData+MD5Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C651ECD9AC1000608F1 /* NSData+MD5Digest.m */; };
+		1E536C7F1ECD9AC1000608F1 /* NSString+NSHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C671ECD9AC1000608F1 /* NSString+NSHash.m */; };
+		1E536C801ECD9AC1000608F1 /* NSString+NSHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C671ECD9AC1000608F1 /* NSString+NSHash.m */; };
+		1E536C811ECD9AC1000608F1 /* UPMutUploaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C6A1ECD9AC1000608F1 /* UPMutUploaderManager.m */; };
+		1E536C821ECD9AC1000608F1 /* UPMutUploaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C6A1ECD9AC1000608F1 /* UPMutUploaderManager.m */; };
+		1E536C831ECD9AC1000608F1 /* UpYun.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C6C1ECD9AC1000608F1 /* UpYun.m */; };
+		1E536C841ECD9AC1000608F1 /* UpYun.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C6C1ECD9AC1000608F1 /* UpYun.m */; };
+		1E536C851ECD9AC1000608F1 /* UPYUNConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C6E1ECD9AC1000608F1 /* UPYUNConfig.m */; };
+		1E536C861ECD9AC1000608F1 /* UPYUNConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E536C6E1ECD9AC1000608F1 /* UPYUNConfig.m */; };
 		AE1A43241C5A053B00B1C795 /* UpYunSDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AE1A43231C5A053B00B1C795 /* UpYunSDKDemoTests.m */; };
 		AE4840241C99642600AF8B4D /* UPLivePhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4840221C99642600AF8B4D /* UPLivePhotoViewController.m */; };
 		AE4840251C99642600AF8B4D /* UPLivePhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE4840231C99642600AF8B4D /* UPLivePhotoViewController.xib */; };
@@ -54,31 +66,31 @@
 /* Begin PBXFileReference section */
 		1E2C95521E530CE500E1D8E7 /* ViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController2.h; sourceTree = "<group>"; };
 		1E2C95531E530CE500E1D8E7 /* ViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController2.m; sourceTree = "<group>"; };
-		1EF6844A1E56F25B00698AEC /* UpYunBlockUpLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYunBlockUpLoader.h; sourceTree = "<group>"; };
-		1EF6844B1E56F25B00698AEC /* UpYunBlockUpLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYunBlockUpLoader.m; sourceTree = "<group>"; };
-		1EF6844C1E56F25B00698AEC /* UpYunFormUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYunFormUploader.h; sourceTree = "<group>"; };
-		1EF6844D1E56F25B00698AEC /* UpYunFormUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYunFormUploader.m; sourceTree = "<group>"; };
-		1EF6844E1E56F25B00698AEC /* UpYunUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYunUploader.h; sourceTree = "<group>"; };
-		1EF684501E56F25B00698AEC /* UpApiUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpApiUtils.h; sourceTree = "<group>"; };
-		1EF684511E56F25B00698AEC /* UpApiUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpApiUtils.m; sourceTree = "<group>"; };
-		1EF684521E56F25B00698AEC /* UpSimpleHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpSimpleHttpClient.h; sourceTree = "<group>"; };
-		1EF684531E56F25B00698AEC /* UpSimpleHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpSimpleHttpClient.m; sourceTree = "<group>"; };
-		1EF684561E56F25B00698AEC /* UPHTTPBodyPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPHTTPBodyPart.h; sourceTree = "<group>"; };
-		1EF684571E56F25B00698AEC /* UPHTTPBodyPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPBodyPart.m; sourceTree = "<group>"; };
-		1EF684581E56F25B00698AEC /* UPHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPHTTPClient.h; sourceTree = "<group>"; };
-		1EF684591E56F25B00698AEC /* UPHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPClient.m; sourceTree = "<group>"; };
-		1EF6845A1E56F25B00698AEC /* UPMultipartBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPMultipartBody.h; sourceTree = "<group>"; };
-		1EF6845B1E56F25B00698AEC /* UPMultipartBody.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPMultipartBody.m; sourceTree = "<group>"; };
-		1EF6845D1E56F25B00698AEC /* NSData+MD5Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MD5Digest.h"; sourceTree = "<group>"; };
-		1EF6845E1E56F25B00698AEC /* NSData+MD5Digest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MD5Digest.m"; sourceTree = "<group>"; };
-		1EF6845F1E56F25B00698AEC /* NSString+NSHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+NSHash.h"; sourceTree = "<group>"; };
-		1EF684601E56F25B00698AEC /* NSString+NSHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NSHash.m"; sourceTree = "<group>"; };
-		1EF684621E56F25B00698AEC /* UPMutUploaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPMutUploaderManager.h; sourceTree = "<group>"; };
-		1EF684631E56F25B00698AEC /* UPMutUploaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPMutUploaderManager.m; sourceTree = "<group>"; };
-		1EF684641E56F25B00698AEC /* UpYun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYun.h; sourceTree = "<group>"; };
-		1EF684651E56F25B00698AEC /* UpYun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYun.m; sourceTree = "<group>"; };
-		1EF684661E56F25B00698AEC /* UPYUNConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPYUNConfig.h; sourceTree = "<group>"; };
-		1EF684671E56F25B00698AEC /* UPYUNConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPYUNConfig.m; sourceTree = "<group>"; };
+		1E536C511ECD9AC1000608F1 /* UpYunBlockUpLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYunBlockUpLoader.h; sourceTree = "<group>"; };
+		1E536C521ECD9AC1000608F1 /* UpYunBlockUpLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYunBlockUpLoader.m; sourceTree = "<group>"; };
+		1E536C531ECD9AC1000608F1 /* UpYunFormUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYunFormUploader.h; sourceTree = "<group>"; };
+		1E536C541ECD9AC1000608F1 /* UpYunFormUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYunFormUploader.m; sourceTree = "<group>"; };
+		1E536C551ECD9AC1000608F1 /* UpYunUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYunUploader.h; sourceTree = "<group>"; };
+		1E536C571ECD9AC1000608F1 /* UpApiUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpApiUtils.h; sourceTree = "<group>"; };
+		1E536C581ECD9AC1000608F1 /* UpApiUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpApiUtils.m; sourceTree = "<group>"; };
+		1E536C591ECD9AC1000608F1 /* UpSimpleHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpSimpleHttpClient.h; sourceTree = "<group>"; };
+		1E536C5A1ECD9AC1000608F1 /* UpSimpleHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpSimpleHttpClient.m; sourceTree = "<group>"; };
+		1E536C5D1ECD9AC1000608F1 /* UPHTTPBodyPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPHTTPBodyPart.h; sourceTree = "<group>"; };
+		1E536C5E1ECD9AC1000608F1 /* UPHTTPBodyPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPBodyPart.m; sourceTree = "<group>"; };
+		1E536C5F1ECD9AC1000608F1 /* UPHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPHTTPClient.h; sourceTree = "<group>"; };
+		1E536C601ECD9AC1000608F1 /* UPHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPHTTPClient.m; sourceTree = "<group>"; };
+		1E536C611ECD9AC1000608F1 /* UPMultipartBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPMultipartBody.h; sourceTree = "<group>"; };
+		1E536C621ECD9AC1000608F1 /* UPMultipartBody.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPMultipartBody.m; sourceTree = "<group>"; };
+		1E536C641ECD9AC1000608F1 /* NSData+MD5Digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MD5Digest.h"; sourceTree = "<group>"; };
+		1E536C651ECD9AC1000608F1 /* NSData+MD5Digest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MD5Digest.m"; sourceTree = "<group>"; };
+		1E536C661ECD9AC1000608F1 /* NSString+NSHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+NSHash.h"; sourceTree = "<group>"; };
+		1E536C671ECD9AC1000608F1 /* NSString+NSHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+NSHash.m"; sourceTree = "<group>"; };
+		1E536C691ECD9AC1000608F1 /* UPMutUploaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPMutUploaderManager.h; sourceTree = "<group>"; };
+		1E536C6A1ECD9AC1000608F1 /* UPMutUploaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPMutUploaderManager.m; sourceTree = "<group>"; };
+		1E536C6B1ECD9AC1000608F1 /* UpYun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYun.h; sourceTree = "<group>"; };
+		1E536C6C1ECD9AC1000608F1 /* UpYun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYun.m; sourceTree = "<group>"; };
+		1E536C6D1ECD9AC1000608F1 /* UPYUNConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPYUNConfig.h; sourceTree = "<group>"; };
+		1E536C6E1ECD9AC1000608F1 /* UPYUNConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPYUNConfig.m; sourceTree = "<group>"; };
 		AE1A43211C5A053B00B1C795 /* UpYunSDKDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UpYunSDKDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE1A43231C5A053B00B1C795 /* UpYunSDKDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpYunSDKDemoTests.m; sourceTree = "<group>"; };
 		AE1A43251C5A053B00B1C795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -130,90 +142,91 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1EF684471E56F25B00698AEC /* UpYunSDK */ = {
+		1E536C4E1ECD9AC1000608F1 /* UpYunSDK */ = {
 			isa = PBXGroup;
 			children = (
-				1EF684481E56F25B00698AEC /* class */,
-				1EF684541E56F25B00698AEC /* class_deprecated */,
+				1E536C4F1ECD9AC1000608F1 /* class */,
+				1E536C5B1ECD9AC1000608F1 /* class_deprecated */,
 			);
-			path = UpYunSDK;
+			name = UpYunSDK;
+			path = ../UpYunSDK;
 			sourceTree = "<group>";
 		};
-		1EF684481E56F25B00698AEC /* class */ = {
+		1E536C4F1ECD9AC1000608F1 /* class */ = {
 			isa = PBXGroup;
 			children = (
-				1EF684491E56F25B00698AEC /* UpLoader */,
-				1EF6844F1E56F25B00698AEC /* Utils */,
+				1E536C501ECD9AC1000608F1 /* UpLoader */,
+				1E536C561ECD9AC1000608F1 /* Utils */,
 			);
 			path = class;
 			sourceTree = "<group>";
 		};
-		1EF684491E56F25B00698AEC /* UpLoader */ = {
+		1E536C501ECD9AC1000608F1 /* UpLoader */ = {
 			isa = PBXGroup;
 			children = (
-				1EF6844A1E56F25B00698AEC /* UpYunBlockUpLoader.h */,
-				1EF6844B1E56F25B00698AEC /* UpYunBlockUpLoader.m */,
-				1EF6844C1E56F25B00698AEC /* UpYunFormUploader.h */,
-				1EF6844D1E56F25B00698AEC /* UpYunFormUploader.m */,
-				1EF6844E1E56F25B00698AEC /* UpYunUploader.h */,
+				1E536C511ECD9AC1000608F1 /* UpYunBlockUpLoader.h */,
+				1E536C521ECD9AC1000608F1 /* UpYunBlockUpLoader.m */,
+				1E536C531ECD9AC1000608F1 /* UpYunFormUploader.h */,
+				1E536C541ECD9AC1000608F1 /* UpYunFormUploader.m */,
+				1E536C551ECD9AC1000608F1 /* UpYunUploader.h */,
 			);
 			path = UpLoader;
 			sourceTree = "<group>";
 		};
-		1EF6844F1E56F25B00698AEC /* Utils */ = {
+		1E536C561ECD9AC1000608F1 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				1EF684501E56F25B00698AEC /* UpApiUtils.h */,
-				1EF684511E56F25B00698AEC /* UpApiUtils.m */,
-				1EF684521E56F25B00698AEC /* UpSimpleHttpClient.h */,
-				1EF684531E56F25B00698AEC /* UpSimpleHttpClient.m */,
+				1E536C571ECD9AC1000608F1 /* UpApiUtils.h */,
+				1E536C581ECD9AC1000608F1 /* UpApiUtils.m */,
+				1E536C591ECD9AC1000608F1 /* UpSimpleHttpClient.h */,
+				1E536C5A1ECD9AC1000608F1 /* UpSimpleHttpClient.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		1EF684541E56F25B00698AEC /* class_deprecated */ = {
+		1E536C5B1ECD9AC1000608F1 /* class_deprecated */ = {
 			isa = PBXGroup;
 			children = (
-				1EF684551E56F25B00698AEC /* HttpUtils */,
-				1EF6845C1E56F25B00698AEC /* NSData+MD5Digest */,
-				1EF684611E56F25B00698AEC /* UPMutUpload */,
-				1EF684641E56F25B00698AEC /* UpYun.h */,
-				1EF684651E56F25B00698AEC /* UpYun.m */,
-				1EF684661E56F25B00698AEC /* UPYUNConfig.h */,
-				1EF684671E56F25B00698AEC /* UPYUNConfig.m */,
+				1E536C5C1ECD9AC1000608F1 /* HttpUtils */,
+				1E536C631ECD9AC1000608F1 /* NSData+MD5Digest */,
+				1E536C681ECD9AC1000608F1 /* UPMutUpload */,
+				1E536C6B1ECD9AC1000608F1 /* UpYun.h */,
+				1E536C6C1ECD9AC1000608F1 /* UpYun.m */,
+				1E536C6D1ECD9AC1000608F1 /* UPYUNConfig.h */,
+				1E536C6E1ECD9AC1000608F1 /* UPYUNConfig.m */,
 			);
 			path = class_deprecated;
 			sourceTree = "<group>";
 		};
-		1EF684551E56F25B00698AEC /* HttpUtils */ = {
+		1E536C5C1ECD9AC1000608F1 /* HttpUtils */ = {
 			isa = PBXGroup;
 			children = (
-				1EF684561E56F25B00698AEC /* UPHTTPBodyPart.h */,
-				1EF684571E56F25B00698AEC /* UPHTTPBodyPart.m */,
-				1EF684581E56F25B00698AEC /* UPHTTPClient.h */,
-				1EF684591E56F25B00698AEC /* UPHTTPClient.m */,
-				1EF6845A1E56F25B00698AEC /* UPMultipartBody.h */,
-				1EF6845B1E56F25B00698AEC /* UPMultipartBody.m */,
+				1E536C5D1ECD9AC1000608F1 /* UPHTTPBodyPart.h */,
+				1E536C5E1ECD9AC1000608F1 /* UPHTTPBodyPart.m */,
+				1E536C5F1ECD9AC1000608F1 /* UPHTTPClient.h */,
+				1E536C601ECD9AC1000608F1 /* UPHTTPClient.m */,
+				1E536C611ECD9AC1000608F1 /* UPMultipartBody.h */,
+				1E536C621ECD9AC1000608F1 /* UPMultipartBody.m */,
 			);
 			path = HttpUtils;
 			sourceTree = "<group>";
 		};
-		1EF6845C1E56F25B00698AEC /* NSData+MD5Digest */ = {
+		1E536C631ECD9AC1000608F1 /* NSData+MD5Digest */ = {
 			isa = PBXGroup;
 			children = (
-				1EF6845D1E56F25B00698AEC /* NSData+MD5Digest.h */,
-				1EF6845E1E56F25B00698AEC /* NSData+MD5Digest.m */,
-				1EF6845F1E56F25B00698AEC /* NSString+NSHash.h */,
-				1EF684601E56F25B00698AEC /* NSString+NSHash.m */,
+				1E536C641ECD9AC1000608F1 /* NSData+MD5Digest.h */,
+				1E536C651ECD9AC1000608F1 /* NSData+MD5Digest.m */,
+				1E536C661ECD9AC1000608F1 /* NSString+NSHash.h */,
+				1E536C671ECD9AC1000608F1 /* NSString+NSHash.m */,
 			);
 			path = "NSData+MD5Digest";
 			sourceTree = "<group>";
 		};
-		1EF684611E56F25B00698AEC /* UPMutUpload */ = {
+		1E536C681ECD9AC1000608F1 /* UPMutUpload */ = {
 			isa = PBXGroup;
 			children = (
-				1EF684621E56F25B00698AEC /* UPMutUploaderManager.h */,
-				1EF684631E56F25B00698AEC /* UPMutUploaderManager.m */,
+				1E536C691ECD9AC1000608F1 /* UPMutUploaderManager.h */,
+				1E536C6A1ECD9AC1000608F1 /* UPMutUploaderManager.m */,
 			);
 			path = UPMutUpload;
 			sourceTree = "<group>";
@@ -230,6 +243,7 @@
 		B8E9D5C917B0C79800146D00 = {
 			isa = PBXGroup;
 			children = (
+				1E536C4E1ECD9AC1000608F1 /* UpYunSDK */,
 				B8E9D5DB17B0C79800146D00 /* UpYunSDKDemo */,
 				AE1A43221C5A053B00B1C795 /* UpYunSDKDemoTests */,
 				B8E9D5D417B0C79800146D00 /* Frameworks */,
@@ -262,7 +276,6 @@
 		B8E9D5DB17B0C79800146D00 /* UpYunSDKDemo */ = {
 			isa = PBXGroup;
 			children = (
-				1EF684471E56F25B00698AEC /* UpYunSDK */,
 				B8E9D68317B0CA6400146D00 /* Resources */,
 				B8E9D67E17B0C94500146D00 /* ViewController.h */,
 				B8E9D67F17B0C94500146D00 /* ViewController.m */,
@@ -407,7 +420,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E536C821ECD9AC1000608F1 /* UPMutUploaderManager.m in Sources */,
+				1E536C761ECD9AC1000608F1 /* UpSimpleHttpClient.m in Sources */,
+				1E536C7C1ECD9AC1000608F1 /* UPMultipartBody.m in Sources */,
+				1E536C841ECD9AC1000608F1 /* UpYun.m in Sources */,
 				AE1A43241C5A053B00B1C795 /* UpYunSDKDemoTests.m in Sources */,
+				1E536C721ECD9AC1000608F1 /* UpYunFormUploader.m in Sources */,
+				1E536C781ECD9AC1000608F1 /* UPHTTPBodyPart.m in Sources */,
+				1E536C701ECD9AC1000608F1 /* UpYunBlockUpLoader.m in Sources */,
+				1E536C7A1ECD9AC1000608F1 /* UPHTTPClient.m in Sources */,
+				1E536C741ECD9AC1000608F1 /* UpApiUtils.m in Sources */,
+				1E536C801ECD9AC1000608F1 /* NSString+NSHash.m in Sources */,
+				1E536C7E1ECD9AC1000608F1 /* NSData+MD5Digest.m in Sources */,
+				1E536C861ECD9AC1000608F1 /* UPYUNConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,22 +441,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E9D68217B0C9E400146D00 /* ViewController.m in Sources */,
-				1EF684681E56F25B00698AEC /* UpYunBlockUpLoader.m in Sources */,
-				1EF684691E56F25B00698AEC /* UpYunFormUploader.m in Sources */,
-				1EF684721E56F25B00698AEC /* UpYun.m in Sources */,
-				1EF684711E56F25B00698AEC /* UPMutUploaderManager.m in Sources */,
+				1E536C6F1ECD9AC1000608F1 /* UpYunBlockUpLoader.m in Sources */,
+				1E536C711ECD9AC1000608F1 /* UpYunFormUploader.m in Sources */,
+				1E536C831ECD9AC1000608F1 /* UpYun.m in Sources */,
+				1E536C811ECD9AC1000608F1 /* UPMutUploaderManager.m in Sources */,
 				B8E9D5E217B0C79800146D00 /* main.m in Sources */,
 				B8E9D5E617B0C79800146D00 /* AppDelegate.m in Sources */,
-				1EF6846C1E56F25B00698AEC /* UPHTTPBodyPart.m in Sources */,
+				1E536C771ECD9AC1000608F1 /* UPHTTPBodyPart.m in Sources */,
 				1E2C95541E530CE500E1D8E7 /* ViewController2.m in Sources */,
-				1EF684731E56F25B00698AEC /* UPYUNConfig.m in Sources */,
-				1EF6846B1E56F25B00698AEC /* UpSimpleHttpClient.m in Sources */,
+				1E536C851ECD9AC1000608F1 /* UPYUNConfig.m in Sources */,
+				1E536C751ECD9AC1000608F1 /* UpSimpleHttpClient.m in Sources */,
 				AE4840241C99642600AF8B4D /* UPLivePhotoViewController.m in Sources */,
-				1EF6846E1E56F25B00698AEC /* UPMultipartBody.m in Sources */,
-				1EF6846A1E56F25B00698AEC /* UpApiUtils.m in Sources */,
-				1EF6846F1E56F25B00698AEC /* NSData+MD5Digest.m in Sources */,
-				1EF684701E56F25B00698AEC /* NSString+NSHash.m in Sources */,
-				1EF6846D1E56F25B00698AEC /* UPHTTPClient.m in Sources */,
+				1E536C7B1ECD9AC1000608F1 /* UPMultipartBody.m in Sources */,
+				1E536C731ECD9AC1000608F1 /* UpApiUtils.m in Sources */,
+				1E536C7D1ECD9AC1000608F1 /* NSData+MD5Digest.m in Sources */,
+				1E536C7F1ECD9AC1000608F1 /* NSString+NSHash.m in Sources */,
+				1E536C791ECD9AC1000608F1 /* UPHTTPClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

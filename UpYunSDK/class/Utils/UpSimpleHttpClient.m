@@ -183,10 +183,15 @@
     sessionConfiguration.HTTPCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     sessionConfiguration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
     sessionConfiguration.HTTPShouldSetCookies = YES;
+
+    //iOS8.3 bug http://stackoverflow.com/questions/29528293/nsmutableurlrequest-body-malformed-after-ios-8-3-update
     
-    sessionConfiguration.HTTPAdditionalHeaders = @{@"Accept"        : @"application/json",
-                                                   @"Content-Type"  : [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary]};
+    //    sessionConfiguration.HTTPAdditionalHeaders = @{@"Accept"        : @"application/json",
+    //                                                   @"Content-Type"  : [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary]};
     
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
+
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration
                                                           delegate:sHttpClient
                                                      delegateQueue:nil];
