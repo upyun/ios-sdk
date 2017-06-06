@@ -236,6 +236,7 @@
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.completionHandler = completionHandler;
+    sHttpClient.dataSendProgressHandler = sendProgressBlock;
     [sessionTask resume];
     return sHttpClient;
 }

@@ -158,7 +158,7 @@
 //分块上传
 - (void)testBlockUpLoader1{
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"test2.png"];
     
     UpYunBlockUpLoader *up = [[UpYunBlockUpLoader alloc] init];
     NSString *bucketName = @"test86400";

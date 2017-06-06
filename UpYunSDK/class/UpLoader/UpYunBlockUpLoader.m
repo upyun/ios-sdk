@@ -117,9 +117,13 @@
                                _operatorName,
                                _savePath,
                                _fileInfos[@"fileHash"]];
-//    NSLog(@"_uploaderIdentityString %@", _uploaderIdentityString);
     
     
+    if (_progressBlock) {
+        //上传进度设置为 0
+        _progressBlock(0, _fileSize);
+    }
+
     if (_uploaderQueue) {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"UpYunBlockUpLoader instance is unavailable，please create a new one."};
         NSError * error  = [[NSError alloc] initWithDomain:NSErrorDomain_UpYunBlockUpLoader
@@ -191,14 +195,9 @@
                                 NSString *next_part_id = [resHeaders objectForKey:@"x-upyun-next-part-id"];
                                 _next_part_id = [next_part_id intValue];
                                 
-                                if (_progressBlock) {
-                                    int  completedNum = _next_part_id - 1;
-                                    if (completedNum < 0 ) {
-                                        completedNum = 0;
-                                    }
-                                    _progressBlock(completedNum, _fileSize);
+                                if (_progressBlock && _next_part_id >= 0) {
+                                    _progressBlock(_next_part_id * UpYunFileBlcokSize, _fileSize);
                                 }
-                                
                                 _X_Upyun_Multi_Uuid = [resHeaders objectForKey:@"x-upyun-multi-uuid"];
                                 dispatch_async(_uploaderQueue, ^(){
                                     if (_cancelled) {
@@ -289,6 +288,10 @@
                                      file:blockData
                         sendProgressBlock:^(NSProgress *progress) {
                             
+                            if (_progressBlock && _next_part_id >= 0) {
+                                _progressBlock(_next_part_id * UpYunFileBlcokSize + progress.completedUnitCount, _fileSize);
+                            }
+                            
                         }
                         completionHandler:^(NSError *error, id response, NSData *body) {
                             NSHTTPURLResponse *res = response;
@@ -296,12 +299,16 @@
 
 
                             if (res.statusCode == 204) {
-                                if (_progressBlock) {
-                                    _progressBlock(_next_part_id * UpYunFileBlcokSize, _fileSize);
-                                }
                                 NSString *next_part_id = [resHeaders objectForKey:@"x-upyun-next-part-id"];
                                 _next_part_id = [next_part_id intValue];
                                 _X_Upyun_Multi_Uuid = [resHeaders objectForKey:@"x-upyun-multi-uuid"];
+                                
+                                if (_progressBlock && _next_part_id >= 0) {
+                                    _progressBlock(_next_part_id * UpYunFileBlcokSize, _fileSize);
+
+                                }
+
+                                
                                 dispatch_async(_uploaderQueue, ^(){
                                     if (_cancelled) {
                                         [self canceledEnd];
