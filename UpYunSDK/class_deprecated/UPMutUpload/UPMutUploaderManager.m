@@ -18,7 +18,7 @@ static NSString *UPMUT_ERROR_DOMAIN = @"分块上传";
 /**
  *  同一个bucket 上传文件时最大并发请求数
  */
-static NSInteger MaxConcurrentOperationCount = 10;
+static NSInteger MaxConcurrentOperationCount = 1;
 
 /**
  *   默认授权时间长度（秒)
@@ -344,6 +344,17 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     __weak typeof(self)weakSelf = self;
     UPHTTPClient *client = [[UPHTTPClient alloc]init];
+    
+    //暂时这样判断这是最后一个合并请求
+    if (_blockSuccess > 1) {
+        NSTimeInterval timeout = _blockSuccess * [UPYUNConfig sharedInstance].SingleBlockSize / (1024 * 1024);
+        if (timeout < 60) {
+            timeout = 60;
+        }
+        
+        NSLog(@"timeout  %f", timeout);
+        [client timeoutIntervalForRequest:timeout];
+    }
 
     [client uploadRequest:request success:^(NSURLResponse *response, id responseData) {
         if (completeBlock) {
@@ -357,6 +368,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
             completeBlock(error, nil, NO);
         }
         [_uploadingClientArray removeObject:client];
+        NSLog(@"error: %@", error);
         [weakSelf cancelAllTasks];
     } progress:^(int64_t completedBytesCount, int64_t totalBytesCount) {
         
