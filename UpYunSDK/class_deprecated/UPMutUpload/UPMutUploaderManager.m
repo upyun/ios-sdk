@@ -167,6 +167,10 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
     
     
     UPCompeleteBlock singleUploadCompleteBlock = ^(NSError *error, NSDictionary *result, BOOL completed) {
+        if (error) {
+            NSLog(@"error: %@", error);
+        }
+        
         if (_isUploadTaskFinish) {
             return ;
         }
@@ -191,6 +195,7 @@ static NSTimeInterval ValidTimeSpan = 600.0f;
                                         tokenSecret:_tokenSecret
                                       completeBlock:mergeRequestCompleteBlcok];
         } else {
+            
             [weakSelf uploadBlockIndex:index+MaxConcurrentOperationCount progressBlock:progressBlock completeBlock:completeBlock];
         }
     };

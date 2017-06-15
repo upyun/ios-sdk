@@ -65,7 +65,7 @@
     
     
 //    设置上传方式：分块上传 or 表单上传  默认表单上传，大文件需要分块上传
-    uy.uploadMethod = UPMutUPload; //分块上传方式 or 表单上传方式
+//    uy.uploadMethod = UPMutUPload; //分块上传方式 or 表单上传方式
   
     
 //    如果 policy 由业务服务端生成, 这里只需要 return policy（提前从业务服务器获取的 policy），否则就不用初始化 policyBlocker

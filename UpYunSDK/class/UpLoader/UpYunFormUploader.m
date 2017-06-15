@@ -53,7 +53,8 @@
                                        @"save-key": saveKey,
                                        @"expiration": expiration,
                                        @"date": date,
-                                       @"content-md5": content_md5};
+                                       @"content-md5": content_md5,
+                                       @"content-length":[NSString stringWithFormat:@"%ld", fileData.length]};
     
     NSDictionary *policyDict_part2 = [NSDictionary new];
     if (otherParameters) {
@@ -66,6 +67,8 @@
     
 
     NSString *policy = [UpApiUtils getPolicyWithParameters:policyDict];
+    
+    
     NSString *uri = [NSString stringWithFormat:@"/%@", bucketName];
     NSString *signature = [UpApiUtils getSignatureWithPassword:operatorPassword
                                                     parameters:@[@"POST", uri, date, policy, content_md5]];

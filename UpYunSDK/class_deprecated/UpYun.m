@@ -75,11 +75,6 @@
 
 - (void)uploadSavekey:(NSString *)savekey data:(NSData*)data filePath:(NSString*)filePath {
     
-    NSInteger fileSize = data.length;
-    if (filePath) {
-        NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-        fileSize = [fileDictionary fileSize];
-    }
     
     switch (_uploadMethod) {
 //        case UPFileSizeUpload:
@@ -314,7 +309,15 @@
             _failBlocker(err);
             return;
         }
-        policy = [self getPolicyWithSaveKey:savekey];
+        
+        
+        NSInteger fileSize = data.length;
+        if (filePath) {
+            NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+            fileSize = [fileDictionary fileSize];
+        }
+        
+        policy = [self getPolicyWithSaveKey:savekey dataLength:fileSize];
     }
 
     __block NSString *signature = @"";
@@ -343,6 +346,7 @@
     if (!fileName) {
         fileName = @"fileName";
     }
+    
     [multiBody addFileData:data OrFilePath:filePath fileName:fileName fileType:nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/", [UPYUNConfig sharedInstance].FormAPIDomain, self.bucket]]];
@@ -464,11 +468,15 @@
              @"policy":policy};
 }
 
-- (NSString *)getPolicyWithSaveKey:(NSString *)savekey {
+
+
+- (NSString *)getPolicyWithSaveKey:(NSString *)savekey dataLength:(NSInteger)contentLength {
     NSString *expiresIn = self.dateExpiresIn.length == 0 ? DATE_STRING(self.expiresIn) : self.dateExpiresIn;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setObject:self.bucket forKey:@"bucket"];
     [dic setObject:expiresIn forKey:@"expiration"];
+    [dic setObject:[NSString stringWithFormat:@"%ld", contentLength] forKey:@"content-length"];
+    
     if (savekey && ![savekey isEqualToString:@""]) {
         [dic setObject:savekey forKey:@"save-key"];
     }
