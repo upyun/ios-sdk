@@ -211,11 +211,8 @@
                                 
                             } else {
                                 
-                                NSDictionary *resHeaders = res.allHeaderFields;
                                 if (_failureBlock) {
                                     NSString *errorDomain = @"UpYunBlockUpLoader.initiate";
-                                    
-                                    
                                     //如果有 http 层错误，保留这个 error，往往是本地超时，或者网络断开错误。
                                     if (!error) {
                                         error = [[NSError alloc] initWithDomain:errorDomain
@@ -282,8 +279,8 @@
     NSData *blockData = [fileHandle readDataOfLength:range.length];
     
     NSString *Content_MD5 = [targetBlcokInfo objectForKey:@"block_hash"];
+    Content_MD5 = nil;
     
-//    Content_MD5 = nil;
     
     NSDate *now = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -377,7 +374,7 @@
 
                                 int returnDetailCode = [[retObj objectForKey:@"code"] intValue];
                                 if ( returnDetailCode == 40011061) {
-                                    //上传的次序不多，重传了同一块，或者没有连续传递
+                                    //上传的次序不对，重传了同一块，或者没有连续传递
                                     NSLog(@"%d", returnDetailCode);
                                     [self _tryUploadNextPartIdFormHeaders:resHeaders];
                                     return;

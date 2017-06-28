@@ -122,21 +122,22 @@
                              NSDictionary *retObj  = NULL;// 期待返回的数据结构
                              NSError *error_json; //接口期望的是 json 数据
                              
-                             if (body) {
-                                 //有返回 body ：尝试按照 json 解析。
-                                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:&error];
-                                 retObj = json;
-                                 if (error_json) {
-                                     NSLog(@"NSErrorDomain_UpYunFormUploader json parse failed %@", error_json);
-                                     NSLog(@"NSErrorDomain_UpYunFormUploader res.body content %@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
-                                 }
-                             }
                              // http 请求错误，网络错误。取消，超时，断开等
                              if (error) {
                                  failureBlock(error, res, retObj);
                                  return ;
                              }
                              
+                             if (body) {
+                                 //有返回 body ：尝试按照 json 解析。
+                                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:&error_json];
+                                 retObj = json;
+                                 if (error_json) {
+                                     NSLog(@"NSErrorDomain_UpYunFormUploader json parse failed %@", error_json);
+                                     NSLog(@"NSErrorDomain_UpYunFormUploader res.body content %@", [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding]);
+                                 }
+                             }
+
                              // http 请求 res body 格式错误，无法进行 json 序列化
                              if (error_json) {
                                  failureBlock(error_json, res, nil);

@@ -16,8 +16,8 @@
  */
 
 #import "UpApiUtils.h"
-#define UpYunStorageServer  @"http://v0.api.upyun.com"
-#define UpYunFileBlcokSize (1024*1024)//分块上传，文件块大小
+#define UpYunStorageServer  @"https://v0.api.upyun.com"
+#define UpYunFileBlcokSize (1024 * 1024)//分块上传，文件块大小
 
 typedef void (^UpLoaderSuccessBlock)(NSHTTPURLResponse *response, NSDictionary *responseBody);
 typedef void (^UpLoaderFailureBlock)(NSError *error, NSHTTPURLResponse *response, NSDictionary *responseBody);

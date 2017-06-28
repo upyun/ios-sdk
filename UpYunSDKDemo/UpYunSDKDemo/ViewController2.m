@@ -50,7 +50,7 @@
     
 //      [self testFormUploader1];
 //      [self testFormUploader2];
-      [self testBlockUpLoader1];
+        [self testBlockUpLoader1];
 //      [self testFormUploaderAndAsyncTask];
 
 }
