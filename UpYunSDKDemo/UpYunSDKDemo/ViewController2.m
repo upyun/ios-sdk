@@ -48,9 +48,9 @@
 
 - (void)uploadBtntap:(id)sender {
     
-      [self testFormUploader1];
+//      [self testFormUploader1];
 //      [self testFormUploader2];
-//      [self testBlockUpLoader1];
+      [self testBlockUpLoader1];
 //      [self testFormUploaderAndAsyncTask];
 
 }
@@ -156,13 +156,18 @@
 }
 
 //分块上传
+
+int countStart = 0;
+int countEnd = 0;
+
 - (void)testBlockUpLoader1{
+    countStart ++;
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"test2.png"];
     
     UpYunBlockUpLoader *up = [[UpYunBlockUpLoader alloc] init];
     NSString *bucketName = @"test86400";
-    NSString *savePath = @"iossdk/blockupload/video.mp4";
+    NSString *savePath = @"iossdk/blockupload/yyyyyyyyyyyyyyyyy.mp4";
     
     [up uploadWithBucketName:bucketName
                     operator:@"operator123"
@@ -171,18 +176,26 @@
                     savePath:savePath
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
+                         
+                         countEnd ++;
                          NSLog(@"上传成功");
                          NSLog(@"file url：https://%@.b0.upaiyun.com/%@",bucketName, savePath);
                          //主线程刷新ui
+                         
+                         NSLog(@"%d - %d", countEnd, countStart);
 
                      }
                      failure:^(NSError *error,
                                NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
+                         countEnd ++;
+
                          NSLog(@"上传失败 error：%@", error);
                          NSLog(@"上传失败 responseBody：%@", responseBody);
                          NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
                          //主线程刷新ui
+                         NSLog(@"%d - %d", countEnd, countStart);
+
 
                      }
                     progress:^(int64_t completedBytesCount,

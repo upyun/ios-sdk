@@ -210,12 +210,34 @@
                                 
                                 
                             } else {
+                                
+                                NSDictionary *resHeaders = res.allHeaderFields;
                                 if (_failureBlock) {
+                                    NSString *errorDomain = @"UpYunBlockUpLoader.initiate";
+                                    
+                                    
+                                    //如果有 http 层错误，保留这个 error，往往是本地超时，或者网络断开错误。
+                                    if (!error) {
+                                        error = [[NSError alloc] initWithDomain:errorDomain
+                                                                           code:0
+                                                                       userInfo:@{NSLocalizedDescriptionKey: @"res.statusCode != 204"}];
+                                    }
+
                                     NSDictionary *retObj = nil;
                                     if (body) {
                                         //有返回 body ：尝试按照 json 解析。
                                         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:&error];
                                         retObj = json;
+                                        if (error && !json) {
+
+                                            // body 无法解析为 json object, 将 body 直接转化为字符串添加到 error。
+                                            NSString *originInfo = [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding];
+                                            NSString *localizedDescription = [NSString stringWithFormat:@"json 解析错误。res.body: %@", originInfo];
+                                            error = [[NSError alloc] initWithDomain:errorDomain
+                                                                               code:1
+                                                                           userInfo:@{NSLocalizedDescriptionKey: localizedDescription}];
+                                            
+                                        }
                                     }
                                     _failureBlock(error, response, retObj);
                                     [self clean];
@@ -226,14 +248,24 @@
 }
 
 //分块上传步骤2: 上传文件块
-
-
+//int testRepeat = 0;
 - (void)uploadNextFileBlock {
-    //从_uploaderTaskInfo中，重新赋值成员变量。因为_uploaderTaskInfo也可能是从userdefault 获取的
+    //从 _uploaderTaskInfo 中，重新赋值成员变量。因为 _uploaderTaskInfo 也可能是从 userdefault 获取的
     _fileInfos = [_uploaderTaskInfo objectForKey:@"_fileInfos"];
     _uploaderIdentityString = [_uploaderTaskInfo objectForKey:@"_uploaderIdentityString"];
     _X_Upyun_Multi_Uuid = [_uploaderTaskInfo objectForKey:@"_X_Upyun_Multi_Uuid"];
     _next_part_id = [[_uploaderTaskInfo objectForKey:@"_next_part_id"] intValue];
+    
+    
+    
+////     debug
+//    if (_next_part_id == 10) {
+//        if (!testRepeat) {
+//            _next_part_id = 12;
+//            testRepeat = 1;
+//        }
+//    }
+//    NSLog(@"_next_part_id %d", _next_part_id);
     
     int part_id = _next_part_id;
     NSArray *blockArray = [_fileInfos objectForKey:@"blocks"];
@@ -249,7 +281,10 @@
     [fileHandle seekToFileOffset:range.location];
     NSData *blockData = [fileHandle readDataOfLength:range.length];
     
-    NSString *Content_MD5 =  [targetBlcokInfo objectForKey:@"block_hash"];
+    NSString *Content_MD5 = [targetBlcokInfo objectForKey:@"block_hash"];
+    
+//    Content_MD5 = nil;
+    
     NSDate *now = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
@@ -257,32 +292,44 @@
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
     NSString *date = [dateFormatter stringFromDate:now];
-    NSDictionary *uploadParameters = @{@"bucket": _bucketName,
-                                       @"savePath": _savePath,
-                                       @"date": date, @"Content-MD5": Content_MD5};
     
+    NSMutableDictionary *uploadParameters = [[NSMutableDictionary alloc] initWithDictionary:@{@"bucket": _bucketName,
+                                                                                             @"savePath": _savePath,
+                                                                                             @"date": date}];
+    
+    if (Content_MD5) {
+        [uploadParameters setObject:Content_MD5 forKey:@"Content-MD5"];
+    }
     NSString *uri = [NSString stringWithFormat:@"/%@/%@", uploadParameters[@"bucket"], uploadParameters[@"savePath"]];
+    
+    
+    NSMutableArray *parametersForSignature = [[NSMutableArray alloc] initWithArray:@[@"PUT", uri, uploadParameters[@"date"]]];
+    if (uploadParameters[@"Content-MD5"]) {
+        [parametersForSignature addObject:uploadParameters[@"Content-MD5"]];
+    }
+    
+
     NSString *signature = [UpApiUtils getSignatureWithPassword:_operatorPassword
-                                                    parameters:@[@"PUT",
-                                                                 uri,
-                                                                 uploadParameters[@"date"],
-                                                                 uploadParameters[@"Content-MD5"]]];
+                                                    parameters:parametersForSignature];
+    
+    
+    
     //http headers
     NSString *Authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, signature];
     NSString *Date = uploadParameters[@"date"];
     NSString *X_Upyun_Multi_Stage = @"upload";
     //暂时不支持 X-Upyun-Meta-X http://docs.upyun.com/api/rest_api/#metadata
-    NSDictionary *headers = @{@"Authorization": Authorization,
-                              @"Date": Date,
-                              @"X-Upyun-Multi-Stage": X_Upyun_Multi_Stage,
-                              @"X-Upyun-Multi-Uuid": _X_Upyun_Multi_Uuid,
-                              @"X-Upyun-Part-Id": [NSString stringWithFormat:@"%d", part_id],
-                              @"Content-MD5": Content_MD5};
     
+    NSMutableDictionary *headers = [[NSMutableDictionary alloc] initWithDictionary:@{@"Authorization": Authorization,
+                                                                                    @"Date": Date,
+                                                                                    @"X-Upyun-Multi-Stage": X_Upyun_Multi_Stage,
+                                                                                    @"X-Upyun-Multi-Uuid": _X_Upyun_Multi_Uuid,
+                                                                                    @"X-Upyun-Part-Id": [NSString stringWithFormat:@"%d", part_id]}];
+    if (uploadParameters[@"Content-MD5"]) {
+        [headers setObject:uploadParameters[@"Content-MD5"] forKey:@"Content-MD5"];
+    }
+
     NSString *urlString = [NSString stringWithFormat:@"%@%@", UpYunStorageServer, uri];
-    
-    
-//    NSLog(@"request headers %@", headers);
     _httpClient = [UpSimpleHttpClient PUT:urlString
                                   headers:headers
                                      file:blockData
@@ -297,45 +344,59 @@
                             NSHTTPURLResponse *res = response;
                             NSDictionary *resHeaders = res.allHeaderFields;
 
-
                             if (res.statusCode == 204) {
-                                NSString *next_part_id = [resHeaders objectForKey:@"x-upyun-next-part-id"];
-                                _next_part_id = [next_part_id intValue];
-                                _X_Upyun_Multi_Uuid = [resHeaders objectForKey:@"x-upyun-multi-uuid"];
-                                
-                                if (_progressBlock && _next_part_id >= 0) {
-                                    _progressBlock(_next_part_id * UpYunFileBlcokSize, _fileSize);
-
-                                }
-
-                                
-                                dispatch_async(_uploaderQueue, ^(){
-                                    if (_cancelled) {
-                                        [self canceledEnd];
-                                    } else {
-                                        [self updateUploaderTaskInfoWithCompleted:NO];
-                                        [self uploadNextFileBlock];
-                                    }
-                                });
-                                
+                                [self _tryUploadNextPartIdFormHeaders:resHeaders];
                             } else {
+                                NSString *errorDomain = @"UpYunBlockUpLoader.uploadNextFileBlock";
+                                //如果有 http 层错误，保留这个 error，往往是本地超时，或者网络断开错误。
+                                if (!error) {
+                                    error = [[NSError alloc] initWithDomain:errorDomain
+                                                                       code:0
+                                                                   userInfo:@{NSLocalizedDescriptionKey: @"res.statusCode != 204"}];
+                                }
                                 NSDictionary *retObj = nil;
                                 if (body) {
                                     //有返回 body ：尝试按照 json 解析。
                                     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:&error];
                                     retObj = json;
-                                }
-//                                NSLog(@"retObj %@", retObj);
-//                                NSLog(@"response %@", response);
-                                if ([[retObj objectForKey:@"code"] intValue] == 40011059) {
-                                    //msg = "file already upload";
-                                    //当文件已经成功了
-                                    _next_part_id = -1;
-                                    [self updateUploaderTaskInfoWithCompleted:NO];
-                                    [self uploadNextFileBlock];
-                                    return ;
+                                    if (error && !json) {
+                                        // body 无法解析为 json object, 将 body 直接转化为字符串添加到 error。
+                                        NSString *originInfo = [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding];
+                                        NSString *localizedDescription = [NSString stringWithFormat:@"json 解析错误。res.body: %@", originInfo];
+                                        error = [[NSError alloc] initWithDomain:errorDomain
+                                                                           code:1
+                                                                       userInfo:@{NSLocalizedDescriptionKey: localizedDescription}];
+                                    }
                                 }
                                 
+                                if (res.statusCode == 502){
+                                    //清空本地数据，下次重新从开始上传数据
+                                    _next_part_id = 0;
+                                    [self updateUploaderTaskInfoWithCompleted:NO];
+                                }
+
+                                int returnDetailCode = [[retObj objectForKey:@"code"] intValue];
+                                if ( returnDetailCode == 40011061) {
+                                    //上传的次序不多，重传了同一块，或者没有连续传递
+                                    NSLog(@"%d", returnDetailCode);
+                                    [self _tryUploadNextPartIdFormHeaders:resHeaders];
+                                    return;
+                                }
+                                
+                                if (returnDetailCode == 40011059 || returnDetailCode == 40011062) {
+                                    //文件已经存在，块已经存在
+                                    NSLog(@"%d", returnDetailCode);
+                                    _next_part_id = _next_part_id + 1;
+                                    dispatch_async(_uploaderQueue, ^(){
+                                        if (_cancelled) {
+                                            [self canceledEnd];
+                                        } else {
+                                            [self updateUploaderTaskInfoWithCompleted:NO];
+                                            [self uploadNextFileBlock];
+                                        }
+                                    });
+                                    return;
+                                }
                                 
                                 if ([resHeaders.allKeys containsObject:@"x-upyun-next-part-id"]) {
                                     NSString *next_part_id = [resHeaders objectForKey:@"x-upyun-next-part-id"];
@@ -357,10 +418,30 @@
                                 }
                             }
                         }];
-    
-    
-
 }
+
+
+- (void)_tryUploadNextPartIdFormHeaders:(NSDictionary *)resHeaders {
+    NSString *next_part_id = [resHeaders objectForKey:@"x-upyun-next-part-id"];
+    _next_part_id = [next_part_id intValue];
+    
+    if ([resHeaders objectForKey:@"x-upyun-multi-uuid"]) {
+        _X_Upyun_Multi_Uuid = [resHeaders objectForKey:@"x-upyun-multi-uuid"];
+    }
+    if (_progressBlock && _next_part_id >= 0) {
+        _progressBlock(_next_part_id * UpYunFileBlcokSize, _fileSize);
+    }
+    dispatch_async(_uploaderQueue, ^(){
+        if (_cancelled) {
+            [self canceledEnd];
+        } else {
+            [self updateUploaderTaskInfoWithCompleted:NO];
+            [self uploadNextFileBlock];
+        }
+    });
+}
+
+
 //分块上传步骤3: 结束上传，合并文件
 - (void)complete {
     
@@ -399,7 +480,7 @@
                         completionHandler:^(NSError *error, id response, NSData *body) {
                             NSDictionary *retObj = nil;
                             if (body) {
-                                //有返回 body ：尝试按照 json 解析。
+                                //有返回 body ：尝试按照 json 解析。注：现在断点续传结束无 body。
                                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:&error];
                                 retObj = json;
                             }
