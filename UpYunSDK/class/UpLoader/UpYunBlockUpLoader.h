@@ -20,7 +20,7 @@
 @interface UpYunBlockUpLoader : NSObject
 
 
-/*表单上传接口
+/*分块上传接口
  参数  bucketName:           上传空间名
  参数  operator:             空间操作员
  参数  operatorPassword:     空间操作员密码
