@@ -603,4 +603,12 @@
     
 }
 
+
++ (void)clearCache {
+    NSString *tmpDirectory = NSTemporaryDirectory();
+    NSString *upYunUploaderTaskInfoDirectory = [tmpDirectory stringByAppendingPathComponent:@"/upYunUploaderTaskInfo/"];
+    [[NSFileManager defaultManager] removeItemAtPath:upYunUploaderTaskInfoDirectory error:nil];
+}
+
+
 @end
