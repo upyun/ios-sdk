@@ -80,8 +80,8 @@
                                NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
                          NSLog(@"上传失败 error：%@", error);
-                         NSLog(@"上传失败 responseBody：%@", responseBody);
-                         NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                         NSLog(@"上传失败 code=%d, responseHeader：%@", response.statusCode, response.allHeaderFields);
+                         NSLog(@"上传失败 message：%@", responseBody);
                          //主线程刷新ui
                          dispatch_async(dispatch_get_main_queue(), ^(){
                              NSString *message = [responseBody objectForKey:@"message"];
@@ -143,8 +143,8 @@
                              NSHTTPURLResponse *response,
                              NSDictionary *responseBody) {
                        NSLog(@"上传失败 error：%@", error);
-                       NSLog(@"上传失败 responseBody：%@", responseBody);
-                       NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                       NSLog(@"上传失败 code=%d, responseHeader：%@", response.statusCode, response.allHeaderFields);
+                       NSLog(@"上传失败 message：%@", responseBody);
                        //主线程刷新ui
                    }
      
@@ -191,8 +191,8 @@ int countEnd = 0;
                          countEnd ++;
 
                          NSLog(@"上传失败 error：%@", error);
-                         NSLog(@"上传失败 responseBody：%@", responseBody);
-                         NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                         NSLog(@"上传失败 code=%d, responseHeader：%@", response.statusCode, response.allHeaderFields);
+                         NSLog(@"上传失败 message：%@", responseBody);
                          //主线程刷新ui
                          NSLog(@"%d - %d", countEnd, countStart);
 
