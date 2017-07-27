@@ -32,7 +32,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 /UpYunSDK 
 ├── class  
 │   ├── UpLoader
-│   │   ├── UpYunBlockUpLoader.h    //分块上传接口
+│   │   ├── UpYunBlockUpLoader.h    //断点续传接口
 │   │   ├── UpYunBlockUpLoader.m
 │   │   ├── UpYunFormUploader.h     //表单上传接口
 │   │   ├── UpYunFormUploader.m
@@ -54,7 +54,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
  //表单上传，适用于上传图片、短视频等小文件。   
  #import "UpYunFormUploader.h" 
  
- //分块上传，适合大文件上传。
+ //断点续传，适合大文件上传。
  #import "UpYunBlockUpLoader.h"
  
  
@@ -127,15 +127,15 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 注意：表单上传接口接口中 otherParameters 提供更丰富的上传参数定义，比如图片和音视频预处理参数 ```apps``` ,具体请参考文档[表单-API-参数](http://docs.upyun.com/api/form_api/#_2)
 
 
-### 4.2分块上传
+### 4.2断点续传
 
-分块上传接口只有一个，需要__本地签名__进行上传。
+断点续传接口只有一个，需要__本地签名__进行上传。
 使用时请引入相应的头文件 ```#import "UpYunBlockUpLoader.h"```。 具体使用方式请参考 demo 页面文件 "ViewController2.m".
 
 
 ```  				
 
-/*分块上传接口
+/*断点续传接口
  参数  bucketName:           上传空间名
  参数  operator:             空间操作员
  参数  operatorPassword:     空间操作员密码
