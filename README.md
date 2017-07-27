@@ -7,14 +7,14 @@
 
 ## 1 SDK 功能简介
 
-UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ```  和分块上传  ``` UpYunBlockUpLoader```   两部分，分别实现了以下文档接口：    
-- [又拍云存储 FORM API 表单上传接口](http://docs.upyun.com/api/form_api/)        
+UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ```  和断点续传  ``` UpYunBlockUpLoader```   两部分，分别实现了以下文档接口：    
+- [又拍云存储 FORM API 表单上传接口](http://docs.upyun.com/api/form_api/)        
 - [又拍云存储 REST API 断点续传接口](http://docs.upyun.com/api/rest_api/#_3)
 
 
 
 ```表单上传```  适用于上传图片、短视频等小文件。（另外通过 otherParameters 可实现方便的```图片视频预处理```功能）			
- ```分块上传```  适用于大文件上传和断点续传。（特别地，断点续传上传的图片不支持预处理）
+```断点续传```  适用于大文件上传和断点续传。（特别地，断点续传上传的图片不支持预处理）
 
 
 ## 2 运行环境
@@ -179,8 +179,8 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
     
   [self testFormUploader1];  //本地签名的表单上传
   [self testFormUploader2];  //服务器端签名的表单上传（模拟）
-  [self testBlockUpLoader1]; //分块上传
-  [self testFormUploaderAndAsyncTask]; //表单上传加异步多媒体处理－－视频截图
+  [self testBlockUpLoader1]; //断点续传
+  [self testFormUploaderAndAsyncTask]; //表单上传加异步多媒体处理－－视频截图
 
 }
 
