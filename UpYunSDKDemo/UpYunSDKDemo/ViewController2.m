@@ -47,12 +47,11 @@
 }
 
 - (void)uploadBtntap:(id)sender {
-    
-      [self testFormUploader1];
+//      [self testFormUploader1];
 //      [self testFormUploader2];
 //      [self testBlockUpLoader1];
 //      [self testFormUploaderAndAsyncTask];
-
+//      [self testFormUploaderAndSyncTask];
 }
 
 //本地签名的表单上传。
@@ -80,7 +79,7 @@
                                NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
                          NSLog(@"上传失败 error：%@", error);
-                         NSLog(@"上传失败 code=%d, responseHeader：%@", response.statusCode, response.allHeaderFields);
+                         NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
                          NSLog(@"上传失败 message：%@", responseBody);
                          //主线程刷新ui
                          dispatch_async(dispatch_get_main_queue(), ^(){
@@ -143,7 +142,7 @@
                              NSHTTPURLResponse *response,
                              NSDictionary *responseBody) {
                        NSLog(@"上传失败 error：%@", error);
-                       NSLog(@"上传失败 code=%d, responseHeader：%@", response.statusCode, response.allHeaderFields);
+                       NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
                        NSLog(@"上传失败 message：%@", responseBody);
                        //主线程刷新ui
                    }
@@ -191,7 +190,7 @@ int countEnd = 0;
                          countEnd ++;
 
                          NSLog(@"上传失败 error：%@", error);
-                         NSLog(@"上传失败 code=%d, responseHeader：%@", response.statusCode, response.allHeaderFields);
+                         NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
                          NSLog(@"上传失败 message：%@", responseBody);
                          //主线程刷新ui
                          NSLog(@"%d - %d", countEnd, countStart);
@@ -213,7 +212,7 @@ int countEnd = 0;
 
 
 
-//表单上传加异步多媒体处理－－视频截图
+//表单上传加异步视频处理－－视频截图
 - (void)testFormUploaderAndAsyncTask {
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
@@ -275,7 +274,71 @@ int countEnd = 0;
                             [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
                         });
                     }];
+}
 
+//表单上传加同步图片处理－－图片水印
+- (void)testFormUploaderAndSyncTask {
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"picture.jpg"];
+    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+    UpYunFormUploader *up = [[UpYunFormUploader alloc] init];
+    
+    NSString *bucketName = @"test86400";
+    
+    //同步图片水印处理。更详细参数参考：云处理文档－图片处理－上传预处理 http://docs.upyun.com/cloud/image/#function
+
+    NSString *watermark = @"这是水印";
+    //需要转换为 base64 编码
+    NSData *encodeData = [watermark dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *watermark_base64 = [encodeData base64EncodedStringWithOptions:0];
+    
+    [up uploadWithBucketName:bucketName
+                    operator:@"operator123"
+                    password:@"password123"
+                    fileData:fileData
+                    fileName:nil
+                     saveKey:@"ios_sdk_new/test2/picture.jpg"
+             otherParameters:@{@"x-gmkerl-thumb": [NSString stringWithFormat:@"/watermark/text/%@/color/FFFFFF/align/south", watermark_base64]}
+                     success:^(NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         NSLog(@"上传成功 responseBody：%@", responseBody);
+                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
+                         //主线程刷新ui
+                     }
+                     failure:^(NSError *error,
+                               NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         NSLog(@"上传失败 error：%@", error);
+                         NSLog(@"上传失败 responseBody：%@", responseBody);
+                         NSLog(@"上传失败 message：%@", [responseBody objectForKey:@"message"]);
+                         //主线程刷新ui
+                         dispatch_async(dispatch_get_main_queue(), ^(){
+                             NSString *message = [responseBody objectForKey:@"message"];
+                             if (!message) {
+                                 message = [NSString stringWithFormat:@"%@", error.localizedDescription];
+                             }
+                             UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"上传失败!"
+                                                                                            message:message
+                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                             UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                                     style:UIAlertActionStyleDefault
+                                                                                   handler:nil];
+                             [alert addAction:defaultAction];
+                             [self presentViewController:alert animated:YES completion:nil];
+                         });
+                     }
+     
+                    progress:^(int64_t completedBytesCount,
+                               int64_t totalBytesCount) {
+                        NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
+                        NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
+                        NSLog(@"upload progress: %@", progress);
+                        
+                        //主线程刷新ui
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
+                        });
+                    }];
 }
 
 //旧版本 sdk demo
