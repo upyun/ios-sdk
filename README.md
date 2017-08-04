@@ -21,7 +21,7 @@ UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ```  和断点续传  
 iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 HTTP 请求。
  
 ## 3 安装使用说明：
- **步骤1:**    
+ **步骤1:**    
  下载 SDK，然后将 `UpYunSDK` 文件夹拖到工程中。（最新版本 2.0.0 暂时无法用 CocoaPods 安装。）
 
  **步骤2:**     
@@ -30,7 +30,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 	
 
 **步骤3:**   
-本地签名上传所需要的基本参数如： 
+本地签名上传所需要的基本参数如： 
 服务名、操作员、操作员密码, 可以在 upyun 控制台获取：[导航栏>云产品>云存储>创建服务](https://console.upyun.com/dashboard/)。		
  
 
