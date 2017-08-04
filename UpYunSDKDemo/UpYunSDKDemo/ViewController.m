@@ -40,7 +40,7 @@
 
 - (IBAction)uploadFile:(id)sender {
     
-    //设置空间名
+    //设置服务名
     [UPYUNConfig sharedInstance].DEFAULT_BUCKET = @"test654123";
     //设置空间表单密钥
     [UPYUNConfig sharedInstance].DEFAULT_PASSCODE = @"0/8/1gPFWUQWGcfjFn6Vsn3VWDc=";

@@ -47,11 +47,11 @@
 }
 
 - (void)uploadBtntap:(id)sender {
-//      [self testFormUploader1];
-//      [self testFormUploader2];
-//      [self testBlockUpLoader1];
-//      [self testFormUploaderAndAsyncTask];
-//      [self testFormUploaderAndSyncTask];
+      [self testFormUploader1];             //本地签名的表单上传
+//    [self testFormUploader2];             //服务器端签名的表单上传（模拟）
+//    [self testBlockUpLoader1];            //断点续传
+//    [self testFormUploaderAndAsyncTask];  //表单上传加异步多媒体处理－－视频截图
+//    [self testFormUploaderAndSyncTask];   //表单上传加同步图片处理－－图片水印
 }
 
 //本地签名的表单上传。
