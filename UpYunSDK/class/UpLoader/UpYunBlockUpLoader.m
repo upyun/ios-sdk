@@ -260,6 +260,9 @@
                                             
                                         }
                                     }
+                                    if (!error) {
+                                        error = [[NSError alloc] initWithDomain:NSErrorDomain_UpYunBlockUpLoader code: -102 userInfo: retObj];
+                                    }
                                     _failureBlock(error, response, retObj);
                                     [self clean];
                                     
@@ -433,6 +436,9 @@
                                     return;
                                 }
                                 if (_failureBlock) {
+                                    if (!error) {
+                                        error = [[NSError alloc] initWithDomain:NSErrorDomain_UpYunBlockUpLoader code: -102 userInfo: retObj];
+                                    }
                                     _failureBlock(error, response, retObj);
                                     [self clean];
                                     
@@ -526,6 +532,10 @@
                                 [self updateUploaderTaskInfoWithCompleted:YES];
                             } else {
                                 if (_failureBlock) {
+                                    
+                                    if (!error) {
+                                        error = [[NSError alloc] initWithDomain:NSErrorDomain_UpYunBlockUpLoader code: -102 userInfo: retObj];
+                                    }
                                     _failureBlock(error, response, retObj);
                                 }
                             }
