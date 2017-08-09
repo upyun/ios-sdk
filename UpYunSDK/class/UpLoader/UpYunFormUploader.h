@@ -19,7 +19,7 @@
 @interface UpYunFormUploader : NSObject
 
 
-/*表单上传接口
+/**表单上传接口
  参数  bucketName:           上传空间名
  参数  operator:             空间操作员
  参数  password:             空间操作员密码
@@ -44,7 +44,7 @@
                     progress:(UpLoaderProgressBlock)progressBlock;
 
 
-/*表单上传接口，上传策略和签名可以是从服务器获取
+/**表单上传接口，上传策略和签名可以是从服务器获取
  参数  operator:        空间操作员
  参数  policy:          上传策略
  参数  signature:       上传策略签名

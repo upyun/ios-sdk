@@ -9,6 +9,8 @@
 #import "ViewController2.h"
 #import "UpYunFormUploader.h" //图片，小文件，短视频
 #import "UpYunBlockUpLoader.h" //分块上传，适合大文件上传
+#import "UpYunFileDealManger.h" // 文件处理任务
+
 
 #import "ViewController.h"
 
@@ -49,10 +51,46 @@
 - (void)uploadBtntap:(id)sender {
 //      [self testFormUploader1];
 //      [self testFormUploader2];
-//      [self testBlockUpLoader1];
+      [self testBlockUpLoader1];
 //      [self testFormUploaderAndAsyncTask];
 //      [self testFormUploaderAndSyncTask];
+//    [self testFileDeal];
+    
+    
 }
+
+- (void)testFileDeal {
+    UpYunFileDealManger *up = [[UpYunFileDealManger alloc] init];
+    
+    
+    NSMutableArray *tasks = [NSMutableArray array];
+    
+    NSDictionary *taksOne =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:05",
+                             @"notify_url": @"http://124.160.114.202:18989/echo",
+                                                       @"save_as": @"ios_sdk_new_video_1.jpg"};
+    NSDictionary *taksTwo =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:11",
+                             @"notify_url": @"http://124.160.114.202:18989/echo",
+                             @"save_as": @"ios_sdk_new_video_2.jpg"};
+    
+    [tasks addObject:taksOne];
+    
+    [tasks addObject:taksTwo];
+    
+    [up dealTaskWithBucketName:@"test86400" operator:@"operator123" password:@"password123" notify_url:@"http://124.160.114.202:18989/echo" source:@"/123.mp4" tasks:tasks success:^(NSHTTPURLResponse *response, NSDictionary *responseBody) {
+        
+        NSLog(@"response--%@", response);
+        NSLog(@"上传成功 responseBody：%@", responseBody);
+        
+    } failure:^(NSError *error, NSHTTPURLResponse *response, NSDictionary *responseBody) {
+         NSLog(@"失败---");
+        NSLog(@"上传失败 error：%@", error);
+        NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
+        NSLog(@"上传失败 message：%@", responseBody);
+    }];
+    
+    
+}
+
 
 //本地签名的表单上传。
 - (void)testFormUploader1 {
@@ -162,11 +200,11 @@ int countEnd = 0;
 - (void)testBlockUpLoader1{
     countStart ++;
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"test2.png"];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
     
     UpYunBlockUpLoader *up = [[UpYunBlockUpLoader alloc] init];
     NSString *bucketName = @"test86400";
-    NSString *savePath = @"iossdk/blockupload/yyyyyyyyyyyyyyyyy.mp4";
+    NSString *savePath = @"ios_upload_task_video.mp4";
     
     [up uploadWithBucketName:bucketName
                     operator:@"operator123"
@@ -177,10 +215,11 @@ int countEnd = 0;
                                NSDictionary *responseBody) {
                          
                          countEnd ++;
-                         NSLog(@"上传成功");
+                         NSLog(@"上传且处理任务成功");
                          NSLog(@"file url：https://%@.b0.upaiyun.com/%@",bucketName, savePath);
                          //主线程刷新ui
                          
+                         NSLog(@"responseBody=%@", responseBody);
                          NSLog(@"%d - %d", countEnd, countStart);
 
                      }
@@ -210,7 +249,75 @@ int countEnd = 0;
                     }];
 }
 
-
+/// 上传之后进行预处理操作
+- (void)testBlockUpLoader2{
+    countStart ++;
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
+    
+    
+    NSMutableArray *tasks = [NSMutableArray array];
+    /// task 的相关参数, 见
+    NSDictionary *taksOne =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:02",
+                             @"save_as": @"ios_sdk_new_video_3.jpg"};
+    NSDictionary *taksTwo =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:03",
+                             @"save_as": @"ios_sdk_new_video_4.jpg"};
+    
+    [tasks addObject:taksOne];
+    
+    [tasks addObject:taksTwo];
+    
+    NSString *notif_url = @"http://124.160.114.202:18989/echo";
+    
+    
+    UpYunBlockUpLoader *up = [[UpYunBlockUpLoader alloc] init];
+    NSString *bucketName = @"test86400";
+    NSString *savePath = @"ios_upload_task_video.mp4";
+    
+    [up uploadWithBucketName:bucketName
+                    operator:@"operator123"
+                    password:@"password123"
+                    filePath:filePath
+                    savePath:savePath
+                  notify_url:notif_url
+                       tasks:tasks
+                     success:^(NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         
+                         countEnd ++;
+                         NSLog(@"上传且处理任务成功");
+                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@",bucketName, savePath);
+                         //主线程刷新ui
+                         
+                         NSLog(@"responseBody=%@", responseBody);
+                         NSLog(@"%d - %d", countEnd, countStart);
+                         
+                     }
+                     failure:^(NSError *error,
+                               NSHTTPURLResponse *response,
+                               NSDictionary *responseBody) {
+                         countEnd ++;
+                         
+                         NSLog(@"上传失败 error：%@", error);
+                         NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
+                         NSLog(@"上传失败 message：%@", responseBody);
+                         //主线程刷新ui
+                         NSLog(@"%d - %d", countEnd, countStart);
+                         
+                         
+                     }
+                    progress:^(int64_t completedBytesCount,
+                               int64_t totalBytesCount) {
+                        NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
+                        NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
+                        NSLog(@"upload progress: %@", progress);
+                        
+                        //主线程刷新ui
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
+                        });
+                    }];
+}
 
 //表单上传加异步视频处理－－视频截图
 - (void)testFormUploaderAndAsyncTask {

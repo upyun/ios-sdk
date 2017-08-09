@@ -7,6 +7,8 @@
 
 #import "UpSimpleHttpClient.h"
 
+#import "UpApiUtils.h"
+
 @interface UpSimpleHttpClient () <NSURLSessionDelegate>
 
 @property (nonatomic, strong) SimpleHttpTaskCompletionHandler completionHandler;
@@ -62,7 +64,6 @@
     sessionConfiguration.HTTPCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     sessionConfiguration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
     sessionConfiguration.HTTPShouldSetCookies = YES;
-    
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:sHttpClient delegateQueue:nil];
     NSURL *url = [[NSURL alloc] initWithString:URLString];
     NSMutableURLRequest *request = (NSMutableURLRequest *)[NSMutableURLRequest requestWithURL:url];
@@ -77,6 +78,42 @@
     if (postParameters.length > 1) {
         postData = [[postParameters substringFromIndex:1] dataUsingEncoding:NSUTF8StringEncoding];
     }
+    request.HTTPBody = postData;
+    NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.nSURLSessionTask = sessionTask;
+    sHttpClient.completionHandler = completionHandler;
+    [sessionTask resume];
+    
+    
+    return sHttpClient;
+}
+
+
+//POST  发送 body 的 content-type：application/x-www-form-urlencoded
++ (UpSimpleHttpClient *)POSTURL:(NSString *)URLString
+                        headers:(NSDictionary *)headers
+                     parameters:(NSDictionary *)parameters
+              completionHandler:(SimpleHttpTaskCompletionHandler)completionHandler {
+    UpSimpleHttpClient *sHttpClient = [[UpSimpleHttpClient alloc] init];
+    
+    
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    sessionConfiguration.HTTPCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    sessionConfiguration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
+    sessionConfiguration.HTTPShouldSetCookies = YES;
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:sHttpClient delegateQueue:nil];
+    NSURL *url = [[NSURL alloc] initWithString:URLString];
+    NSMutableURLRequest *request = (NSMutableURLRequest *)[NSMutableURLRequest requestWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+
+    for (NSString *key in headers.allKeys) {
+        [request setValue:[headers objectForKey:key] forHTTPHeaderField:key];
+    }
+
+    
+    NSString *bodyString = [UpApiUtils queryStringFrom:parameters];
+    NSData *postData = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
     request.HTTPBody = postData;
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
     sHttpClient.nSURLSessionTask = sessionTask;

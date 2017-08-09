@@ -20,15 +20,17 @@
 @interface UpYunBlockUpLoader : NSObject
 
 
-/*分块上传接口
- 参数  bucketName:           上传空间名
- 参数  operator:             空间操作员
- 参数  operatorPassword:     空间操作员密码
- 参数  filePath:             上传文件本地路径
- 参数  savePath:             上传文件的保存路径, 例如：“/2015/0901/file1.jpg”
- 参数  successBlock:         上传成功回调
- 参数  failureBlock:         上传失败回调
- 参数  progressBlock:        上传进度回调
+
+
+/**分块上传接口
+ *参数  bucketName:           上传空间名
+ *参数  operator:             空间操作员
+ *参数  operatorPassword:     空间操作员密码
+ *参数  filePath:             上传文件本地路径
+ *参数  savePath:             上传文件的保存路径, 例如：“/2015/0901/file1.jpg”
+ *参数  successBlock:         上传成功回调
+ *参数  failureBlock:         上传失败回调
+ *参数  progressBlock:        上传进度回调
  */
 
 - (void)uploadWithBucketName:(NSString *)bucketName
@@ -36,6 +38,32 @@
                     password:(NSString *)operatorPassword
                     filePath:(NSString *)filePath
                     savePath:(NSString *)savePath
+                     success:(UpLoaderSuccessBlock)successBlock
+                     failure:(UpLoaderFailureBlock)failureBlock
+                    progress:(UpLoaderProgressBlock)progressBlock;
+
+/** 分块上传接口
+ 
+ 
+ * 参数  bucketName:           上传空间名
+ * 参数  operator:             空间操作员
+ * 参数  operatorPassword:     空间操作员密码
+ * 参数  filePath:             上传文件本地路径
+ * 参数  savePath:             上传文件的保存路径, 例如：“/2015/0901/file1.jpg”
+ * 参数  notify_url:           回调通知地址, 详见 https://docs.upyun.com/cloud/av/#notify_url
+ * 参数  tasks:                任务信息, 详见 https://docs.upyun.com/cloud/av/#tasks
+ * 参数  successBlock:         上传成功回调
+ * 参数  failureBlock:         上传失败回调
+ * 参数  progressBlock:        上传进度回调
+*/
+
+- (void)uploadWithBucketName:(NSString *)bucketName
+                    operator:(NSString *)operatorName
+                    password:(NSString *)operatorPassword
+                    filePath:(NSString *)filePath
+                    savePath:(NSString *)savePath
+                  notify_url:(NSString *)notify_url
+                       tasks:(NSArray *)tasks
                      success:(UpLoaderSuccessBlock)successBlock
                      failure:(UpLoaderFailureBlock)failureBlock
                     progress:(UpLoaderProgressBlock)progressBlock;
