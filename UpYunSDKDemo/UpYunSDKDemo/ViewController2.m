@@ -49,13 +49,14 @@
 }
 
 - (void)uploadBtntap:(id)sender {
-//      [self testFormUploader1];
-//      [self testFormUploader2];
-      [self testBlockUpLoader1];
-//      [self testFormUploaderAndAsyncTask];
-//      [self testFormUploaderAndSyncTask];
-//    [self testFileDeal];
     
+    [self testFormUploader1];             //本地签名的表单上传
+//    [self testFormUploader2];             //服务器端签名的表单上传（模拟）
+//    [self testBlockUpLoader1];            //断点续传
+//    [self testBlockUpLoader2];            //断点续传 后异步处理
+//    [self testFormUploaderAndAsyncTask];  //表单上传加异步多媒体处理－－视频截图
+//    [self testFormUploaderAndSyncTask];   //表单上传加同步图片处理－－图片水印
+//    [self testFileDeal];                  // 文件异步处理请求
     
 }
 
@@ -87,8 +88,6 @@
         NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
         NSLog(@"上传失败 message：%@", responseBody);
     }];
-    
-    
 }
 
 
@@ -249,7 +248,7 @@ int countEnd = 0;
                     }];
 }
 
-/// 上传之后进行预处理操作
+/// 上传之后进行文件处理操作
 - (void)testBlockUpLoader2{
     countStart ++;
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];

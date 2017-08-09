@@ -11,7 +11,7 @@
 @interface UPYUNConfig : NSObject
 + (UPYUNConfig *)sharedInstance;
 /**
- *	@brief 默认空间名(必填项), 默认为 *****
+ *	@brief 默认服务名(必填项), 默认为 *****
  */
 @property (nonatomic, copy) NSString *DEFAULT_BUCKET;
 /**

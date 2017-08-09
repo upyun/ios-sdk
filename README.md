@@ -21,44 +21,17 @@ UPYUN iOS SDK 集成了表单上传``` UpYunFormUploader ```  和断点续传  
 iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 HTTP 请求。
  
 ## 3 安装使用说明：
+ **步骤1:**    
  下载 SDK，然后将 `UpYunSDK` 文件夹拖到工程中。（最新版本 2.0.0 暂时无法用 CocoaPods 安装。）
- 
- 
 
- UpYunSDK 文件目录： 
+ **步骤2:**     
+ 参考 ```demo``` 工程 ```ViewController2.m``` 上传方法进行文件上传。需要引入相应的头文件, ``` UpYunFormUploader.h ``` 或者 ``` UpYunBlockUpLoader.h ```。
+ 
+	
 
- 
- ```			
-/UpYunSDK 
-├── class  
-│   ├── UpLoader
-│   │   ├── UpYunBlockUpLoader.h    //断点续传接口
-│   │   ├── UpYunBlockUpLoader.m
-│   │   ├── UpYunFormUploader.h     //表单上传接口
-│   │   ├── UpYunFormUploader.m
-│   │   └── UpYunUploader.h
-│   └── Utils
-│
-│  
-└── class_deprecated // 旧版本 SDK
-
-
- 
- ```			
- 
- 
- 使用时候，请引入相应的头文件。  	 
- 
- ```  				
- 
- //表单上传，适用于上传图片、短视频等小文件。   
- #import "UpYunFormUploader.h" 
- 
- //断点续传，适合大文件上传。
- #import "UpYunBlockUpLoader.h"
- 
- 
- ```			
+**步骤3:**   
+本地签名上传所需要的基本参数如： 
+服务名、操作员、操作员密码, 可以在 upyun 控制台获取：[导航栏>云产品>云存储>创建服务](https://console.upyun.com/dashboard/)。		
  
 
 
@@ -67,7 +40,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 
 ### 4.1表单上传
 
-表单上传接口共有两个，分别适用于__本地签名__和__服务器签名__两种上传方式。
+表单上传接口共有两个，分别适用于 __本地签名__ 和 __服务器签名__ 两种上传方式。
 使用时请引入头文件 ```#import "UpYunFormUploader.h"```。 具体使用方式请参考 demo 页面文件 "ViewController2.m".
 
 
@@ -76,9 +49,9 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 
 
 /*表单上传接口
- 参数  bucketName:           上传空间名
- 参数  operator:             空间操作员
- 参数  password:             空间操作员密码
+ 参数  bucketName:           服务名
+ 参数  operator:             操作员
+ 参数  password:             操作员密码
  参数  fileData:             上传文件数据
  参数  fileName:             上传文件名
  参数  saveKey:              上传文件的保存路径, 例如：“/2015/0901/file1.jpg”。可用占位符，参考：http://docs.upyun.com/api/form_api/#save-key
@@ -129,7 +102,7 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 
 ### 4.2断点续传
 
-断点续传接口只有一个，需要__本地签名__进行上传。
+断点续传接口只有一个，需要 __本地签名__ 进行上传。
 使用时请引入相应的头文件 ```#import "UpYunBlockUpLoader.h"```。 具体使用方式请参考 demo 页面文件 "ViewController2.m".
 
 
@@ -154,6 +127,35 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
                      success:(UpLoaderSuccessBlock)successBlock
                      failure:(UpLoaderFailureBlock)failureBlock
                     progress:(UpLoaderProgressBlock)progressBlock;
+                    
+                   
+/** 断点续传后处理接口
+ 
+ 参数  bucketName:           服务名
+ 参数  operator:             操作员
+ 参数  operatorPassword:     操作员密码
+ 
+ 服务名、操作员、操作员密码, 可以在 upyun 控制台获取：https://console.upyun.com/dashboard/ 导航栏>云产品>云存储>创建服务
+ * 参数  filePath:             上传文件本地路径
+ * 参数  savePath:             上传文件的保存路径, 例如：“/2015/0901/file1.jpg”
+ * 参数  notify_url:           回调通知地址, 详见 https://docs.upyun.com/cloud/av/#notify_url
+ * 参数  tasks:                任务信息, 详见 https://docs.upyun.com/cloud/av/#tasks
+ * 参数  successBlock:         上传成功回调
+ * 参数  failureBlock:         上传失败回调
+ * 参数  progressBlock:        上传进度回调
+*/
+
+- (void)uploadWithBucketName:(NSString *)bucketName
+                    operator:(NSString *)operatorName
+                    password:(NSString *)operatorPassword
+                    filePath:(NSString *)filePath
+                    savePath:(NSString *)savePath
+                  notify_url:(NSString *)notify_url
+                       tasks:(NSArray *)tasks
+                     success:(UpLoaderSuccessBlock)successBlock
+                     failure:(UpLoaderFailureBlock)failureBlock
+                    progress:(UpLoaderProgressBlock)progressBlock;
+                    
 //取消上传
 - (void)cancel;
 
@@ -177,10 +179,13 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 
 - (void)uploadBtntap:(id)sender {
     
-  [self testFormUploader1];  //本地签名的表单上传
-  [self testFormUploader2];  //服务器端签名的表单上传（模拟）
-  [self testBlockUpLoader1]; //断点续传
-  [self testFormUploaderAndAsyncTask]; //表单上传加异步多媒体处理－－视频截图
+    [self testFormUploader1];             //本地签名的表单上传
+    [self testFormUploader2];             //服务器端签名的表单上传（模拟）
+    [self testBlockUpLoader1];            //断点续传
+    [self testBlockUpLoader2];            //断点续传 后异步处理
+    [self testFormUploaderAndAsyncTask];  //表单上传加异步多媒体处理－－视频截图
+    [self testFormUploaderAndSyncTask];   //表单上传加同步图片处理－－图片水印
+    [self testFileDeal];                  // 文件异步处理请求
 
 }
 
