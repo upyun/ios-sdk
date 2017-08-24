@@ -13,11 +13,11 @@ s.requires_arc = true
 s.ios.deployment_target = '7.0'
 
 	s.subspec 'class' do |ss|
-	ss.source_files = ['class/**/*.{h,m}']
+	ss.source_files = ['UpYunSDK/class/**/*.{h,m}']
 	end
 
 	s.subspec 'class_deprecated' do |ss|
-	ss.source_files = ['class_deprecated/*.{h,m}', 'class_deprecated/**/*.{h,m}']
+	ss.source_files = ['UpYunSDK/class_deprecated/*.{h,m}', 'UpYunSDK/class_deprecated/**/*.{h,m}']
 	end
 
 
