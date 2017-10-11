@@ -23,6 +23,8 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
 ## 3 安装使用说明：
  **步骤1:**    
  下载 SDK，然后将 `UpYunSDK` 文件夹拖到工程中。（最新版本 2.0.0 暂时无法用 CocoaPods 安装。）
+ 
+ __注__: 如果使用Xcode 9 版本, 拖到工程后, 仍需要在项目的 app target 中，查看 **Build Phases** 中的 **Compile Source** 和 **Copy Bundle Resources** ，手动添加需要编译的代码文件和资源文件。
 
  **步骤2:**     
  参考 ```demo``` 工程 ```ViewController2.m``` 上传方法进行文件上传。需要引入相应的头文件, ``` UpYunFormUploader.h ``` 或者 ``` UpYunBlockUpLoader.h ```。
