@@ -52,7 +52,7 @@
     
     [self testFormUploader1];             //本地签名的表单上传
 //    [self testFormUploader2];             //服务器端签名的表单上传（模拟）
-//    [self testBlockUpLoader1];            //断点续传
+//    [self testBlockUpLoader1];              //断点续传
 //    [self testBlockUpLoader2];            //断点续传 后异步处理
 //    [self testFormUploaderAndAsyncTask];  //表单上传加异步多媒体处理－－视频截图
 //    [self testFormUploaderAndSyncTask];   //表单上传加同步图片处理－－图片水印
@@ -109,7 +109,11 @@
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
                          NSLog(@"上传成功 responseBody：%@", responseBody);
-                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
+                         
+                         NSLog(@"可将您的域名与返回的 url 路径拼接成完整文件 URL，再进行访问测试。注意生产环境请用正式域名，新开空间可用 test.upcdn.net 进行测试。https 访问需要空间开启 https 支持");
+                         NSLog(@"用默认提供的旧测试域名，拼接后文件地址（新空间无法访问）：http://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
+                         NSLog(@"用默认提供的新测试域名，拼接后文件地址（旧空间无法访问）：http://%@.test.upcdn.net/%@", bucketName, [responseBody objectForKey:@"url"]);
+
                          //主线程刷新ui
                      }
                      failure:^(NSError *error,
@@ -214,14 +218,23 @@ int countEnd = 0;
                                NSDictionary *responseBody) {
                          
                          countEnd ++;
-                         NSLog(@"上传且处理任务成功");
-                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@",bucketName, savePath);
+               
+                         
+                         
                          //主线程刷新ui
                          
                          NSLog(@"responseBody=%@", responseBody);
                          NSLog(@"%d - %d", countEnd, countStart);
-
+                         
+                         
+                         NSLog(@"上传且处理任务成功");
+                   
+                         NSLog(@"可将您的域名与 savePath 路径拼接成完整文件 URL，再进行访问测试。注意生产环境请用正式域名，新开空间可用 test.upcdn.net 进行测试。https 访问需要空间开启 https 支持");
+                         NSLog(@"用默认提供的旧测试域名，拼接后文件地址（新空间无法访问）：http://%@.b0.upaiyun.com/%@", bucketName, savePath);
+                         NSLog(@"用默认提供的新测试域名，拼接后文件地址（旧空间无法访问）：http://%@.test.upcdn.net/%@", bucketName, savePath);
                      }
+     
+     
                      failure:^(NSError *error,
                                NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
@@ -285,7 +298,11 @@ int countEnd = 0;
                          
                          countEnd ++;
                          NSLog(@"上传且处理任务成功");
-                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@",bucketName, savePath);
+                         NSLog(@"可将您的域名与 savePath 路径拼接成完整文件 URL，再进行访问测试。注意生产环境请用正式域名，新开空间可用 test.upcdn.net 进行测试。https 访问需要空间开启 https 支持");
+                         NSLog(@"用默认提供的旧测试域名，拼接后文件地址（新空间无法访问）：http://%@.b0.upaiyun.com/%@", bucketName, savePath);
+                         NSLog(@"用默认提供的新测试域名，拼接后文件地址（旧空间无法访问）：http://%@.test.upcdn.net/%@", bucketName, savePath);
+                         
+                         
                          //主线程刷新ui
                          
                          NSLog(@"responseBody=%@", responseBody);
@@ -343,7 +360,6 @@ int countEnd = 0;
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
                          NSLog(@"上传成功 responseBody：%@", responseBody);
-                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
                          //主线程刷新ui
                      }
                      failure:^(NSError *error,
@@ -408,7 +424,6 @@ int countEnd = 0;
                      success:^(NSHTTPURLResponse *response,
                                NSDictionary *responseBody) {
                          NSLog(@"上传成功 responseBody：%@", responseBody);
-                         NSLog(@"file url：https://%@.b0.upaiyun.com/%@", bucketName, [responseBody objectForKey:@"url"]);
                          //主线程刷新ui
                      }
                      failure:^(NSError *error,
