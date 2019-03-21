@@ -15,6 +15,7 @@
 @property (nonatomic, strong) SimpleHttpTaskDataSendProgressHandler dataSendProgressHandler;
 @property (nonatomic, strong) SimpleHttpTaskDataReceiveProgressHandler dataReceiveProgressHandler;
 
+@property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) NSURLSessionTask *nSURLSessionTask;
 @property (nonatomic, strong) NSMutableData *didReceiveBody;
 @property (nonatomic, strong) NSURLResponse *didReceiveResponse;
@@ -48,6 +49,7 @@
     request.HTTPMethod = @"GET";
     
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.session = session;
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.completionHandler = completionHandler;
     [sessionTask resume];
@@ -80,6 +82,7 @@
     }
     request.HTTPBody = postData;
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.session = session;
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.completionHandler = completionHandler;
     [sessionTask resume];
@@ -116,6 +119,7 @@
     NSData *postData = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
     request.HTTPBody = postData;
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.session = session;
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.completionHandler = completionHandler;
     [sessionTask resume];
@@ -164,6 +168,7 @@
     
     request.HTTPBody = postData;
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.session = session;
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.completionHandler = completionHandler;
     [sessionTask resume];
@@ -234,6 +239,7 @@
                                                      delegateQueue:nil];
     //发起请求
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.session = session;
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.dataSendProgressHandler = sendProgressBlock;
     sHttpClient.completionHandler = completionHandler;
@@ -271,6 +277,7 @@
         [request setValue:[headers objectForKey:key] forHTTPHeaderField:key];
     }
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.session = session;
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.completionHandler = completionHandler;
     sHttpClient.dataSendProgressHandler = sendProgressBlock;
@@ -302,6 +309,7 @@
     
     //发起请求
     NSURLSessionTask *sessionTask = [session dataTaskWithRequest:request];
+    sHttpClient.session = session;
     sHttpClient.nSURLSessionTask = sessionTask;
     sHttpClient.dataReceiveProgressHandler = receiveProgressBlock;
     sHttpClient.completionHandler = completionHandler;
@@ -312,14 +320,21 @@
 
 
 - (void)cancel {
-    [_nSURLSessionTask cancel];
+    [self.nSURLSessionTask cancel];
+    /// NSURLSession对于它的 delegate属性是强引用。这就意味着当session存在时，其delegate就不会被释放。另外，由session发起请求的缓存相关对象也会被其强引用并一直保留在内存中
+    [self.session invalidateAndCancel];
+    [self.session finishTasksAndInvalidate];
 }
 
 - (void)dealloc {
-//    NSLog(@"dealloc %@", self);
+//    NSLog(@"UpSimpleHttpClient dealloc %@", self);
 }
 
 - (void)complete {
+    [self.nSURLSessionTask cancel];
+    /// NSURLSession对于它的 delegate属性是强引用。这就意味着当session存在时，其delegate就不会被释放。另外，由session发起请求的缓存相关对象也会被其强引用并一直保留在内存中
+    [self.session invalidateAndCancel];
+    [self.session finishTasksAndInvalidate];
     self.dataSendProgressHandler = nil;
     self.dataReceiveProgressHandler = nil;
 
@@ -327,7 +342,7 @@
     self.nSURLSessionTask = nil;
     self.didReceiveBody = nil;
     self.didReceiveResponse = nil;
-    
+    self.session = nil;
 }
 
 #pragma mark NSURLSessionDelegate
