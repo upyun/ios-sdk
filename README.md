@@ -183,8 +183,16 @@ iOS 8.0 及以上版本, ARC 模式, 基于系统网络库 NSURLSession 发送 H
     
     [self testFormUploader1];             //本地签名的表单上传
     [self testFormUploader2];             //服务器端签名的表单上传（模拟）
-    [self testBlockUpLoader1];            //断点续传
-    [self testBlockUpLoader2];            //断点续传 后异步处理
+
+    [self testBlockUpLoader1];            //串行断点续传
+    [self testBlockUpLoader2];            //串行断点续传 后异步处理
+    [self testBlockUpLoader3];              // 并行分块断点续传
+    [self testBlockUpLoader4];            // 并行分块断点续传
+
+    // 因为异步签名和文件上传签名不一致. 所以如果需要上传之并进行异步处理. 只能使用本地签名
+    [self testBlockUpLoader5];            // 串行断点续传, 服务端签名.
+    [self testBlockUpLoader6];            // 并行断点续传  服务端签名
+
     [self testFormUploaderAndAsyncTask];  //表单上传加异步多媒体处理－－视频截图
     [self testFormUploaderAndSyncTask];   //表单上传加同步图片处理－－图片水印
     [self testFileDeal];                  // 文件异步处理请求
