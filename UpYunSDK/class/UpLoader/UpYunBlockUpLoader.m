@@ -30,7 +30,7 @@
     int _next_part_id;
     NSString *_X_Upyun_Multi_Uuid;
     NSDate *_initDate;
-    int _fileSize;
+    NSUInteger _fileSize;
     NSDictionary *_fileInfos;
     dispatch_queue_t _uploaderQueue;
     UpSimpleHttpClient *_httpClient;
@@ -38,7 +38,11 @@
     NSString *_uploaderIdentityString;//一次上传文件的特征值。特征值相同，上传成功后的结果相同（文件内容和保存路径)。
     NSMutableDictionary *_uploaderTaskInfo;//当前的上传任务。（目的是断点续传，所以仅仅纪录保存 upload 阶段的状态）
     
-    
+
+    /// 上传策略.or 上传参数
+    NSDictionary *_policy;
+    /// 签名认证
+    NSString *_signature;
     NSArray *_tasks;
     NSString *_notify_url;
 }
@@ -100,6 +104,68 @@
 //    NSLog(@"_uploaderTaskInfo %@  %@", _uploaderTaskInfo, _uploaderIdentityString);
     return statusIsUploading;
 }
+
+- (void)uploadWithBucketName:(NSString *)bucketName
+                      policy:(NSDictionary *)policy
+                   signature:(NSString *)signature
+                    filePath:(NSString *)filePath
+                     success:(UpLoaderSuccessBlock)successBlock
+                     failure:(UpLoaderFailureBlock)failureBlock
+                    progress:(UpLoaderProgressBlock)progressBlock {
+
+    _policy = policy;
+    _signature = signature;
+
+    _operatorName = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"Operator"];
+    _bucketName = bucketName;
+    _filePath = filePath;
+    NSString *uri = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"URI"];
+    _savePath = [uri substringFromIndex:_bucketName.length+1];
+
+
+    _successBlock = successBlock;
+    _failureBlock = failureBlock;
+    _progressBlock = progressBlock;
+    _fileInfos = [self fileBlocksInfo:filePath];
+    _uploaderIdentityString = [NSString stringWithFormat:@"bucketName=%@&operatorName=%@&savePath=%@&file=%@",
+                               _bucketName,
+                               _operatorName,
+                               _savePath,
+                               _fileInfos[@"fileHash"]];
+
+
+    if (_progressBlock) {
+        //上传进度设置为 0
+        _progressBlock(0, _fileSize);
+    }
+
+    if (_uploaderQueue) {
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"UpYunBlockUpLoader instance is unavailable，please create a new one."};
+        NSError * error  = [[NSError alloc] initWithDomain:NSErrorDomain_UpYunBlockUpLoader
+                                                      code: -102
+                                                  userInfo: userInfo];
+        NSLog(@"error %@",error);
+        failureBlock(error, nil, nil);
+        return;
+    }
+    _uploaderQueue = dispatch_queue_create("UpYunBlockUpLoader.uploaderQueue", DISPATCH_QUEUE_SERIAL);
+
+    dispatch_async(_uploaderQueue, ^(){
+        if (_cancelled) {
+            [self canceledEnd];
+        } else {
+            if ([self checkUploadStatus]) {
+                //断点续传
+                [self uploadNextFileBlock];
+            } else {
+                [self initiate];
+                //崭新的上传
+            }
+        }
+    });
+    
+}
+
 
 - (void)uploadWithBucketName:(NSString *)bucketName
                     operator:(NSString *)operatorName
@@ -176,37 +242,47 @@
 
 //分块上传步骤1: 初始化
 - (void)initiate {
-    
-    NSDate *now = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatter setLocale:usLocale];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
-    NSString *date = [dateFormatter stringFromDate:now];
-    NSDictionary *uploadParameters = @{@"bucket": _bucketName,
-                                       @"savePath": _savePath,
-                                       @"date": date};
-    
-    NSString *uri = [NSString stringWithFormat:@"/%@/%@", uploadParameters[@"bucket"], uploadParameters[@"savePath"]];
-    NSString *signature = [UpApiUtils getSignatureWithPassword:_operatorPassword
-                                                    parameters:@[@"PUT",
-                                                                 uri,
-                                                                 uploadParameters[@"date"]]];
-    //http headers
-    NSString *Authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, signature];
-    NSString *Date = uploadParameters[@"date"];
-    NSString *X_Upyun_Multi_Stage = @"initiate";
-    NSString *X_Upyun_Multi_Length = [UpApiUtils lengthOfFileAtPath:_filePath];
-    NSString *X_Upyun_Multi_Type = [UpApiUtils mimeTypeOfFileAtPath:_filePath];
-    //暂时不支持 X-Upyun-Meta-X http://docs.upyun.com/api/rest_api/#metadata
-    NSDictionary *headers = @{@"Authorization": Authorization,
-                              @"Date": Date,
-                              @"X-Upyun-Multi-Stage": X_Upyun_Multi_Stage,
-                              @"X-Upyun-Multi-Length": X_Upyun_Multi_Length,
-                              @"X-Upyun-Multi-Type": X_Upyun_Multi_Type};
-    
+    NSString *x_upyun_multi_stage = @"initiate";
+
+    NSString *x_upyun_multi_length = @(_fileSize).stringValue;
+    NSString *content_length =  @"0";
+    NSString *x_upyun_multi_type = [UpApiUtils mimeTypeOfFileAtPath:_filePath];
+
+    NSString *authorization = @"";
+    NSString *date = @"";
+    NSString *md5 = @"";
+    NSString *uri = @"";
+    if (_policy.count > 0) {
+        authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, _signature];
+        date = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"Date"];
+        md5 = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"Content-MD5"];
+        uri = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"uri"];
+    } else {
+        date = [UpApiUtils getNowDateStr];
+        NSDictionary *uploadParameters = @{@"bucket": _bucketName,
+                                           @"savePath": _savePath,
+                                           @"date": date};
+        uri = [NSString stringWithFormat:@"/%@/%@", uploadParameters[@"bucket"], uploadParameters[@"savePath"]];
+        NSString *signature = [UpApiUtils getSignatureWithPassword:_operatorPassword
+                                                        parameters:@[@"PUT",
+                                                                     uri,
+                                                                     uploadParameters[@"date"]]];
+        //http headers
+        authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, signature];
+    }
+
+    NSMutableDictionary *headers = @{@"Authorization": authorization,
+                                     @"Date": date,
+                                     @"X-Upyun-Multi-Stage": x_upyun_multi_stage,
+                                     @"X-Upyun-Multi-Length": x_upyun_multi_length,
+                                     @"Content-Length": content_length,
+                                     @"X-Upyun-Multi-Type": x_upyun_multi_type}.mutableCopy;
+
     NSString *urlString = [NSString stringWithFormat:@"%@%@", UpYunStorageServer, uri];
+
+    if (md5.length > 0) {
+        [headers setObject:md5 forKey:@"Content-MD5"];
+    }
     _httpClient = [UpSimpleHttpClient PUT:urlString
                                   headers:headers file:nil
                         sendProgressBlock:^(NSProgress *progress) {
@@ -304,56 +380,48 @@
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:_filePath];
     [fileHandle seekToFileOffset:range.location];
     NSData *blockData = [fileHandle readDataOfLength:range.length];
-    
-    NSString *Content_MD5 = [targetBlcokInfo objectForKey:@"block_hash"];
-    Content_MD5 = nil;
-    
-    
-    NSDate *now = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatter setLocale:usLocale];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
-    NSString *date = [dateFormatter stringFromDate:now];
-    
-    NSMutableDictionary *uploadParameters = [[NSMutableDictionary alloc] initWithDictionary:@{@"bucket": _bucketName,
-                                                                                             @"savePath": _savePath,
-                                                                                             @"date": date}];
-    
-    if (Content_MD5) {
-        [uploadParameters setObject:Content_MD5 forKey:@"Content-MD5"];
-    }
-    NSString *uri = [NSString stringWithFormat:@"/%@/%@", uploadParameters[@"bucket"], uploadParameters[@"savePath"]];
-    
-    
-    NSMutableArray *parametersForSignature = [[NSMutableArray alloc] initWithArray:@[@"PUT", uri, uploadParameters[@"date"]]];
-    if (uploadParameters[@"Content-MD5"]) {
-        [parametersForSignature addObject:uploadParameters[@"Content-MD5"]];
-    }
-    
 
-    NSString *signature = [UpApiUtils getSignatureWithPassword:_operatorPassword
-                                                    parameters:parametersForSignature];
-    
-    
-    
-    //http headers
-    NSString *Authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, signature];
-    NSString *Date = uploadParameters[@"date"];
-    NSString *X_Upyun_Multi_Stage = @"upload";
-    //暂时不支持 X-Upyun-Meta-X http://docs.upyun.com/api/rest_api/#metadata
-    
-    NSMutableDictionary *headers = [[NSMutableDictionary alloc] initWithDictionary:@{@"Authorization": Authorization,
-                                                                                    @"Date": Date,
-                                                                                    @"X-Upyun-Multi-Stage": X_Upyun_Multi_Stage,
-                                                                                    @"X-Upyun-Multi-Uuid": _X_Upyun_Multi_Uuid,
-                                                                                    @"X-Upyun-Part-Id": [NSString stringWithFormat:@"%d", part_id]}];
-    if (uploadParameters[@"Content-MD5"]) {
-        [headers setObject:uploadParameters[@"Content-MD5"] forKey:@"Content-MD5"];
+    NSString *x_upyun_multi_stage = @"upload";
+    NSString *x_upyun_multi_uuid = _X_Upyun_Multi_Uuid;
+    NSString *content_length = @(blockData.length).stringValue;
+
+    NSString *authorization = @"";
+    NSString *date = @"";
+    NSString *md5 = @"";
+    NSString *uri = @"";
+    if (_policy.count > 0) {
+        authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, _signature];
+        date = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"Date"];
+        md5 = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"Content-MD5"];
+        uri = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"uri"];
+    } else {
+        date = [UpApiUtils getNowDateStr];
+        NSDictionary *uploadParameters = @{@"bucket": _bucketName,
+                                           @"savePath": _savePath,
+                                           @"date": date};
+        uri = [NSString stringWithFormat:@"/%@/%@", uploadParameters[@"bucket"], uploadParameters[@"savePath"]];
+        NSString *signature = [UpApiUtils getSignatureWithPassword:_operatorPassword
+                                                        parameters:@[@"PUT",
+                                                                     uri,
+                                                                     uploadParameters[@"date"]]];
+        //http headers
+        authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, signature];
+    }
+
+    NSMutableDictionary *headers = @{@"Authorization": authorization,
+                                     @"Date": date,
+                                     @"X-Upyun-Multi-Stage": x_upyun_multi_stage,
+                                     @"X-Upyun-Multi-Uuid": x_upyun_multi_uuid,
+                                     @"Content-Length": content_length,
+                                     @"X-Upyun-Part-Id": @(part_id).stringValue}.mutableCopy;
+
+    if (md5.length > 0) {
+        [headers setObject:md5 forKey:@"Content-MD5"];
     }
 
     NSString *urlString = [NSString stringWithFormat:@"%@%@", UpYunStorageServer, uri];
+
+
     _httpClient = [UpSimpleHttpClient PUT:urlString
                                   headers:headers
                                      file:blockData
@@ -471,34 +539,43 @@
 
 //分块上传步骤3: 结束上传，合并文件
 - (void)complete {
-    
-    NSDate *now = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-    [dateFormatter setLocale:usLocale];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
-    NSString *date = [dateFormatter stringFromDate:now];
-    NSDictionary *uploadParameters = @{@"bucket": _bucketName,
-                                       @"savePath": _savePath,
-                                       @"date": date};
-    
-    NSString *uri = [NSString stringWithFormat:@"/%@/%@", uploadParameters[@"bucket"], uploadParameters[@"savePath"]];
-    NSString *signature = [UpApiUtils getSignatureWithPassword:_operatorPassword
-                                                    parameters:@[@"PUT",
-                                                                 uri,
-                                                                 uploadParameters[@"date"]]];
-    //http headers
-    NSString *Authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, signature];
-    NSString *Date = uploadParameters[@"date"];
-    NSString *X_Upyun_Multi_Stage = @"complete";
-    
-    NSDictionary *headers = @{@"Authorization": Authorization,
-                              @"Date": Date,
-                              @"X-Upyun-Multi-Stage": X_Upyun_Multi_Stage,
-                              @"X-Upyun-Multi-Uuid": _X_Upyun_Multi_Uuid,
-                              @"X-Upyun-Multi-MD5": [_fileInfos objectForKey:@"fileHash"]};
+
+    NSString *x_upyun_multi_stage = @"complete";
+    NSString *x_upyun_multi_uuid = _X_Upyun_Multi_Uuid;
+    NSString *content_length = @"0";
+
+    NSString *authorization = @"";
+    NSString *date = @"";
+    NSString *md5 = @"";
+    NSString *uri = @"";
+    if (_policy.count > 0) {
+        authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, _signature];
+        date = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"Date"];
+        md5 = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"Content-MD5"];
+        uri = [UpApiUtils getValueInPolicyDic:_policy OfKey:@"uri"];
+    } else {
+        date = [UpApiUtils getNowDateStr];
+        NSDictionary *uploadParameters = @{@"bucket": _bucketName,
+                                           @"savePath": _savePath,
+                                           @"date": date};
+        uri = [NSString stringWithFormat:@"/%@/%@", uploadParameters[@"bucket"], uploadParameters[@"savePath"]];
+        NSString *signature = [UpApiUtils getSignatureWithPassword:_operatorPassword
+                                                        parameters:@[@"PUT",
+                                                                     uri,
+                                                                     uploadParameters[@"date"]]];
+        authorization = [NSString stringWithFormat:@"UPYUN %@:%@", _operatorName, signature];
+    }
+    NSMutableDictionary *headers = @{@"Authorization": authorization,
+                                     @"Date": date,
+                                     @"X-Upyun-Multi-Stage": x_upyun_multi_stage,
+                                     @"X-Upyun-Multi-Uuid": x_upyun_multi_uuid,
+                                     @"Content-Length": content_length}.mutableCopy;
     NSString *urlString = [NSString stringWithFormat:@"%@%@", UpYunStorageServer, uri];
+    if (md5.length > 0) {
+        [headers setObject:md5 forKey:@"Content-MD5"];
+    }
+
+
     _httpClient = [UpSimpleHttpClient PUT:urlString
                                   headers:headers
                                      file:nil
@@ -549,7 +626,7 @@
 
 //预处理获取文件信息，文件分块记录
 - (NSDictionary *)fileBlocksInfo:(NSString *)filePath {
-    _fileSize = [[UpApiUtils lengthOfFileAtPath:_filePath] intValue];
+    _fileSize = [[UpApiUtils lengthOfFileAtPath:_filePath] integerValue];
     NSMutableDictionary *fileInfo = [[NSMutableDictionary alloc] init];
     [fileInfo setValue:[NSString stringWithFormat:@"%d",_fileSize] forKey:@"fileSize"];
     NSInteger blockCount = _fileSize / UpYunFileBlcokSize;

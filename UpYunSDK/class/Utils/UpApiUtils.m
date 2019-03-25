@@ -61,6 +61,18 @@
     return  nil;
 }
 
++ (NSString *)getValueInPolicyDic:(NSDictionary *)policyDic OfKey:(NSString *)key {
+
+    for (NSString *dicKey in policyDic.allKeys) {
+        if ([key compare:dicKey options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+            return [policyDic objectForKey:dicKey];
+        }
+    }
+
+    NSLog(@"错误----未找到 %@ 对应的值", key);
+    return @"";
+}
+
 
 + (NSString *)getSignatureWithPassword:(NSString *)password
                             parameters:(NSArray *)parameter {
@@ -212,6 +224,20 @@
     }
     return result;
 
+}
+
+/// 获取当前 GMT 时间字符串
++ (NSString *)getNowDateStr {
+
+    NSDate *now = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setLocale:usLocale];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [dateFormatter setDateFormat:@"EEE, dd MMM y HH:mm:ss zzz"];
+    NSString *date = [dateFormatter stringFromDate:now];
+
+    return date;
 }
 
 

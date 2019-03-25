@@ -22,7 +22,8 @@
 
 + (NSDictionary *)getDictFromPolicyString:(NSString *)policy;
 
-
+/// 新版签名 参数 https://help.upyun.com/knowledge-base/object_storage_authorization/#e694bee59ca8-http-header-e4b8ad
++ (NSString *)getValueInPolicyDic:(NSDictionary *)policyDic OfKey:(NSString *)key;
 
 ///hash 方法
 + (NSString *)getMD5HashFromData:(NSData *)data;
@@ -37,6 +38,9 @@
 
 ///  dic to query tring
 + (NSString*)queryStringFrom:(NSDictionary *)parameters;
+
+/// 获取当前 GMT 时间字符串
++ (NSString *)getNowDateStr;
 
 @end
 

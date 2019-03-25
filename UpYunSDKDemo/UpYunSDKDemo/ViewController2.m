@@ -57,10 +57,15 @@
 
 //    [self testFormUploader1];             //本地签名的表单上传
 //    [self testFormUploader2];             //服务器端签名的表单上传（模拟）
+
 //    [self testBlockUpLoader1];            //串行断点续传
 //    [self testBlockUpLoader2];            //串行断点续传 后异步处理
-    [self testBlockUpLoader3];              // 并行分块断点续传
-//    [self testBlockUpLoader4];              // 并行分块断点续传 后异步处理
+//    [self testBlockUpLoader3];              // 并行分块断点续传
+//    [self testBlockUpLoader4];            // 并行分块断点续传
+
+    /// 因为异步签名和文件上传签名不一致. 所以如果需要上传之并进行异步处理. 只能使用本地签名
+//    [self testBlockUpLoader5];            // 串行断点续传, 服务端签名.
+    [self testBlockUpLoader6];            // 并行断点续传  服务端签名
 
 //    [self testFormUploaderAndAsyncTask];  //表单上传加异步多媒体处理－－视频截图
 //    [self testFormUploaderAndSyncTask];   //表单上传加同步图片处理－－图片水印
@@ -274,7 +279,7 @@ int countEnd = 0;
     
     
     NSMutableArray *tasks = [NSMutableArray array];
-    /// task 的相关参数, 见
+    /// task 的相关参数, 见 https://docs.upyun.com/cloud/av/#tasks
     NSDictionary *taksOne =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:02",
                              @"save_as": @"ios_sdk_new_video_3.jpg"};
     NSDictionary *taksTwo =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:03",
@@ -395,7 +400,7 @@ int countEnd = 0;
 - (void)testBlockUpLoader4 {
 
     NSMutableArray *tasks = [NSMutableArray array];
-    /// task 的相关参数, 见
+    /// task 的相关参数, 见 https://docs.upyun.com/cloud/av/#tasks
     NSDictionary *taksOne =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:02",
                              @"save_as": @"ios_sdk_new_video_3.jpg"};
     NSDictionary *taksTwo =@{@"type": @"thumbnail", @"avopts": @"/o/true/n/1/ss/00:00:03",
@@ -455,6 +460,109 @@ int countEnd = 0;
                             [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
                         });
                     }];
+}
+
+
+/// 串行断点续传  服务端签名
+- (void)testBlockUpLoader5 {
+
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
+
+    UpYunBlockUpLoader *up = [[UpYunBlockUpLoader alloc] init];
+    NSString *bucketName = @"test86400";
+
+    NSString *savePath = @"ios_upload_seri_block__task_video.mp4";
+
+    NSString *operator_name = @"operator123";
+    NSString *operator_pwd = @"password123";
+
+    NSString *date = [UpApiUtils getNowDateStr];
+    NSString *uri = [NSString stringWithFormat:@"/%@/%@", bucketName, savePath];
+
+    /// @{@"Operator":operator_name, @"URI":uri, @"Date":date, @"Content-MD5":md5}, 其中 md5 可选
+    /// policy 服务端返回. 因为涉及到时间参数. 如果能保证参数和签名的参数一致, 也可以本地自己处理生成
+    NSDictionary *policy = @{@"Operator":operator_name, @"URI":uri, @"Date":date};
+
+    /// 这个值. 服务端返回.
+    NSString *signature = [UpApiUtils getSignatureWithPassword:operator_pwd parameters:@[@"PUT", uri, date]];
+
+    [up uploadWithBucketName:bucketName policy:policy signature:signature filePath:filePath success:^(NSHTTPURLResponse *response, NSDictionary *responseBody) {
+        NSLog(@"responseBody=%@", responseBody);
+
+        NSLog(@"上传且处理任务成功");
+
+        NSLog(@"可将您的域名与 savePath 路径拼接成完整文件 URL，再进行访问测试。注意生产环境请用正式域名，新开空间可用 test.upcdn.net 进行测试。https 访问需要空间开启 https 支持");
+        NSLog(@"用默认提供的旧测试域名，拼接后文件地址（新空间无法访问）：http://%@.b0.upaiyun.com/%@", bucketName, savePath);
+        NSLog(@"用默认提供的新测试域名，拼接后文件地址（旧空间无法访问）：http://%@.test.upcdn.net/%@", bucketName, savePath);
+    } failure:^(NSError *error, NSHTTPURLResponse *response, NSDictionary *responseBody) {
+
+        NSLog(@"上传失败 error：%@", error);
+        NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
+        NSLog(@"上传失败 message：%@", responseBody);
+        //主线程刷新ui
+    } progress:^(int64_t completedBytesCount, int64_t totalBytesCount) {
+        NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
+        NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
+        NSLog(@"upload progress: %@", progress);
+
+        //                        //主线程刷新ui
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
+        });
+    }];
+}
+
+/// 并发断点续传  服务端签名
+- (void)testBlockUpLoader6 {
+    NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    NSString *filePath = [resourcePath stringByAppendingPathComponent:@"video.mp4"];
+
+    UpYunConcurrentBlockUpLoader *up = [[UpYunConcurrentBlockUpLoader alloc] init];
+    NSString *bucketName = @"test86400";
+    /// 用来测试过期时间--
+    /// NSString *savePath = @"ios_upload_time_task_video.mp4";
+    NSString *savePath = @"ios_upload_concurrent_block_20_task_video.mp4";
+
+
+    ///
+    NSString *operator_name = @"operator123";
+    NSString *operator_pwd = @"password123";
+
+    NSString *date = [UpApiUtils getNowDateStr];
+    NSString *uri = [NSString stringWithFormat:@"/%@/%@", bucketName, savePath];
+
+    /// @{@"Operator":operator_name, @"URI":uri, @"Date":date, @"Content-MD5":md5}, 其中 md5 可选
+    /// policy 服务端返回. 因为涉及到时间参数. 如果能保证参数和签名的参数一致, 也可以本地自己处理生成
+    NSDictionary *policy = @{@"Operator":operator_name, @"URI":uri, @"Date":date};
+
+    /// 这个值. 服务端返回.
+    NSString *signature = [UpApiUtils getSignatureWithPassword:operator_pwd parameters:@[@"PUT", uri, date]];
+
+    [up uploadWithBucketName:bucketName policy:policy signature:signature filePath:filePath success:^(NSHTTPURLResponse *response, NSDictionary *responseBody) {
+        NSLog(@"responseBody=%@", responseBody);
+
+        NSLog(@"上传且处理任务成功");
+
+        NSLog(@"可将您的域名与 savePath 路径拼接成完整文件 URL，再进行访问测试。注意生产环境请用正式域名，新开空间可用 test.upcdn.net 进行测试。https 访问需要空间开启 https 支持");
+        NSLog(@"用默认提供的旧测试域名，拼接后文件地址（新空间无法访问）：http://%@.b0.upaiyun.com/%@", bucketName, savePath);
+        NSLog(@"用默认提供的新测试域名，拼接后文件地址（旧空间无法访问）：http://%@.test.upcdn.net/%@", bucketName, savePath);
+    } failure:^(NSError *error, NSHTTPURLResponse *response, NSDictionary *responseBody) {
+
+        NSLog(@"上传失败 error：%@", error);
+        NSLog(@"上传失败 code=%ld, responseHeader：%@", (long)response.statusCode, response.allHeaderFields);
+        NSLog(@"上传失败 message：%@", responseBody);
+        //主线程刷新ui
+    } progress:^(int64_t completedBytesCount, int64_t totalBytesCount) {
+        NSString *progress = [NSString stringWithFormat:@"%lld / %lld", completedBytesCount, totalBytesCount];
+        NSString *progress_rate = [NSString stringWithFormat:@"upload %.1f %%", 100 * (float)completedBytesCount / totalBytesCount];
+        NSLog(@"upload progress: %@", progress);
+
+        //                        //主线程刷新ui
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [self.uploadBtn setTitle:progress_rate forState:UIControlStateNormal];
+        });
+    }];
 }
 
 //表单上传加异步视频处理－－视频截图

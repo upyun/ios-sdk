@@ -19,6 +19,29 @@
 
 @interface UpYunBlockUpLoader : NSObject
 
+/**串行式断点续传接口
+ 参数  bucketName:           服务名
+ 参数  policy:               上传策略/ 签名的参数.
+ @{@"Operator":operator_name, @"URI":uri, @"Date":date, @"Content-MD5":md5}
+ 其中 Content-MD5 可选, 其他 key 必须传值
+
+ 参数  signature:            签名认证
+
+ 参数参考 https://help.upyun.com/knowledge-base/object_storage_authorization/#e694bee59ca8-http-header-e4b8ad
+
+ 参数  filePath:             上传文件本地路径
+ 参数  successBlock:         上传成功回调
+ 参数  failureBlock:         上传失败回调
+ 参数  progressBlock:        上传进度回调
+ */
+
+- (void)uploadWithBucketName:(NSString *)bucketName
+                      policy:(NSDictionary *)policy
+                   signature:(NSString *)signature
+                    filePath:(NSString *)filePath
+                     success:(UpLoaderSuccessBlock)successBlock
+                     failure:(UpLoaderFailureBlock)failureBlock
+                    progress:(UpLoaderProgressBlock)progressBlock;
 
 /**断点续传接口
  参数  bucketName:           服务名
